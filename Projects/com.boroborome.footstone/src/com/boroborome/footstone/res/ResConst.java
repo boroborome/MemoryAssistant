@@ -32,6 +32,12 @@ public final class ResConst
     //Unkown Error:{0}
     public static final String UnkownError = "db.UnkownError";
     
-    //Remove Task Failed.
-    public static final String RemoveTaskFailed = "db.RemoveTaskFailed";
+    public static final String FailedRemoveRecord = "db.FailedRemoveRecord";
+    
+    public static final String FailedExeBatchSql = "db.FailedExeBatchSql";
+	//Failed to create statement.
+    public static final String FailedToCreateState = "db.FailedToCreateState";
+	public static final String UnsupportType = "db.UnsupportType";
+	public static final String FailedInSetSqlParam = "db.FailedInSetSqlParam";
+    
 }

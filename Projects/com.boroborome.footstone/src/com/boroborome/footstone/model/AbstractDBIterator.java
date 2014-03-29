@@ -103,7 +103,7 @@ public abstract class AbstractDBIterator<T> extends AbstractBufferIterator<T>
         catch (SQLException e)
         {
             log.error("remove data failed.", e);
-            throw new RuntimeMessageException(ResConst.ResKey, ResConst.RemoveTaskFailed, e);
+            throw new RuntimeMessageException(ResConst.ResKey, ResConst.FailedRemoveRecord, e);
         }
     }
 }

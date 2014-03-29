@@ -8,10 +8,12 @@
  */
 package com.boroborome.footstone.sql;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.boroborome.footstone.exception.MessageException;
+import com.boroborome.footstone.model.IBufferIterator;
 
 /**
  * <DT><B>Title:</B></DT>
@@ -25,6 +27,19 @@ import com.boroborome.footstone.exception.MessageException;
  */
 public interface IDatabaseMgrSvc
 {
+	/**
+	 * 针对某个数据类型逐个执行某种sql语句<br>
+	 * 一般应用于批量插入，批量修改
+	 * @param sql 需要执行的sql
+	 * @param it 数据迭代器
+	 * @param fileMethod 将数据填充到sql中的逻辑
+	 * @throws MessageException
+	 * @since:        [产品/模块版本，表示从哪个版本开始有]
+	 */
+	public<T> void executeSql(String sql, IBufferIterator<T> it, IFillSql<T> fileMethod) throws MessageException;
+	
+	PreparedStatement createStatement(String sql) throws MessageException;
+	
     /**
      * 执行指定的sql语句，返回结果
      * @param sql select开头的sql语句

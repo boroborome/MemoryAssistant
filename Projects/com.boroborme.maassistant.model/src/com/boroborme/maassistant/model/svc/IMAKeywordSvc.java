@@ -8,6 +8,7 @@
  */
 package com.boroborme.maassistant.model.svc;
 
+import com.boroborme.maassistant.model.MAKeyword;
 import com.boroborome.footstone.svc.IDataSvc;
 
 
@@ -16,6 +17,6 @@ import com.boroborome.footstone.svc.IDataSvc;
  * @author BoRoBoRoMe
  * @param <MAKeyword>
  */
-public interface IMAKeywordSvc<MAKeyword> extends IDataSvc<MAKeyword>
+public interface IMAKeywordSvc extends IDataSvc<MAKeyword>
 {
 }
