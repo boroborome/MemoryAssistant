@@ -24,8 +24,11 @@ public class MAInformationDBIterator extends AbstractDBIterator<MAInformation>
 	@Override
 	public MAInformation adapterValue(ResultSet rs) throws SQLException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		MAInformation item = new MAInformation();
+        item.setCreateTime(rs.getLong("createTime"));
+        item.setModifyTime(rs.getLong("modifyTime"));
+        item.setContent(rs.getString("content"));
+        return item;
 	}
 
 }

@@ -7,6 +7,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.apache.log4j.Logger;
+
 import com.boroborme.maassistant.model.MAKeyword;
 import com.boroborme.maassistant.model.MAKeywordCondition;
 import com.boroborme.maassistant.model.svc.IMAKeywordSvc;
@@ -26,6 +28,8 @@ import com.boroborome.maassistant.logic.res.ResConst;
  */
 public class MAKeywordSvcImpl implements IMAKeywordSvc
 {
+	private static Logger log = Logger.getLogger(MAKeywordSvcImpl.class);
+	
 	private IDatabaseMgrSvc dbMgrSvc;
 	private EventContainer<IDataChangeListener<MAKeyword>> eventContainer = new EventContainer<IDataChangeListener<MAKeyword>>(IDataChangeListener.class);
     
@@ -94,7 +98,7 @@ public class MAKeywordSvcImpl implements IMAKeywordSvc
         }
         
     	PreparedStatement statement = builder.createStatement(dbMgrSvc);
-    	ResultSet rs;
+    	ResultSet rs = null;
 		try
 		{
 			rs = statement.executeQuery();
@@ -105,8 +109,31 @@ public class MAKeywordSvcImpl implements IMAKeywordSvc
 		}
 		catch (SQLException e)
 		{
+			if (rs != null)
+			{
+				try
+				{
+					rs.close();
+				}
+				catch (SQLException e1)
+				{
+					log.error("close rs failed.", e1);
+				}
+			}
+			try
+			{
+				statement.close();
+			}
+			catch (SQLException e1)
+			{
+				log.error("close statement failed.", e1);
+			}
+				
 			throw new MessageException(ResConst.ResKey, ResConst.FailedInExeSql);
 		}
+		
+		//This statement and rs will be used by MAKeywordDBIterator.
+		//So they can't be closed here
         return result;
 	}
 
@@ -115,6 +142,4 @@ public class MAKeywordSvcImpl implements IMAKeywordSvc
 	{
 		return this.eventContainer;
 	}
-
-
 }
