@@ -7,13 +7,13 @@ package com.boroborme.maassistant.model;
  * @author boroborome
  *
  */
-public class MAInfomation
+public class MAInformation
 {
 	private long createTime;
 	private long modifyTime;
 	private String content;
 	
-	public MAInfomation()
+	public MAInformation()
 	{
 		super();
 	}
