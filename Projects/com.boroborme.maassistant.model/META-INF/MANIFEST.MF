@@ -11,3 +11,4 @@ Import-Package: com.boroborome.footstone,
  org.osgi.framework;version="1.3.0"
 Export-Package: com.boroborme.maassistant.model,
  com.boroborme.maassistant.model.svc
+Require-Bundle: com.boroborome.footstone;bundle-version="1.0.0"

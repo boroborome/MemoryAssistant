@@ -14,3 +14,5 @@ Import-Package: com.boroborome.footstone,
  com.boroborome.footstone.ui,
  org.apache.log4j;version="1.2.13",
  org.osgi.framework;version="1.3.0"
+Require-Bundle: com.boroborme.maassistant.model;bundle-version="1.0.0",
+ com.boroborome.maassistant.logic;bundle-version="1.0.0"
