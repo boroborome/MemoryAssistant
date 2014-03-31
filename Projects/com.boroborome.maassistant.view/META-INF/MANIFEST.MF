@@ -5,7 +5,7 @@ Bundle-SymbolicName: com.boroborome.maassistant.view
 Bundle-Version: 1.0.0.0
 Bundle-Activator: com.boroborome.maassistant.view.bundle.Activator
 Bundle-Vendor: BOROBOROME
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: com.boroborome.footstone,
  com.boroborome.footstone.exception,
  com.boroborome.footstone.resource,

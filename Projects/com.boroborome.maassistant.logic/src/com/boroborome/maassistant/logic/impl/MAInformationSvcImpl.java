@@ -11,8 +11,6 @@ import org.apache.log4j.Logger;
 
 import com.boroborme.maassistant.model.MAInformation;
 import com.boroborme.maassistant.model.MAInformationCondition;
-import com.boroborme.maassistant.model.MAKeyword;
-import com.boroborme.maassistant.model.MAKeywordCondition;
 import com.boroborme.maassistant.model.svc.IMAInformationSvc;
 import com.boroborome.footstone.exception.MessageException;
 import com.boroborome.footstone.model.EventContainer;
@@ -110,6 +108,7 @@ private static Logger log = Logger.getLogger(MAInformationSvcImpl.class);
 	{
 		IBufferIterator<MAInformation> result = null;
 		SimpleSqlBuilder builder = new SimpleSqlBuilder("select * from tblInformation");
+		//(select * from tblInfoKeyRelation tbr where tbr.wordid in ())
 		MAInformationCondition c = (MAInformationCondition) condition;
 //        if (c.getLstKeyword() != null && c.getLstKeyword().isEmpty())
 //        {

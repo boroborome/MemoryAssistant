@@ -3,6 +3,8 @@
  */
 package com.boroborme.maassistant.model;
 
+import java.util.List;
+
 /**
  * @author boroborome
  *
@@ -12,6 +14,8 @@ public class MAInformation
 	private long createTime;
 	private long modifyTime;
 	private String content;
+	
+	private List<MAKeyword> lstKeyword;
 	
 	public MAInformation()
 	{
@@ -65,7 +69,21 @@ public class MAInformation
 	{
 		this.content = content;
 	}
-	
-	
+
+	/**
+	 * @return the lstKeyword
+	 */
+	public List<MAKeyword> getLstKeyword()
+	{
+		return lstKeyword;
+	}
+
+	/**
+	 * @param lstKeyword the lstKeyword to set
+	 */
+	public void setLstKeyword(List<MAKeyword> lstKeyword)
+	{
+		this.lstKeyword = lstKeyword;
+	}
 	
 }
