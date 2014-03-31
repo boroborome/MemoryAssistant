@@ -6,5 +6,11 @@ Bundle-Version: 1.0.0.0
 Bundle-Activator: com.boroborome.maassistant.view.bundle.Activator
 Bundle-Vendor: BOROBOROME
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Import-Package: com.boroborome.footstone.ui,
+Import-Package: com.boroborome.footstone,
+ com.boroborome.footstone.exception,
+ com.boroborome.footstone.resource,
+ com.boroborome.footstone.sql,
+ com.boroborome.footstone.svc,
+ com.boroborome.footstone.ui,
+ org.apache.log4j;version="1.2.13",
  org.osgi.framework;version="1.3.0"

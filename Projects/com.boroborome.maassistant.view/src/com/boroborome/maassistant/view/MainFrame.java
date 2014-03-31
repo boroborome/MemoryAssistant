@@ -15,7 +15,6 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyVetoException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -32,11 +31,14 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
 
+import org.apache.log4j.Logger;
+
+import com.boroborome.footstone.AbstractFootstoneActivator;
 import com.boroborome.footstone.FootstoneSvcAccess;
-import com.boroborome.footstone.exception.MessageException;
 import com.boroborome.footstone.resource.IResourceMgrSvc;
 import com.boroborome.footstone.resource.ISpaceName;
 import com.boroborome.footstone.sql.IDatabaseMgrSvc;
+import com.boroborome.footstone.svc.ISystemInstallSvc;
 import com.boroborome.maassistant.view.bundle.Activator;
 import com.boroborome.maassistant.view.res.ResConst;
 
@@ -123,13 +125,12 @@ public class MainFrame extends JFrame implements ISpaceName
             return;
         }
         
-        ITaskMgrSysSvc taskMgrSysSvc = (ITaskMgrSysSvc) Activator.getService(ITaskMgrSysSvc.class.getName());
+        ISystemInstallSvc systemInstallSvc = AbstractFootstoneActivator.getService(ISystemInstallSvc.class);
         try
         {
             //数据库删除停止事件分发
-            Activator.getService(IDistributeEventSvc.class).setDistributeEventEnable(false);
-            taskMgrSysSvc.uninstall();
-            taskMgrSysSvc.install();
+            systemInstallSvc.uninstall();
+            systemInstallSvc.install();
             JOptionPane.showMessageDialog(this, "Rebuild success.You shuld restart this program.");
         }
         catch (Exception e)
@@ -137,17 +138,6 @@ public class MainFrame extends JFrame implements ISpaceName
             log.error("start distributeEventSvc failed.", e);
             FootstoneSvcAccess.getExceptionGrave().bury(e);
         }
-        
-        try
-        {
-            Activator.getService(IDistributeEventSvc.class).setDistributeEventEnable(true);
-        }
-        catch (MessageException e)
-        {
-            log.error("start distributeEventSvc failed.", e);
-            JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        }
-        
     }
 
     
@@ -163,7 +153,6 @@ public class MainFrame extends JFrame implements ISpaceName
         this.setJMenuBar(getMainMenuBar());
         this.setContentPane(getPnlMain());
         this.setTitle("Task Manager"); //$NON-NLS-1$
-        this.setIconImage(ImgUtil.getImage(ImgUtil.ModifyMan_S));
     }
 
     /**
@@ -203,8 +192,8 @@ public class MainFrame extends JFrame implements ISpaceName
     {
         toolBar = new JToolBar();
         toolBar.setFloatable(true);
-        toolBar.add(createBtnShowWindow("Manage Task", TaskItemFrame.class));
-        toolBar.add(createBtnShowWindow("Manage Event", TaskEventFrame.class));
+//        toolBar.add(createBtnShowWindow("Manage Task", TaskItemFrame.class));
+//        toolBar.add(createBtnShowWindow("Manage Event", TaskEventFrame.class));
 //        toolBar.add(createBtnShowWindow("Test", CheckCloseInternalFrame.class));
         if (Activator.getService(IDatabaseMgrSvc.class) != null && log.isDebugEnabled())
         {
