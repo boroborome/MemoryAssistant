@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="com.boroborome.maassistant.view" default="pack">
+<project name="com.boroborome.ma.view" default="pack">
 	<property name="src.dir" value="src"/>
 	<property name="bin.dir" value="bin"/>
 	<property name="output.dir" value="../../Release/lib"/>
@@ -7,7 +7,7 @@
 	<target name="pack">
 		<!-- deltree dir="${output.dir}/resource"/ -->
 		<!-- copydir dest="${output.dir}/resource" src="resource"></copydir-->
-		<jar basedir="${bin.dir}" destfile="${output.dir}/com.boroborome.maassistant.view.jar" manifest="META-INF/manifest.mf">
+		<jar basedir="${bin.dir}" destfile="${output.dir}/com.boroborome.ma.view.jar" manifest="META-INF/manifest.mf">
 			<include name="com/boroborome/**/**.*"/>
 		</jar>
 	</target>

@@ -1,0 +1,10 @@
+----------------------------------------------------------------
+Tue Apr 01 23:58:37 CST 2014:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.8.1.2 - (1095077): instance a816c00e-0145-1e03-8081-000000b0cf18 
+on database directory /Users/boroborome/Develop/MemoryAssitant/Release/database/madb  with class loader org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader@574516d4 
+Loaded from file:/Users/boroborome/Develop/MemoryAssitant/Release/lib/derby.jar
+java.vendor=Oracle Corporation
+java.runtime.version=1.7.0_17-b02
+user.dir=/Users/boroborome/Develop/MemoryAssitant/Release
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''

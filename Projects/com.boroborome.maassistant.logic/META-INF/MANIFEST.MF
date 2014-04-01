@@ -1,13 +1,13 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Logic
-Bundle-SymbolicName: com.boroborome.maassistant.logic
+Bundle-SymbolicName: com.boroborome.ma.logic
 Bundle-Version: 1.0.0.0
-Bundle-Activator: com.boroborome.maassistant.logic.bundle.Activator
+Bundle-Activator: com.boroborome.ma.logic.bundle.Activator
 Bundle-Vendor: BOROBOROME
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Import-Package: com.boroborme.maassistant.model,
- com.boroborme.maassistant.model.svc,
+Import-Package: com.boroborme.ma.model,
+ com.boroborme.ma.model.svc,
  com.boroborome.footstone,
  com.boroborome.footstone.exception,
  com.boroborome.footstone.model,
@@ -16,4 +16,6 @@ Import-Package: com.boroborme.maassistant.model,
  com.boroborome.footstone.svc,
  org.osgi.framework;version="1.3.0"
 Require-Bundle: org.apache.log4j,
- com.boroborme.maassistant.model;bundle-version="1.0.0"
+ com.boroborme.ma.model;bundle-version="1.0.0",
+ derby;bundle-version="10.8.1000002",
+ org.mybatis.mybatis;bundle-version="3.0.4"

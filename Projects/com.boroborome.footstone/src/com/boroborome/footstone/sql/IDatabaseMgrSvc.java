@@ -8,6 +8,7 @@
  */
 package com.boroborome.footstone.sql;
 
+import java.io.InputStream;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -39,6 +40,14 @@ public interface IDatabaseMgrSvc
 	public<T> void executeSql(String sql, IBufferIterator<T> it, IFillSql<T> fileMethod) throws MessageException;
 	
 	PreparedStatement createStatement(String sql) throws MessageException;
+	
+	/**
+	 * Execute the sql in filestream
+	 * @param sqlFileStream sql file stream
+	 * @throws MessageException
+	 * @since:        [产品/模块版本，表示从哪个版本开始有]
+	 */
+	void runSqlFile(InputStream sqlFileStream) throws MessageException;
 	
     /**
      * 执行指定的sql语句，返回结果

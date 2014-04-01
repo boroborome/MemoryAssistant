@@ -8,10 +8,14 @@
  */
 package com.boroborome.footstone.sql;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import org.apache.ibatis.jdbc.ScriptRunner;
 
 import com.boroborome.footstone.exception.MessageException;
 import com.boroborome.footstone.model.IBufferIterator;
@@ -86,6 +90,13 @@ public class DefaultDatabaseMgrSvc implements IDatabaseMgrSvc
 	{
 		PreparedStatement statement = createStatement(sql);
 		return statement.executeUpdate();
+	}
+
+	@Override
+	public void runSqlFile(InputStream sqlFileStream) throws MessageException
+	{
+        ScriptRunner runner = new ScriptRunner(connection);
+        runner.runScript(new InputStreamReader(sqlFileStream));
 	}
 
 }

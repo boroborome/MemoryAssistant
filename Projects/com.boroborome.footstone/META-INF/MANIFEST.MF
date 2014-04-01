@@ -28,6 +28,7 @@ Import-Package: javax.swing,
  javax.swing.table,
  javax.swing.text,
  javax.xml.parsers,
+ org.apache.ibatis.jdbc;version="3.0.4",
  org.osgi.framework;version="1.3.0",
  org.w3c.dom,
  org.xml.sax
