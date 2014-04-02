@@ -1,1 +1,1 @@
-java -Declipse.ignoreApp=true -Dosgi.noShutdown=true -Djava.library.path=./lib -jar lib/org.eclipse.osgi_3.5.2.R35x_v20100126.jar -configuration conf  -Djava.library.path=./lib -Dlog4j.configuration=conf/log4j.xml -clean
+java -XstartOnFirstThread -Declipse.ignoreApp=true -Dosgi.noShutdown=true -Djava.library.path=./lib -jar -Dlog4j.configuration=conf/log4j.xml lib/org.eclipse.osgi_3.5.2.R35x_v20100126.jar -configuration conf -clean

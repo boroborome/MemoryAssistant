@@ -29,9 +29,10 @@ public abstract class BaseReadonlyTableModel<T> extends BaseExtTableModel<T>
     /**
      * 构造函数
      */
-    public BaseReadonlyTableModel()
+    public BaseReadonlyTableModel(final String[] columns)
     {
         lstRowData = new ArrayList<Object[]>();
+        this.setColumns(columns);
     }
 
     /* (non-Javadoc)
@@ -52,7 +53,12 @@ public abstract class BaseReadonlyTableModel<T> extends BaseExtTableModel<T>
         }
         return result;
     }
-
+    
+    @Override
+    public final Object getValueAt(T data, int column)
+    {
+    	throw new UnsupportedOperationException("The method getValueAt in BaseReadonly class is not usable.");
+    }
     /**
      * 将数据格式化成需要显示的列表
      * @param data 需要格式化的数据
