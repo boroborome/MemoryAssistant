@@ -39,7 +39,6 @@ import com.boroborome.footstone.resource.IResourceMgrSvc;
 import com.boroborome.footstone.resource.ISpaceName;
 import com.boroborome.footstone.sql.IDatabaseMgrSvc;
 import com.boroborome.footstone.svc.ISystemInstallSvc;
-import com.boroborome.ma.view.bundle.Activator;
 import com.boroborome.ma.view.res.ResConst;
 
 /**
@@ -195,6 +194,7 @@ public class MainFrame extends JFrame implements ISpaceName
 //        toolBar.add(createBtnShowWindow("Manage Task", TaskItemFrame.class));
 //        toolBar.add(createBtnShowWindow("Manage Event", TaskEventFrame.class));
 //        toolBar.add(createBtnShowWindow("Test", CheckCloseInternalFrame.class));
+        toolBar.add(createBtnShowWindow("Manage Info", InformationFrame.class));
         if (AbstractFootstoneActivator.getService(IDatabaseMgrSvc.class) != null && log.isDebugEnabled())
         {
             toolBar.add(createBtnShowWindow("Execute Sql", ExecuteSqlFrame.class));
