@@ -33,6 +33,7 @@ public class Activator extends AbstractFootstoneActivator
             Activator.class.getClassLoader().loadClass(driver);
             Connection connection = DriverManager.getConnection(url);
             databaseMgrSvc = new DefaultDatabaseMgrSvc(connection);
+            registerService(IDatabaseMgrSvc.class, databaseMgrSvc, null);
         }
         catch (Exception e)
         {

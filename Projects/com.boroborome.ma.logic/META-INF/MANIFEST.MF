@@ -16,6 +16,5 @@ Import-Package: com.boroborme.ma.model,
  com.boroborome.footstone.svc,
  org.osgi.framework;version="1.3.0"
 Require-Bundle: org.apache.log4j,
- com.boroborme.ma.model;bundle-version="1.0.0",
  derby;bundle-version="10.8.1000002",
  org.mybatis.mybatis;bundle-version="3.0.4"
