@@ -23,16 +23,6 @@ import javax.swing.JPanel;
  */
 public class CheckCloseInternalFrame extends JInternalFrame
 {
-    /* (non-Javadoc)
-     * @see javax.swing.JInternalFrame#doDefaultCloseAction()
-     */
-    @Override
-    public void doDefaultCloseAction()
-    {
-        // TODO Auto-generated method stub
-        super.doDefaultCloseAction();
-    }
-
     /**
      * 构造函数
      * @param title

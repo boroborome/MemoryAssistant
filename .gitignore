@@ -11,7 +11,9 @@ Projects/com.boroborme.maassistant.model/.settings/
 Projects/com.boroborome.maassistant.logic/.settings/
 Projects/com.boroborome.maassistant.view/bin/
 Projects/com.boroborome.maassistant.view/.settings/
-
 Release/conf/org.eclipse.osgi/
 Release/logs/
 Release/database/
+*.log
+Projects/com.boroborome.ma.view/bin/
+*.uml~

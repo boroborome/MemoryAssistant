@@ -195,7 +195,7 @@ public class MainFrame extends JFrame implements ISpaceName
 //        toolBar.add(createBtnShowWindow("Manage Task", TaskItemFrame.class));
 //        toolBar.add(createBtnShowWindow("Manage Event", TaskEventFrame.class));
 //        toolBar.add(createBtnShowWindow("Test", CheckCloseInternalFrame.class));
-        if (Activator.getService(IDatabaseMgrSvc.class) != null && log.isDebugEnabled())
+        if (AbstractFootstoneActivator.getService(IDatabaseMgrSvc.class) != null && log.isDebugEnabled())
         {
             toolBar.add(createBtnShowWindow("Execute Sql", ExecuteSqlFrame.class));
         }
@@ -512,7 +512,7 @@ public class MainFrame extends JFrame implements ISpaceName
 
     protected void showAbout()
     {
-        JOptionPane.showMessageDialog(this, Activator.getService(IResourceMgrSvc.class).getRes(ResConst.ResKey, ResConst.About));
+        JOptionPane.showMessageDialog(this, AbstractFootstoneActivator.getService(IResourceMgrSvc.class).getRes(ResConst.ResKey, ResConst.About));
     }
 
     /**

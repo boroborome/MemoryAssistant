@@ -109,7 +109,7 @@ public class InfoManagePanel extends JPanel
 			@Override
 			public void actionPerformed(ActionEvent arg0)
 			{
-				doAddInfo();
+				doDelInfo();
 			}
 		});
 		pnl.add(btnDelete, new GridBagConstraints(1, 0, 1, 1, 0, 0, GridBagConstraints.NORTHWEST,
@@ -121,9 +121,17 @@ public class InfoManagePanel extends JPanel
 	}
 	
 
-	private void doAddInfo()
+	private void doDelInfo()
 	{
-		// TODO Auto-generated method stub
+		// TODO To be implement delete Information
 		
 	}
+
+	private void doAddInfo()
+	{
+		// TODO To be implement add information
+		
+	}
+	
+	
 }

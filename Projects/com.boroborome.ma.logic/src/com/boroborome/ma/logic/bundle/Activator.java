@@ -53,7 +53,6 @@ public class Activator extends AbstractFootstoneActivator
 	@Override
 	public void bundleStop(BundleContext context)
 	{
-		// TODO Auto-generated method stub
 		
 	}
 
