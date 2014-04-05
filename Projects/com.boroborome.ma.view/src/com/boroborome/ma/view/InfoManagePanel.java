@@ -29,9 +29,9 @@ import com.boroborome.footstone.ui.ExtTable;
 public class InfoManagePanel extends JPanel
 {
 	private JTextField txtKeys;
-	private JTextArea txtInfoDetail;
 	private BaseReadonlyTableModel<MAInformation> infoTableModel;
 	private ExtTable infoTable;
+	private InformationPanel pnlInfoDetail;
 
 	public InfoManagePanel()
 	{
@@ -40,34 +40,35 @@ public class InfoManagePanel extends JPanel
 
 	private void initUI()
 	{
+		//TODO the ui of information management should be improve to more usefull
 		this.setLayout(new GridBagLayout());
-		this.add(new JLabel("Key:"), new GridBagConstraints(0, 0, 1, 1, 0, 0, GridBagConstraints.NORTHWEST,
-				GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-		txtKeys = new JTextField();
-		this.add(txtKeys, new GridBagConstraints(1, 0, 1, 1, 1, 0, GridBagConstraints.NORTHWEST,
-				GridBagConstraints.HORIZONTAL, new Insets(0, 12, 0, 0), 0, 0));
 		
 		JSplitPane sptPnl = new JSplitPane();
 		this.add(sptPnl, new GridBagConstraints(0, 1, 2, 1, 1, 1, GridBagConstraints.NORTHWEST,
 				GridBagConstraints.BOTH, new Insets(12, 0, 0, 0), 0, 0));
 		sptPnl.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
 		sptPnl.setLeftComponent(createInfoMgrTable());
-		sptPnl.setRightComponent(createInfoDetailPnl());
-	}
-
-	private JScrollPane createInfoDetailPnl()
-	{
-		txtInfoDetail = new JTextArea();
-		return new JScrollPane(txtInfoDetail);
+		
+		pnlInfoDetail = new InformationPanel();
+		sptPnl.setRightComponent(pnlInfoDetail);
 	}
 
 	private Component createInfoMgrTable()
 	{
 		JPanel pnl = new JPanel();
 		pnl.setLayout(new GridBagLayout());
-		pnl.add(createButtonPnl(), new GridBagConstraints(0, 0, 1, 1, 1, 0, GridBagConstraints.NORTHWEST,
+		
+		int row = 0;
+		pnl.add(new JLabel("Key:"), new GridBagConstraints(0, row, 1, 1, 0, 0, GridBagConstraints.NORTHWEST,
+				GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
+		txtKeys = new JTextField();
+		pnl.add(txtKeys, new GridBagConstraints(1, row, 1, 1, 1, 0, GridBagConstraints.NORTHWEST,
+				GridBagConstraints.HORIZONTAL, new Insets(0, 12, 0, 0), 0, 0));
+
+		
+		pnl.add(createButtonPnl(), new GridBagConstraints(0, ++row, 2, 1, 1, 0, GridBagConstraints.NORTHWEST,
 				GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
-		pnl.add(createInfoTable(), new GridBagConstraints(0, 1, 1, 1, 1, 1, GridBagConstraints.NORTHWEST,
+		pnl.add(createInfoTable(), new GridBagConstraints(0, ++row, 2, 1, 1, 1, GridBagConstraints.NORTHWEST,
 				GridBagConstraints.BOTH, new Insets(12, 0, 0, 0), 0, 0));
 		return pnl;
 	}
