@@ -23,7 +23,7 @@ import com.boroborome.footstone.ui.AbstractDataPanel;
  */
 public class InformationPanel extends AbstractDataPanel<MAInformation>
 {
-	private JTextField txtKeys;
+	private KeywordField txtKeys;
 	private JTextArea txtInfoDetail;
 
 	public InformationPanel()
@@ -35,7 +35,7 @@ public class InformationPanel extends AbstractDataPanel<MAInformation>
 		this.setLayout(new GridBagLayout());
 		this.add(new JLabel("Key:"), new GridBagConstraints(0, 0, 1, 1, 0, 0, GridBagConstraints.NORTHWEST,
 				GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-		txtKeys = new JTextField();
+		txtKeys = new KeywordField();
 		this.add(txtKeys, new GridBagConstraints(1, 0, 1, 1, 1, 0, GridBagConstraints.NORTHWEST,
 				GridBagConstraints.HORIZONTAL, new Insets(0, 12, 0, 0), 0, 0));
 		

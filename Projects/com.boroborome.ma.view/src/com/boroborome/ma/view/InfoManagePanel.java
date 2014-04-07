@@ -7,16 +7,20 @@ import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
+import javax.swing.JWindow;
+import javax.swing.Popup;
+import javax.swing.PopupFactory;
+import javax.swing.SwingUtilities;
+import javax.swing.ToolTipManager;
 
 import com.boroborme.ma.model.MAInformation;
 import com.boroborome.footstone.ui.BaseReadonlyTableModel;
@@ -28,7 +32,7 @@ import com.boroborome.footstone.ui.ExtTable;
  */
 public class InfoManagePanel extends JPanel
 {
-	private JTextField txtKeys;
+	private KeywordField txtKeys;
 	private BaseReadonlyTableModel<MAInformation> infoTableModel;
 	private ExtTable infoTable;
 	private InformationPanel pnlInfoDetail;
@@ -61,7 +65,7 @@ public class InfoManagePanel extends JPanel
 		int row = 0;
 		pnl.add(new JLabel("Key:"), new GridBagConstraints(0, row, 1, 1, 0, 0, GridBagConstraints.NORTHWEST,
 				GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-		txtKeys = new JTextField();
+		txtKeys = new KeywordField();
 		pnl.add(txtKeys, new GridBagConstraints(1, row, 1, 1, 1, 0, GridBagConstraints.NORTHWEST,
 				GridBagConstraints.HORIZONTAL, new Insets(0, 12, 0, 0), 0, 0));
 
@@ -130,8 +134,7 @@ public class InfoManagePanel extends JPanel
 
 	private void doAddInfo()
 	{
-		// TODO To be implement add information
-		
+		// TODO To be implement add Information
 	}
 	
 	
