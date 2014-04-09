@@ -6,7 +6,7 @@ import java.awt.event.WindowEvent;
 import org.osgi.framework.BundleContext;
 
 import com.boroborome.footstone.AbstractFootstoneActivator;
-import com.boroborome.ma.view.MainFrame;
+import com.boroborome.ma.view.MAMainFrame;
 
 public class Activator extends AbstractFootstoneActivator
 {
@@ -14,7 +14,8 @@ public class Activator extends AbstractFootstoneActivator
 	@Override
 	public void bundleStart(BundleContext context)
 	{
-		MainFrame frame = new MainFrame();
+//		MainFrame frame = new MainFrame();
+		MAMainFrame frame = new MAMainFrame();
 		frame.addWindowListener(new WindowAdapter()
         {
             @Override

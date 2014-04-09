@@ -7,6 +7,7 @@ Bundle-Activator: com.boroborome.ma.view.bundle.Activator
 Bundle-Vendor: BOROBOROME
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: com.boroborme.ma.model,
+ com.boroborme.ma.model.svc,
  com.boroborome.footstone,
  com.boroborome.footstone.exception,
  com.boroborome.footstone.resource,

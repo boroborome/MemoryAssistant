@@ -3,6 +3,7 @@
  */
 package com.boroborme.ma.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,7 +16,7 @@ public class MAInformation
 	private long modifyTime;
 	private String content;
 	
-	private List<MAKeyword> lstKeyword;
+	private List<MAKeyword> lstKeyword = new ArrayList<MAKeyword>();
 	
 	public MAInformation()
 	{

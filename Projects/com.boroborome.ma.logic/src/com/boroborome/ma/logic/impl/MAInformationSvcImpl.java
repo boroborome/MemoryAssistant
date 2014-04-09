@@ -6,6 +6,7 @@ package com.boroborome.ma.logic.impl;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 
@@ -40,7 +41,7 @@ private static Logger log = Logger.getLogger(MAInformationSvcImpl.class);
 	}
 
 	@Override
-	public void create(IBufferIterator<MAInformation> it) throws MessageException
+	public void create(Iterator<MAInformation> it) throws MessageException
 	{
 		dbMgrSvc.executeSql("insert into tblInformation(createTime,modifyTime,content) values(?,?,?)", it,
 	            new IFillSql<MAInformation>()
@@ -62,7 +63,7 @@ private static Logger log = Logger.getLogger(MAInformationSvcImpl.class);
 	}
 
 	@Override
-	public void modify(IBufferIterator<MAInformation> it) throws MessageException
+	public void modify(Iterator<MAInformation> it) throws MessageException
 	{
 		dbMgrSvc.executeSql("update tblInformation set modifyTime=?,content=? where createTime=?", it,
 	            new IFillSql<MAInformation>()
@@ -84,7 +85,7 @@ private static Logger log = Logger.getLogger(MAInformationSvcImpl.class);
 	}
 
 	@Override
-	public void delete(IBufferIterator<MAInformation> it) throws MessageException
+	public void delete(Iterator<MAInformation> it) throws MessageException
 	{
 		dbMgrSvc.executeSql("delete tblInformation where createTime=?", it,
 	            new IFillSql<MAInformation>()

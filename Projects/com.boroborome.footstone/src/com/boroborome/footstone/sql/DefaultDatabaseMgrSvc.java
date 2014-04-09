@@ -14,11 +14,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Iterator;
 
 import org.apache.ibatis.jdbc.ScriptRunner;
 
 import com.boroborome.footstone.exception.MessageException;
-import com.boroborome.footstone.model.IBufferIterator;
 import com.boroborome.footstone.res.ResConst;
 
 /**
@@ -41,7 +41,7 @@ public class DefaultDatabaseMgrSvc implements IDatabaseMgrSvc
 	}
 
 	@Override
-	public <T> void executeSql(String sql, IBufferIterator<T> it, IFillSql<T> fileMethod) throws MessageException
+	public <T> void executeSql(String sql, Iterator<T> it, IFillSql<T> fileMethod) throws MessageException
 	{
 		if (it == null || !it.hasNext())
         {

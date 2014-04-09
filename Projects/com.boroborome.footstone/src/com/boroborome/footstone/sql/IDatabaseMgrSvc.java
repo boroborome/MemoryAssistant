@@ -12,9 +12,9 @@ import java.io.InputStream;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Iterator;
 
 import com.boroborome.footstone.exception.MessageException;
-import com.boroborome.footstone.model.IBufferIterator;
 
 /**
  * <DT><B>Title:</B></DT>
@@ -37,7 +37,7 @@ public interface IDatabaseMgrSvc
 	 * @throws MessageException
 	 * @since:        [产品/模块版本，表示从哪个版本开始有]
 	 */
-	public<T> void executeSql(String sql, IBufferIterator<T> it, IFillSql<T> fileMethod) throws MessageException;
+	public<T> void executeSql(String sql, Iterator<T> it, IFillSql<T> fileMethod) throws MessageException;
 	
 	PreparedStatement createStatement(String sql) throws MessageException;
 	

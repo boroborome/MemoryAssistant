@@ -7,13 +7,11 @@ Projects/com.boroborome.window/
 Projects/com.boroborome.taskmgr.logic.db/
 Projects/com.boroborome.taskmgr.model/
 Projects/com.boroborome.footstone/.settings/
-Projects/com.boroborme.maassistant.model/.settings/
-Projects/com.boroborome.maassistant.logic/.settings/
-Projects/com.boroborome.maassistant.view/bin/
-Projects/com.boroborome.maassistant.view/.settings/
 Release/conf/org.eclipse.osgi/
 Release/logs/
 Release/database/
+Projects/com.boroborome.ma.view/bin/**
+Projects/com.boroborome.ma.view/bin/com/boroborome/ma/view/bundle/Activator$1.class
 **.log
-Projects/com.boroborome.ma.view/bin/
 **.uml~
+

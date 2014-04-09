@@ -6,6 +6,7 @@ package com.boroborome.ma.logic.impl;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 
@@ -40,7 +41,7 @@ public class MAKeywordSvcImpl implements IMAKeywordSvc
 	}
 
 	@Override
-	public void create(IBufferIterator<MAKeyword> it) throws MessageException
+	public void create(Iterator<MAKeyword> it) throws MessageException
 	{
 		dbMgrSvc.executeSql("insert into tblKeyWord(wordid,keyword) values(?,?)", it,
 	            new IFillSql<MAKeyword>()
@@ -61,13 +62,13 @@ public class MAKeywordSvcImpl implements IMAKeywordSvc
 	}
 
 	@Override
-	public void modify(IBufferIterator<MAKeyword> it) throws MessageException
+	public void modify(Iterator<MAKeyword> it) throws MessageException
 	{
 		throw new UnsupportedOperationException("The keyword does not support modify.");
 	}
 
 	@Override
-	public void delete(IBufferIterator<MAKeyword> it) throws MessageException
+	public void delete(Iterator<MAKeyword> it) throws MessageException
 	{
 		dbMgrSvc.executeSql("delete tblKeyWord where wordid=?", it,
 	            new IFillSql<MAKeyword>()

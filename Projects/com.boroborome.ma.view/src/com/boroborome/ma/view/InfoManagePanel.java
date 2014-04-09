@@ -10,6 +10,9 @@ import java.awt.Insets;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -21,8 +24,17 @@ import javax.swing.Popup;
 import javax.swing.PopupFactory;
 import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
+import org.apache.log4j.Logger;
 
 import com.boroborme.ma.model.MAInformation;
+import com.boroborme.ma.model.svc.IMAInformationSvc;
+import com.boroborome.footstone.AbstractFootstoneActivator;
+import com.boroborome.footstone.FootstoneSvcAccess;
+import com.boroborome.footstone.exception.MessageException;
+import com.boroborome.footstone.svc.ISystemInstallSvc;
 import com.boroborome.footstone.ui.BaseReadonlyTableModel;
 import com.boroborome.footstone.ui.ExtTable;
 
@@ -32,9 +44,11 @@ import com.boroborome.footstone.ui.ExtTable;
  */
 public class InfoManagePanel extends JPanel
 {
+	private static Logger log = Logger.getLogger(InfoManagePanel.class);
+	
 	private KeywordField txtKeys;
-	private BaseReadonlyTableModel<MAInformation> infoTableModel;
-	private ExtTable infoTable;
+	private BaseReadonlyTableModel<MAInformation> tblModelInfo;
+	private ExtTable tblInfo;
 	private InformationPanel pnlInfoDetail;
 
 	public InfoManagePanel()
@@ -79,7 +93,7 @@ public class InfoManagePanel extends JPanel
 
 	private Component createInfoTable()
 	{
-		infoTableModel = new BaseReadonlyTableModel<MAInformation>(new String[]{"CreateTime", "KeyWord", "Content"})
+		tblModelInfo = new BaseReadonlyTableModel<MAInformation>(new String[]{"CreateTime", "KeyWord", "Content"})
 		{
 			@Override
 			public Object[] formatItem(MAInformation data)
@@ -87,9 +101,26 @@ public class InfoManagePanel extends JPanel
 				return new Object[]{data.getCreateTime(), "Keywords", data.getContent()};
 			}
 		};
-		infoTable = new ExtTable();
-		infoTable.setModel(infoTableModel);
-		return infoTable;
+		tblInfo = new ExtTable();
+		tblInfo.setModel(tblModelInfo);
+		tblInfo.getSelectionModel().addListSelectionListener(new ListSelectionListener()
+		{
+			@Override
+			public void valueChanged(ListSelectionEvent e)
+			{
+				int selectRow = tblInfo.getSelectedRow();
+				if (selectRow >= 0)
+				{
+					MAInformation info = tblModelInfo.getItem(selectRow);
+					pnlInfoDetail.setData(info);
+				}
+				else
+				{
+					pnlInfoDetail.setData(null);
+				}
+			}
+		});
+		return tblInfo;
 	}
 
 	private Component createButtonPnl()
@@ -128,13 +159,58 @@ public class InfoManagePanel extends JPanel
 
 	private void doDelInfo()
 	{
-		// TODO To be implement delete Information
+		int[] selectRows = tblInfo.getSelectedRows();
+		if (selectRows == null || selectRows.length == 0)
+		{
+			return;
+		}
 		
+		int result = JOptionPane.showConfirmDialog(this,
+                "Are you sure to delete all selected information?", 
+                "Are you sure?", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
+        if (result != JOptionPane.YES_OPTION)
+        {
+            return;
+        }
+        
+        List<MAInformation> lstInfo = new ArrayList<MAInformation>();
+        for (int row : selectRows)
+        {
+        	lstInfo.add(tblModelInfo.getItem(row));
+        }
+        IMAInformationSvc maInformationSvc = AbstractFootstoneActivator.getService(IMAInformationSvc.class);
+		try
+		{
+			maInformationSvc.delete(lstInfo.iterator());
+			// TODO ［optimize] if delete partly failed the result will be wrong.
+			for (int rowIndex = selectRows.length - 1; rowIndex >= 0; --rowIndex)
+			{
+				tblModelInfo.removeRow(selectRows[rowIndex]);
+			}
+		}
+		catch (MessageException e)
+		{
+			log.error("failed in deleting information.", e);
+            FootstoneSvcAccess.getExceptionGrave().bury(e);
+		}
 	}
 
 	private void doAddInfo()
 	{
-		// TODO To be implement add Information
+		MAInformation info = new MAInformation();
+		info.getLstKeyword().addAll(txtKeys.getLstKeyword());
+		IMAInformationSvc maInformationSvc = AbstractFootstoneActivator.getService(IMAInformationSvc.class);
+		try
+		{
+			maInformationSvc.create(Arrays.asList(info).iterator());
+			tblModelInfo.insertItem(0, info);
+			tblInfo.getSelectionModel().setSelectionInterval(0,  0);
+		}
+		catch (MessageException e)
+		{
+			log.error("failed in creating information.", e);
+            FootstoneSvcAccess.getExceptionGrave().bury(e);
+		}
 	}
 	
 	

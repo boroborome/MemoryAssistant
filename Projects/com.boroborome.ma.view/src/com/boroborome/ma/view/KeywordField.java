@@ -142,6 +142,11 @@ public class KeywordField extends JTextField
 			this.lstKeyword.addAll(lstKeyword);
 		}
 	}
+
+	public boolean isEmpty()
+	{
+		return lstKeyword.isEmpty();
+	}
 	
 	
 }
