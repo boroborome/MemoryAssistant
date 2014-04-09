@@ -10,7 +10,7 @@ Projects/com.boroborome.footstone/.settings/
 Release/conf/org.eclipse.osgi/
 Release/logs/
 Release/database/
-Projects/com.boroborome.ma.view/bin/**
+Projects/com.boroborome.ma.view/bin/
 Projects/com.boroborome.ma.view/bin/com/boroborome/ma/view/bundle/Activator$1.class
 **.log
 **.uml~
