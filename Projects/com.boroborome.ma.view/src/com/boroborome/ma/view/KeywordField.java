@@ -30,7 +30,8 @@ import com.boroborome.footstone.ui.ExtTable;
 
 /**
  * @author boroborome
- *
+ * TODO this control should return the keyword's id?
+ * TODO we should implement the fun:select keyword from popup window
  */
 public class KeywordField extends JTextField
 {
@@ -86,8 +87,22 @@ public class KeywordField extends JTextField
 			@Override
 			public void keyReleased(KeyEvent e)
 			{
-				updatePopupInfo();
-			}});
+				if (e.getKeyChar() == ' ')
+				{
+					saveKeyword();
+				}
+				else
+				{
+					updatePopupInfo();
+				}
+			}
+		});
+	}
+
+	protected void saveKeyword()
+	{
+		// TODO implement save keyword.
+		
 	}
 
 	private void initPopupWindow()
@@ -117,7 +132,6 @@ public class KeywordField extends JTextField
 
 	private void updatePopupInfo()
 	{
-		// TODO query Keywords and show
 		// find out the right posistion to show the popup window
 		Point newPos = this.getLocation();
 		SwingUtilities.convertPointToScreen(newPos, this.getParent());
@@ -139,7 +153,9 @@ public class KeywordField extends JTextField
 		}
 		else
 		{
-			String prefix = strKeywords.substring(startIndex, endIndex);
+			startIndex++;
+			String prefix = strKeywords.substring(startIndex, endIndex + 1);
+			System.out.println(prefix);
 			startUpdateKeyword(prefix);
 		}
 	}
