@@ -17,7 +17,7 @@ public class ShowWindowAction extends AbstractAction
 	@Override
 	public void actionPerformed(ActionEvent e)
 	{
-		// TODO ShowWindowAction's action
+		// TODO [optimize] ShowWindowAction's action
 		
 	}
 

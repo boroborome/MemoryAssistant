@@ -7,7 +7,6 @@ import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -19,11 +18,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
-import javax.swing.JWindow;
-import javax.swing.Popup;
-import javax.swing.PopupFactory;
-import javax.swing.SwingUtilities;
-import javax.swing.ToolTipManager;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -34,7 +28,6 @@ import com.boroborme.ma.model.svc.IMAInformationSvc;
 import com.boroborome.footstone.AbstractFootstoneActivator;
 import com.boroborome.footstone.FootstoneSvcAccess;
 import com.boroborome.footstone.exception.MessageException;
-import com.boroborome.footstone.svc.ISystemInstallSvc;
 import com.boroborome.footstone.ui.BaseReadonlyTableModel;
 import com.boroborome.footstone.ui.ExtTable;
 
@@ -58,7 +51,7 @@ public class InfoManagePanel extends JPanel
 
 	private void initUI()
 	{
-		//TODO the ui of information management should be improve to more usefull
+		//TODO [optimize] the ui of information management should be improve to more usefull
 		this.setLayout(new GridBagLayout());
 		
 		JSplitPane sptPnl = new JSplitPane();

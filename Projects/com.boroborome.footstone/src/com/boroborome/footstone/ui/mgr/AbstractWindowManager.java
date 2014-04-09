@@ -39,7 +39,7 @@ public abstract class AbstractWindowManager
 	
 	public void showWindow(String title, JPanel panel)
 	{
-		//TODO the Window manager framework to be implements
+		//TODO [optimize] the Window manager framework to be implements
 		JPanel pnl = mapPanel.get(title);
 		if (pnl == null)
 		{
