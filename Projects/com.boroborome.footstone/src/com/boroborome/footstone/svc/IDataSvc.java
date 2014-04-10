@@ -15,7 +15,7 @@ import com.boroborome.footstone.model.EventContainer;
 
 /**
  * @author BoRoBoRoMe
- *
+ * TODO [optimize] this interface can be defined with input Iterator and output Iterator.
  */
 public interface IDataSvc<E>
 {

@@ -37,7 +37,7 @@ public class KeywordField extends JTextField
 {
 	private static Logger log = Logger.getLogger(KeywordField.class);
 	
-	private List<MAKeyword> lstKeyword = new ArrayList<MAKeyword>();
+//	private List<MAKeyword> lstKeyword = new ArrayList<MAKeyword>();
 
 	private JWindow popupWindow;
 
@@ -155,7 +155,6 @@ public class KeywordField extends JTextField
 		{
 			startIndex++;
 			String prefix = strKeywords.substring(startIndex, endIndex + 1);
-			System.out.println(prefix);
 			startUpdateKeyword(prefix);
 		}
 	}
@@ -179,7 +178,20 @@ public class KeywordField extends JTextField
 	 */
 	public List<MAKeyword> getLstKeyword()
 	{
-		List<MAKeyword> newLstKeyword = new ArrayList<MAKeyword>(lstKeyword.size());
+		//TODO [optimize] should filter repeat keyword
+		List<MAKeyword> newLstKeyword = new ArrayList<MAKeyword>();
+		String[] aryKeys = this.getText().split(" ");
+		for (String key : aryKeys)
+		{
+			if (key == null || key.isEmpty())
+			{
+				continue;
+			}
+			
+			MAKeyword keyword = new MAKeyword();
+			keyword.setKeyword(key);
+			newLstKeyword.add(keyword);
+		}
 		return newLstKeyword;
 	}
 
@@ -188,18 +200,21 @@ public class KeywordField extends JTextField
 	 */
 	public void setLstKeyword(List<MAKeyword> lstKeyword)
 	{
-		this.lstKeyword.clear();
-		if (lstKeyword != null)
+		StringBuilder buf = new StringBuilder();
+		if (lstKeyword != null && !lstKeyword.isEmpty())
 		{
-			this.lstKeyword.addAll(lstKeyword);
+			for (MAKeyword keyword : lstKeyword)
+			{
+				if (buf.length() > 0)
+				{
+					buf.append(' ');
+				}
+				buf.append(keyword.getKeyword());
+			}
 		}
+		this.setText(buf.toString());	
 	}
 
-	public boolean isEmpty()
-	{
-		return lstKeyword.isEmpty();
-	}
-	
 	private class UpdateKeywordThread extends Thread
 	{
 		private String prefix;

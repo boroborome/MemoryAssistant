@@ -54,7 +54,7 @@ public class DatabaseSystemInstallSvc implements ISystemInstallSvc
 	@Override
 	public void uninstall() throws MessageException
 	{
-		databaseMgrSvc.runSqlFile(loader.getResourceAsStream(installFile));
+		databaseMgrSvc.runSqlFile(loader.getResourceAsStream(uninstallFile));
 	}
 
 	/* (non-Javadoc)
@@ -63,7 +63,7 @@ public class DatabaseSystemInstallSvc implements ISystemInstallSvc
 	@Override
 	public void install() throws MessageException
 	{
-		databaseMgrSvc.runSqlFile(loader.getResourceAsStream(uninstallFile));
+		databaseMgrSvc.runSqlFile(loader.getResourceAsStream(installFile));
 	}
 
 }

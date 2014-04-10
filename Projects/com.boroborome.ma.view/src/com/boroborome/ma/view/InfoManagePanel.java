@@ -24,6 +24,7 @@ import javax.swing.event.ListSelectionListener;
 import org.apache.log4j.Logger;
 
 import com.boroborme.ma.model.MAInformation;
+import com.boroborme.ma.model.MAKeyword;
 import com.boroborme.ma.model.svc.IMAInformationSvc;
 import com.boroborome.footstone.AbstractFootstoneActivator;
 import com.boroborome.footstone.FootstoneSvcAccess;
@@ -47,6 +48,9 @@ public class InfoManagePanel extends JPanel
 	public InfoManagePanel()
 	{
 		initUI();
+		
+		//TODO need a first query
+		//TODO need a query after a key pressed
 	}
 
 	private void initUI()
@@ -91,7 +95,9 @@ public class InfoManagePanel extends JPanel
 			@Override
 			public Object[] formatItem(MAInformation data)
 			{
-				return new Object[]{data.getCreateTime(), "Keywords", data.getContent()};
+				return new Object[]{data.getCreateTime(), 
+						MAKeyword.list2String(data.getLstKeyword()), 
+						data.getContent()};
 			}
 		};
 		tblInfo = new ExtTable();
@@ -101,6 +107,24 @@ public class InfoManagePanel extends JPanel
 			@Override
 			public void valueChanged(ListSelectionEvent e)
 			{
+				//if the panel is showing something,we should save it at first
+				if (pnlInfoDetail.getOldValue() != null)
+				{
+					MAInformation preInfo = new MAInformation();
+					pnlInfoDetail.collectData(preInfo);
+					preInfo.setModifyTime(System.currentTimeMillis());
+					try
+					{
+						IMAInformationSvc maInformationSvc = AbstractFootstoneActivator.getService(IMAInformationSvc.class);
+						maInformationSvc.create(Arrays.asList(preInfo).iterator());
+					}
+					catch (MessageException exp)
+					{
+						log.error("failed in modify information.", exp);
+			            FootstoneSvcAccess.getExceptionGrave().bury(exp);
+					}
+				}
+				
 				int selectRow = tblInfo.getSelectedRow();
 				if (selectRow >= 0)
 				{
@@ -191,7 +215,10 @@ public class InfoManagePanel extends JPanel
 	private void doAddInfo()
 	{
 		MAInformation info = new MAInformation();
-		info.getLstKeyword().addAll(txtKeys.getLstKeyword());
+		info.setLstKeyword(txtKeys.getLstKeyword());
+		long curTime = System.currentTimeMillis();
+		info.setCreateTime(curTime);
+		info.setModifyTime(curTime);
 		IMAInformationSvc maInformationSvc = AbstractFootstoneActivator.getService(IMAInformationSvc.class);
 		try
 		{

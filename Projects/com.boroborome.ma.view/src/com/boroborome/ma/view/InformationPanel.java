@@ -48,6 +48,13 @@ public class InformationPanel extends AbstractDataPanel<MAInformation>
 	@Override
 	public void showData(MAInformation value)
 	{
+		if (value == null)
+		{
+			txtKeys.setLstKeyword(null);
+			txtInfoDetail.setText(null);
+			return;
+		}
+		
 		StringBuilder keyBuilder = new StringBuilder();
 		for (MAKeyword keyword : value.getLstKeyword())
 		{
@@ -66,12 +73,17 @@ public class InformationPanel extends AbstractDataPanel<MAInformation>
 	{
 		value.setLstKeyword(txtKeys.getLstKeyword());
 		value.setContent(this.txtInfoDetail.getText());
+		if (this.oldValue != null)
+		{
+			value.setCreateTime(oldValue.getCreateTime());
+			value.setModifyTime(oldValue.getModifyTime());
+		}
 	}
 
 	@Override
 	public void verifyInput() throws InputException
 	{
-		if (txtKeys.isEmpty())
+		if (txtKeys.getLstKeyword().isEmpty())
 		{
 			throw new InputException(ResConst.ResKey, ResConst.NotEmpty, new Object[]{"Keyword"}, txtKeys, null);
 		}

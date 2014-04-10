@@ -12,9 +12,11 @@ create table tblInformation (createTime BIGINT,
 create index idxTblInfoMT on tblInformation(modifyTime);
 
 -- create relation between information and keyword
-create table tblInfoKeyRelation (wordid BIGINT foreign key references tblKeyWord(wordid),
-	infoid BIGINT foreign key references tblInformation(createTime),
+create table tblInfoKeyRelation (wordid BIGINT,
+	infoid BIGINT,
 	PRIMARY KEY (wordid, infoid));
+alter table tblInfoKeyRelation add constraint wordid_FK Foreign Key (wordid) references tblKeyWord (wordid);
+alter table tblInfoKeyRelation add constraint infoid_FK Foreign Key (infoid) references tblInformation (createTime);
 
 create index idxIkrKeyword on tblInfoKeyRelation(wordid);
 create index idxIkrInfoid on tblInfoKeyRelation(infoid);

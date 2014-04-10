@@ -19,13 +19,12 @@ package com.boroborome.footstone.ui;
  * @author BoRoBoRoMe
  * @version 1.0 2011-10-2
  */
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import java.awt.BorderLayout;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
 import java.awt.Rectangle;
 import java.util.Date;
+
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 public class TimeComboBoxes
 {

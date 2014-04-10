@@ -147,7 +147,7 @@ public class MainFrame extends JFrame implements ISpaceName
      */
     private void initialize()
     {
-        this.setSize(1000, 750);
+        this.setSize(1000, 650);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setJMenuBar(getMainMenuBar());
         this.setContentPane(getPnlMain());

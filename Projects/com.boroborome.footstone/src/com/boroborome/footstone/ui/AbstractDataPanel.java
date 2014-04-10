@@ -433,6 +433,7 @@ public abstract class AbstractDataPanel<T> extends JPanel
     
     private class TablePropertyChangeListener implements PropertyChangeListener
     {
+    	@Override
         public void propertyChange(PropertyChangeEvent evt)
         {
             ((TableModel)evt.getOldValue()).removeTableModelListener(AbstractDataPanel.this.eventContainer);
