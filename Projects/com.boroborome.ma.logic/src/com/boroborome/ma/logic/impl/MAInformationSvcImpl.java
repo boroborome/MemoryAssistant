@@ -33,11 +33,13 @@ private static Logger log = Logger.getLogger(MAInformationSvcImpl.class);
 	
 	private IDatabaseMgrSvc dbMgrSvc;
 	private EventContainer<IDataChangeListener<MAInformation>> eventContainer = new EventContainer<IDataChangeListener<MAInformation>>(IDataChangeListener.class);
+	private MAKeywordSvcImpl keywordSvc;
     
-	public MAInformationSvcImpl(IDatabaseMgrSvc dbMgrSvc)
+	public MAInformationSvcImpl(IDatabaseMgrSvc dbMgrSvc, MAKeywordSvcImpl keywordSvc)
 	{
 		super();
 		this.dbMgrSvc = dbMgrSvc;
+		this.keywordSvc = keywordSvc;
 	}
 
 	@Override
@@ -49,6 +51,8 @@ private static Logger log = Logger.getLogger(MAInformationSvcImpl.class);
 	                @Override
 	                public void fill(PreparedStatement statement, MAInformation value) throws SQLException
 	                {
+	                	keywordSvc.saveAndUpdate(value.getLstKeyword());
+	                	
 	                    statement.setLong(1, value.getCreateTime());
 	                    statement.setLong(2, value.getModifyTime());
 	                    statement.setString(3, value.getContent());
@@ -61,7 +65,7 @@ private static Logger log = Logger.getLogger(MAInformationSvcImpl.class);
 	                }
 	            });
 	}
-
+	
 	@Override
 	public void modify(Iterator<MAInformation> it) throws MessageException
 	{
@@ -71,6 +75,8 @@ private static Logger log = Logger.getLogger(MAInformationSvcImpl.class);
 	                @Override
 	                public void fill(PreparedStatement statement, MAInformation value) throws SQLException
 	                {
+	                	keywordSvc.saveAndUpdate(value.getLstKeyword());
+	                	
 	                    statement.setLong(1, value.getModifyTime());
 	                    statement.setString(2, value.getContent());
 	                    statement.setLong(3, value.getCreateTime());

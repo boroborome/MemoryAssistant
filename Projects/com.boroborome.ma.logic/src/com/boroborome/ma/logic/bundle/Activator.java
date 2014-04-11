@@ -47,8 +47,9 @@ public class Activator extends AbstractFootstoneActivator
         registerService(ISystemInstallSvc.class,
         		new DatabaseSystemInstallSvc(databaseMgrSvc, ResConst.class,
         				"install.sql", "uninstall.sql"), null);
-        registerService(IMAKeywordSvc.class, new MAKeywordSvcImpl(databaseMgrSvc), null);
-        registerService(IMAInformationSvc.class, new MAInformationSvcImpl(databaseMgrSvc), null);
+        MAKeywordSvcImpl keywordSvc = new MAKeywordSvcImpl(databaseMgrSvc);
+        registerService(IMAKeywordSvc.class, keywordSvc, null);
+        registerService(IMAInformationSvc.class, new MAInformationSvcImpl(databaseMgrSvc, keywordSvc), null);
 	}
 
 	@Override

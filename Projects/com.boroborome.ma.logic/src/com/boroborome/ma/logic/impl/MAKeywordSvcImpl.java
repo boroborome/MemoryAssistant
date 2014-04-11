@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
@@ -142,5 +143,12 @@ public class MAKeywordSvcImpl implements IMAKeywordSvc
 	public EventContainer<IDataChangeListener<MAKeyword>> getEventContainer()
 	{
 		return this.eventContainer;
+	}
+
+	public void saveAndUpdate(List<MAKeyword> lstKeyword)
+	{
+		//TODO [primary] make sure the keyword is in the database
+    	
+		
 	}
 }
