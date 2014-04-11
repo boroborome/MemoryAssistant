@@ -18,15 +18,14 @@ import javax.swing.JTextField;
 import javax.swing.JWindow;
 import javax.swing.SwingUtilities;
 
-import org.apache.log4j.Logger;
-
 import com.boroborme.ma.model.MAKeyword;
 import com.boroborme.ma.model.MAKeywordCondition;
 import com.boroborme.ma.model.svc.IMAKeywordSvc;
 import com.boroborome.footstone.AbstractFootstoneActivator;
-import com.boroborome.footstone.exception.MessageException;
 import com.boroborome.footstone.ui.BaseReadonlyTableModel;
 import com.boroborome.footstone.ui.ExtTable;
+import com.boroborome.ma.view.query.IQueryLogic;
+import com.boroborome.ma.view.query.QueryAssistant;
 
 /**
  * @author boroborome
@@ -35,8 +34,6 @@ import com.boroborome.footstone.ui.ExtTable;
  */
 public class KeywordField extends JTextField
 {
-	private static Logger log = Logger.getLogger(KeywordField.class);
-	
 //	private List<MAKeyword> lstKeyword = new ArrayList<MAKeyword>();
 
 	private JWindow popupWindow;
@@ -45,7 +42,9 @@ public class KeywordField extends JTextField
 
 	private ExtTable tblKey;
 
-	private UpdateKeywordThread threadUpdateKeyword;
+	private QueryAssistant<String, MAKeyword> queryAssistant 
+		= new QueryAssistant<String, MAKeyword>("Thread Query keyword for KeywordField",
+				new KeywordQueryLogic());
 	/**
 	 * 
 	 */
@@ -155,23 +154,10 @@ public class KeywordField extends JTextField
 		{
 			startIndex++;
 			String prefix = strKeywords.substring(startIndex, endIndex + 1);
-			startUpdateKeyword(prefix);
+			this.queryAssistant.setCondtion(prefix);
 		}
 	}
 
-
-	private void startUpdateKeyword(String prefix)
-	{
-		if (threadUpdateKeyword == null)
-		{
-			threadUpdateKeyword = new UpdateKeywordThread(prefix);
-			threadUpdateKeyword.start();
-		}
-		else
-		{
-			threadUpdateKeyword.setPrefix(prefix);
-		}
-	}
 
 	/**
 	 * @return the lstKeyword
@@ -215,78 +201,37 @@ public class KeywordField extends JTextField
 		this.setText(buf.toString());	
 	}
 
-	private class UpdateKeywordThread extends Thread
+	private class KeywordQueryLogic implements IQueryLogic<String, MAKeyword>
 	{
-		private String prefix;
-		private boolean prefixChange = false;
-		public UpdateKeywordThread(String prefix)
-		{
-			this.prefix = prefix;
-			this.setName("Thread Query keyword for KeywordField.");
-		}
+		private IMAKeywordSvc maKeywordSvc;
+		private MAKeywordCondition cond;
 		
-		
-		/**
-		 * @return the prefix
-		 */
-		public String getPrefix()
+		public KeywordQueryLogic()
 		{
-			return prefix;
+			maKeywordSvc = AbstractFootstoneActivator.getService(IMAKeywordSvc.class);
+			cond = new MAKeywordCondition();
 		}
 
-
-		/**
-		 * @param prefix the prefix to set
-		 */
-		public void setPrefix(String prefix)
+		@Override
+		public void clearView()
 		{
-			if (!prefix.equals(prefix))
-			{
-				this.prefix = prefix;
-				prefixChange = true;
-			}
+			tblModelKey.clear();			
 		}
 
 
 		@Override
-		public void run()
+		public Iterator<MAKeyword> query(String condition) throws Exception
 		{
-			try
-			{
-				IMAKeywordSvc maKeywordSvc = AbstractFootstoneActivator.getService(IMAKeywordSvc.class);
-				MAKeywordCondition cond = new MAKeywordCondition();
-				while (true)
-				{
-					prefixChange = false;
-					tblModelKey.clear();
-					if (prefixChange)
-					{
-						continue;
-					}
-					
-					cond.setKeywordLike(prefix);
-					Iterator<MAKeyword> itKeyword = maKeywordSvc.query(cond);
-					if (prefixChange)
-					{
-						continue;
-					}
-					
-					tblModelKey.showData(itKeyword);
-					if (prefixChange)
-					{
-						continue;
-					}
-				}
-				
-			}
-			catch (MessageException e)
-			{
-				log.error("Failed in querying keyword.", e);
-			}
-			finally
-			{
-				threadUpdateKeyword = null;
-			}
+			cond.setKeywordLike(condition);
+			Iterator<MAKeyword> itKeyword = maKeywordSvc.query(cond);
+			return itKeyword;
+		}
+
+
+		@Override
+		public void showData(Iterator<MAKeyword> it) throws Exception
+		{
+			tblModelKey.showData(it);			
 		}
 		
 	}

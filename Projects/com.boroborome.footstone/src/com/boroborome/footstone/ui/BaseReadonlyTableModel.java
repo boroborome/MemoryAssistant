@@ -108,7 +108,7 @@ public abstract class BaseReadonlyTableModel<T> extends BaseExtTableModel<T>
     }
 
     @Override
-    protected void justSetItem(int row, T data)
+    public void justSetItem(int row, T data)
     {
         lstRowData.set(row, formatItem(data));
         super.justSetItem(row, data);

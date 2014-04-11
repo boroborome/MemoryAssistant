@@ -245,7 +245,7 @@ public abstract class BaseExtTableModel<T> extends AbstractTableModel implements
         this.fireTableDataChanged();
     }
 
-    protected void justSetItem(final int row, final T data)
+    public void justSetItem(final int row, final T data)
     {
         lstRow.set(row, new RowPair(null, data));
     }

@@ -9,8 +9,11 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -24,6 +27,7 @@ import javax.swing.event.ListSelectionListener;
 import org.apache.log4j.Logger;
 
 import com.boroborme.ma.model.MAInformation;
+import com.boroborme.ma.model.MAInformationCondition;
 import com.boroborme.ma.model.MAKeyword;
 import com.boroborme.ma.model.svc.IMAInformationSvc;
 import com.boroborome.footstone.AbstractFootstoneActivator;
@@ -31,6 +35,8 @@ import com.boroborome.footstone.FootstoneSvcAccess;
 import com.boroborome.footstone.exception.MessageException;
 import com.boroborome.footstone.ui.BaseReadonlyTableModel;
 import com.boroborome.footstone.ui.ExtTable;
+import com.boroborome.ma.view.query.IQueryLogic;
+import com.boroborome.ma.view.query.QueryAssistant;
 
 /**
  * @author boroborome
@@ -44,13 +50,40 @@ public class InfoManagePanel extends JPanel
 	private BaseReadonlyTableModel<MAInformation> tblModelInfo;
 	private ExtTable tblInfo;
 	private InformationPanel pnlInfoDetail;
-
+	private QueryAssistant<List<MAKeyword>, MAInformation> queryAssistant
+		= new QueryAssistant<List<MAKeyword>, MAInformation>("Thread Query Information", new QueryInformationLogic());
+	private int currentSelectRow = -1;
+	
 	public InfoManagePanel()
 	{
 		initUI();
 		
-		//TODO need a first query
-		//TODO need a query after a key pressed
+		initActions();
+	}
+
+	private void initActions()
+	{
+		txtKeys.addKeyListener(new KeyListener()
+		{
+
+			@Override
+			public void keyTyped(KeyEvent e)
+			{
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void keyPressed(KeyEvent e)
+			{
+				queryAssistant.setCondtion(txtKeys.getLstKeyword());
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e)
+			{
+			}
+		});		
 	}
 
 	private void initUI()
@@ -108,7 +141,7 @@ public class InfoManagePanel extends JPanel
 			public void valueChanged(ListSelectionEvent e)
 			{
 				//if the panel is showing something,we should save it at first
-				if (pnlInfoDetail.getOldValue() != null)
+				if (currentSelectRow != -1)
 				{
 					MAInformation preInfo = new MAInformation();
 					pnlInfoDetail.collectData(preInfo);
@@ -116,7 +149,8 @@ public class InfoManagePanel extends JPanel
 					try
 					{
 						IMAInformationSvc maInformationSvc = AbstractFootstoneActivator.getService(IMAInformationSvc.class);
-						maInformationSvc.create(Arrays.asList(preInfo).iterator());
+						maInformationSvc.modify(Arrays.asList(preInfo).iterator());
+						tblModelInfo.justSetItem(currentSelectRow, preInfo);
 					}
 					catch (MessageException exp)
 					{
@@ -125,10 +159,10 @@ public class InfoManagePanel extends JPanel
 					}
 				}
 				
-				int selectRow = tblInfo.getSelectedRow();
-				if (selectRow >= 0)
+				currentSelectRow = tblInfo.getSelectedRow();
+				if (currentSelectRow >= 0)
 				{
-					MAInformation info = tblModelInfo.getItem(selectRow);
+					MAInformation info = tblModelInfo.getItem(currentSelectRow);
 					pnlInfoDetail.setData(info);
 				}
 				else
@@ -233,5 +267,33 @@ public class InfoManagePanel extends JPanel
 		}
 	}
 	
-	
+	private class QueryInformationLogic implements IQueryLogic<List<MAKeyword>, MAInformation>
+	{
+		private IMAInformationSvc maInformationSvc;
+		private MAInformationCondition cond = new MAInformationCondition();
+		
+		public QueryInformationLogic()
+		{
+			maInformationSvc = AbstractFootstoneActivator.getService(IMAInformationSvc.class);
+		}
+		@Override
+		public void clearView()
+		{
+			tblModelInfo.clear();
+		}
+
+		@Override
+		public Iterator<MAInformation> query(List<MAKeyword> condition) throws Exception
+		{
+			cond.setLstKeyword(condition);
+			return maInformationSvc.query(cond);
+		}
+
+		@Override
+		public void showData(Iterator<MAInformation> it) throws Exception
+		{
+			tblModelInfo.showData(it);			
+		}
+		
+	}
 }
