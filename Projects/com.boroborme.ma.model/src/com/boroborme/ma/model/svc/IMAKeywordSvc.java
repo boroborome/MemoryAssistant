@@ -23,4 +23,6 @@ import com.boroborome.footstone.svc.IAutoIDDataSvc;
 public interface IMAKeywordSvc extends IAutoIDDataSvc<MAKeyword>
 {
 	public void saveAndUpdate(List<MAKeyword> lstKeyword) throws MessageException;
+
+	public void updateID(List<MAKeyword> lstKeyword);
 }

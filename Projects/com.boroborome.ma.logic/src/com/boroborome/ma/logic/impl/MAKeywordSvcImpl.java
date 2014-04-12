@@ -97,9 +97,9 @@ public class MAKeywordSvcImpl implements IMAKeywordSvc
 	{
 		SimpleSqlBuilder builder = new SimpleSqlBuilder("select * from tblKeyWord");
         MAKeywordCondition c = (MAKeywordCondition) condition;
-        if (c.getKeywordLike() != null && c.getKeywordLike().isEmpty())
+        if (c.getKeywordLike() != null && !c.getKeywordLike().isEmpty())
         {
-        	builder.appendCondition(" where keyword like ?", c.getKeywordLike());
+        	builder.appendCondition("keyword like ?", c.getKeywordLike() + '%');
         }
         
     	return queryBySqlBuilder(builder);
@@ -272,4 +272,11 @@ public class MAKeywordSvcImpl implements IMAKeywordSvc
         }
         return result;
     }
+
+    @Override
+	public void updateID(List<MAKeyword> lstKeyword)
+	{
+		// TODO Auto-generated method stub
+		
+	}
 }

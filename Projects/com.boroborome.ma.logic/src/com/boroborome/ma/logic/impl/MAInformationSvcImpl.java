@@ -14,6 +14,7 @@ import com.boroborme.ma.model.MAInformation;
 import com.boroborme.ma.model.MAInformationCondition;
 import com.boroborme.ma.model.MAKeyword;
 import com.boroborme.ma.model.svc.IMAInformationSvc;
+import com.boroborme.ma.model.svc.IMAKeywordSvc;
 import com.boroborome.footstone.exception.MessageException;
 import com.boroborome.footstone.model.EventContainer;
 import com.boroborome.footstone.model.IBufferIterator;
@@ -34,9 +35,9 @@ private static Logger logger = Logger.getLogger(MAInformationSvcImpl.class);
 	
 	private IDatabaseMgrSvc dbMgrSvc;
 	private EventContainer<IDataChangeListener<MAInformation>> eventContainer = new EventContainer<IDataChangeListener<MAInformation>>(IDataChangeListener.class);
-	private MAKeywordSvcImpl keywordSvc;
+	private IMAKeywordSvc keywordSvc;
     
-	public MAInformationSvcImpl(IDatabaseMgrSvc dbMgrSvc, MAKeywordSvcImpl keywordSvc)
+	public MAInformationSvcImpl(IDatabaseMgrSvc dbMgrSvc, IMAKeywordSvc keywordSvc)
 	{
 		super();
 		this.dbMgrSvc = dbMgrSvc;
@@ -145,10 +146,11 @@ private static Logger logger = Logger.getLogger(MAInformationSvcImpl.class);
 		SimpleSqlBuilder builder = new SimpleSqlBuilder("select * from tblInformation");
 		//(select * from tblInfoKeyRelation tbr where tbr.wordid in ())
 		MAInformationCondition c = (MAInformationCondition) condition;
-//        if (c.getLstKeyword() != null && c.getLstKeyword().isEmpty())
-//        {
-//        	builder.appendCondition(" where keyword like ?", c.getKeywordLike());
-//        }
+        if (c.getLstKeyword() != null && !c.getLstKeyword().isEmpty())
+        {
+        	keywordSvc.updateID(c.getLstKeyword());
+//        	builder.appendCondition("keyword like ?", c.getKeywordLike());
+        }
         
     	PreparedStatement statement = builder.createStatement(dbMgrSvc);
     	ResultSet rs = null;

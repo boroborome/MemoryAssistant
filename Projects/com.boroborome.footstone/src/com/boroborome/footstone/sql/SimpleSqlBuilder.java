@@ -31,7 +31,7 @@ public class SimpleSqlBuilder
 {
 	private StringBuilder sqlString = new StringBuilder();
     private List<Object> lstParam = new ArrayList<Object>();
-    private boolean haveNoCondtion;
+    private boolean haveNoCondtion = true;
     
     /**
      * 构造函数
@@ -59,6 +59,7 @@ public class SimpleSqlBuilder
     	}
     	sqlString.append(conditionSql);
     	lstParam.addAll(Arrays.asList(param));
+    	haveNoCondtion = false;
     }
     
     public PreparedStatement createStatement(IDatabaseMgrSvc dbMgrSvc) throws MessageException
