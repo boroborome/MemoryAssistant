@@ -14,6 +14,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.Iterator;
 
 import org.apache.ibatis.jdbc.ScriptRunner;
@@ -78,12 +79,6 @@ public class DefaultDatabaseMgrSvc implements IDatabaseMgrSvc
         }
 	}
 
-	@Override
-	public ResultSet executeQuery(String sql) throws SQLException, MessageException
-	{
-		PreparedStatement statement = createStatement(sql);
-		return statement.executeQuery();
-	}
 
 	@Override
 	public int executeUpdate(String sql) throws SQLException, MessageException
@@ -97,6 +92,27 @@ public class DefaultDatabaseMgrSvc implements IDatabaseMgrSvc
 	{
         ScriptRunner runner = new ScriptRunner(connection);
         runner.runScript(new InputStreamReader(sqlFileStream));
+	}
+
+	@Override
+	public boolean executeUpdateSql(String sql, Object... param)
+	{
+		PreparedStatement statement = SimpleSqlBuilder.createStatement(sql, Arrays.asList(param), this);
+		try
+		{
+			return statement.execute();
+		}
+		catch (SQLException e)
+		{
+			throw new MessageException(ResConst.ResKey, ResConst.FailedExeSql, new Object[]{sql}, e);
+		}
+	}
+
+	@Override
+	public ResultSet executeQuery(String sql, Object... param) throws SQLException, MessageException
+	{
+		PreparedStatement statement = SimpleSqlBuilder.createStatement(sql, Arrays.asList(param), this);
+		return statement.executeQuery();
 	}
 
 }

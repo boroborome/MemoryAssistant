@@ -12,6 +12,7 @@ import org.apache.log4j.Logger;
 
 import com.boroborme.ma.model.MAInformation;
 import com.boroborme.ma.model.MAInformationCondition;
+import com.boroborme.ma.model.MAKeyword;
 import com.boroborme.ma.model.svc.IMAInformationSvc;
 import com.boroborome.footstone.exception.MessageException;
 import com.boroborome.footstone.model.EventContainer;
@@ -29,7 +30,7 @@ import com.boroborome.ma.logic.res.ResConst;
  */
 public class MAInformationSvcImpl implements IMAInformationSvc
 {
-private static Logger log = Logger.getLogger(MAInformationSvcImpl.class);
+private static Logger logger = Logger.getLogger(MAInformationSvcImpl.class);
 	
 	private IDatabaseMgrSvc dbMgrSvc;
 	private EventContainer<IDataChangeListener<MAInformation>> eventContainer = new EventContainer<IDataChangeListener<MAInformation>>(IDataChangeListener.class);
@@ -61,7 +62,30 @@ private static Logger log = Logger.getLogger(MAInformationSvcImpl.class);
 	                @Override
 	                public void onSuccess(MAInformation value)
 	                {
+	                	updateReleation(value);
 	                    eventContainer.fireEvents(IDataChangeListener.EVENT_CREATED, value);
+	                }
+	            });
+	}
+	
+	public void updateReleation(final MAInformation information)
+	{
+		if (information == null)
+		{
+			return;
+		}
+		
+		dbMgrSvc.executeUpdateSql("delete from tblInfoKeyRelation where infoid=?", 
+    			Long.valueOf(information.getCreateTime()));
+		
+		dbMgrSvc.executeSql("insert into tblInfoKeyRelation(wordid,infoid) values(?,?)", information.getLstKeyword().iterator(),
+	            new IFillSql<MAKeyword>()
+	            {
+	                @Override
+	                public void fill(PreparedStatement statement, MAKeyword value) throws SQLException
+	                {
+	                    statement.setLong(1, value.getWordid());
+	                    statement.setLong(2, information.getCreateTime());
 	                }
 	            });
 	}
@@ -85,6 +109,7 @@ private static Logger log = Logger.getLogger(MAInformationSvcImpl.class);
 	                @Override
 	                public void onSuccess(MAInformation value)
 	                {
+	                	updateReleation(value);
 	                    eventContainer.fireEvents(IDataChangeListener.EVENT_MODIFIED, value);
 	                }
 	            });
@@ -99,6 +124,9 @@ private static Logger log = Logger.getLogger(MAInformationSvcImpl.class);
 	                @Override
 	                public void fill(PreparedStatement statement, MAInformation value) throws SQLException
 	                {
+	                	dbMgrSvc.executeUpdateSql("delete from tblInfoKeyRelation where infoid=?", 
+	                			Long.valueOf(value.getCreateTime()));
+	                	
 	                    statement.setLong(1, value.getCreateTime());
 	                }
 	                
@@ -142,7 +170,7 @@ private static Logger log = Logger.getLogger(MAInformationSvcImpl.class);
 				}
 				catch (SQLException e1)
 				{
-					log.error("close rs failed.", e1);
+					logger.error("close rs failed.", e1);
 				}
 			}
 			try
@@ -151,7 +179,7 @@ private static Logger log = Logger.getLogger(MAInformationSvcImpl.class);
 			}
 			catch (SQLException e1)
 			{
-				log.error("close statement failed.", e1);
+				logger.error("close statement failed.", e1);
 			}
 				
 			throw new MessageException(ResConst.ResKey, ResConst.FailedInExeSql);

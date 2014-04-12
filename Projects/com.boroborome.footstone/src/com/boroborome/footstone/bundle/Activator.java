@@ -11,6 +11,7 @@ import com.boroborome.footstone.FootstoneSvcAccess;
 import com.boroborome.footstone.exception.IExceptionGrave;
 import com.boroborome.footstone.res.ResConst;
 import com.boroborome.footstone.resource.IResourceMgrSvc;
+import com.boroborome.footstone.svc.IIDGeneratorSvc;
 import com.boroborome.footstone.ui.action.IObjectActionSvc;
 
 /**
@@ -42,6 +43,7 @@ public class Activator extends AbstractFootstoneActivator
         {
             FootstoneSvcAccess.getExceptionGrave().bury(e);
         }
+        this.registerService(IIDGeneratorSvc.class, new IDGeneratorSvcImpl(), null);
     }
 
     @Override

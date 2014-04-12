@@ -41,6 +41,8 @@ public interface IDatabaseMgrSvc
 	
 	PreparedStatement createStatement(String sql) throws MessageException;
 	
+	boolean executeUpdateSql(String sql, Object...param);
+	
 	/**
 	 * Execute the sql in filestream
 	 * @param sqlFileStream sql file stream
@@ -56,7 +58,7 @@ public interface IDatabaseMgrSvc
      * @throws SQLException
      * @throws MessageException 
      */
-    ResultSet executeQuery(String sql) throws SQLException, MessageException;
+    ResultSet executeQuery(String sql, Object...param) throws SQLException, MessageException;
 
     /**
      * 执行更新语句

@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 
 import org.osgi.framework.BundleContext;
 
+import com.boroborme.ma.model.MAKeyword;
 import com.boroborme.ma.model.svc.IMAInformationSvc;
 import com.boroborme.ma.model.svc.IMAKeywordSvc;
 import com.boroborome.footstone.AbstractFootstoneActivator;
@@ -12,6 +13,7 @@ import com.boroborome.footstone.FootstoneSvcAccess;
 import com.boroborome.footstone.sql.DefaultDatabaseMgrSvc;
 import com.boroborome.footstone.sql.IDatabaseMgrSvc;
 import com.boroborome.footstone.svc.DatabaseSystemInstallSvc;
+import com.boroborome.footstone.svc.IIDGeneratorSvc;
 import com.boroborome.footstone.svc.ISystemInstallSvc;
 import com.boroborome.ma.logic.impl.MAInformationSvcImpl;
 import com.boroborome.ma.logic.impl.MAKeywordSvcImpl;
@@ -50,6 +52,9 @@ public class Activator extends AbstractFootstoneActivator
         MAKeywordSvcImpl keywordSvc = new MAKeywordSvcImpl(databaseMgrSvc);
         registerService(IMAKeywordSvc.class, keywordSvc, null);
         registerService(IMAInformationSvc.class, new MAInformationSvcImpl(databaseMgrSvc, keywordSvc), null);
+        
+        IIDGeneratorSvc idGenerator = getService(IIDGeneratorSvc.class);
+        idGenerator.init(MAKeyword.class, keywordSvc);
 	}
 
 	@Override

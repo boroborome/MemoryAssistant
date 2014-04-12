@@ -39,5 +39,6 @@ public final class ResConst
     public static final String FailedToCreateState = "db.FailedToCreateState";
 	public static final String UnsupportType = "db.UnsupportType";
 	public static final String FailedInSetSqlParam = "db.FailedInSetSqlParam";
+	public static final String FailedExeSql = "db.FailedExeSql";
     
 }

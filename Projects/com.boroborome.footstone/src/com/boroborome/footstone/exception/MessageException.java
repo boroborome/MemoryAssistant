@@ -25,7 +25,7 @@ import com.boroborome.footstone.resource.IResourceMgrSvc;
  * @author        BoRoBoRoMe
  * @version       1.0 2008-10-9
  */
-public class MessageException extends Exception implements IMessageException
+public class MessageException extends RuntimeException implements IMessageException
 {
     
     /*

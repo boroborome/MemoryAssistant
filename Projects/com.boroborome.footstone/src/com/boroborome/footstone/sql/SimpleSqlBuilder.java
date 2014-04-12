@@ -42,6 +42,11 @@ public class SimpleSqlBuilder
         sqlString.append(selectSql);
     }
     
+    /**
+     * This function will auto add keyword 'where' at the first time.and add 'and' at the other time.
+     * @param conditionSql a sql like "name=?" or "(age > ? or age < ?)"
+     * @param param parameter list
+     */
     public void appendCondition(String conditionSql, Object... param)
     {
     	if (haveNoCondtion)
@@ -58,7 +63,11 @@ public class SimpleSqlBuilder
     
     public PreparedStatement createStatement(IDatabaseMgrSvc dbMgrSvc) throws MessageException
     {
-    	PreparedStatement statement = dbMgrSvc.createStatement(sqlString.toString());
+    	return createStatement(sqlString.toString(), this.lstParam, dbMgrSvc);
+    }
+    public static PreparedStatement createStatement(String sql, List lstParam, IDatabaseMgrSvc dbMgrSvc) throws MessageException
+    {
+    	PreparedStatement statement = dbMgrSvc.createStatement(sql);
     	try
     	{
 	    	for (int indexParam = 0, countParam = lstParam.size(); indexParam < countParam; ++indexParam)
@@ -89,8 +98,7 @@ public class SimpleSqlBuilder
     	catch (SQLException e)
     	{
     		throw new MessageException(ResConst.ResKey, ResConst.FailedInSetSqlParam, 
-					new Object[]{sqlString.toString()},
-					e);
+					new Object[]{sql}, e);
     	}
     	return statement;
     }

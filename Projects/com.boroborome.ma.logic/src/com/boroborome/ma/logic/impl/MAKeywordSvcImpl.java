@@ -6,14 +6,17 @@ package com.boroborome.ma.logic.impl;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 
 import com.boroborme.ma.model.MAKeyword;
 import com.boroborme.ma.model.MAKeywordCondition;
 import com.boroborme.ma.model.svc.IMAKeywordSvc;
+import com.boroborome.footstone.AbstractFootstoneActivator;
 import com.boroborome.footstone.exception.MessageException;
 import com.boroborome.footstone.model.EventContainer;
 import com.boroborome.footstone.model.IBufferIterator;
@@ -22,6 +25,7 @@ import com.boroborome.footstone.sql.IFillSql;
 import com.boroborome.footstone.sql.SimpleSqlBuilder;
 import com.boroborome.footstone.svc.IDataChangeListener;
 import com.boroborome.footstone.svc.IDataCondition;
+import com.boroborome.footstone.svc.IIDGeneratorSvc;
 import com.boroborome.ma.logic.res.ResConst;
 
 /**
@@ -91,7 +95,6 @@ public class MAKeywordSvcImpl implements IMAKeywordSvc
 	@Override
 	public IBufferIterator<MAKeyword> query(IDataCondition<MAKeyword> condition) throws MessageException
 	{
-		IBufferIterator<MAKeyword> result = null;
 		SimpleSqlBuilder builder = new SimpleSqlBuilder("select * from tblKeyWord");
         MAKeywordCondition c = (MAKeywordCondition) condition;
         if (c.getKeywordLike() != null && c.getKeywordLike().isEmpty())
@@ -99,7 +102,24 @@ public class MAKeywordSvcImpl implements IMAKeywordSvc
         	builder.appendCondition(" where keyword like ?", c.getKeywordLike());
         }
         
-    	PreparedStatement statement = builder.createStatement(dbMgrSvc);
+    	return queryBySqlBuilder(builder);
+	}
+
+	/**
+	 * Query a iterator by sqlBuilder
+	 * @param builder
+	 * @return
+	 * @throws MessageException
+	 */
+	public IBufferIterator<MAKeyword> queryBySqlBuilder(SimpleSqlBuilder sqlBuilder) throws MessageException
+	{
+		if (sqlBuilder == null)
+		{
+			return null;
+		}
+		
+		IBufferIterator<MAKeyword> result = null;
+		PreparedStatement statement = sqlBuilder.createStatement(dbMgrSvc);
     	ResultSet rs = null;
 		try
 		{
@@ -145,10 +165,111 @@ public class MAKeywordSvcImpl implements IMAKeywordSvc
 		return this.eventContainer;
 	}
 
-	public void saveAndUpdate(List<MAKeyword> lstKeyword)
+	@Override
+	public void saveAndUpdate(List<MAKeyword> lstKeyword) throws MessageException
 	{
-		//TODO [primary] make sure the keyword is in the database
-    	
+		if (lstKeyword == null || lstKeyword.isEmpty())
+		{
+			return;
+		}
 		
+		//Create a sqlBuilder for query keyword
+		Map<String, MAKeyword> mapKey = new HashMap<String, MAKeyword>();
+		StringBuilder conditionBuf = new StringBuilder("keyword in (");
+		for (int keyIndex = lstKeyword.size() -1 ; keyIndex >= 0; --keyIndex)
+		{
+			MAKeyword key = lstKeyword.get(keyIndex);
+			if (!mapKey.containsKey(key.getKeyword()))
+			{
+				if (!mapKey.isEmpty())
+				{
+					conditionBuf.append(',');
+				}
+				conditionBuf.append('?');
+				mapKey.put(key.getKeyword(), key);
+			}
+			else
+			{
+				lstKeyword.remove(keyIndex);
+			}
+		}
+		conditionBuf.append(')');
+		
+		SimpleSqlBuilder sqlBuilder = new SimpleSqlBuilder("select * from tblKeyWord");
+		sqlBuilder.appendCondition(conditionBuf.toString(), mapKey.keySet().toArray());
+		
+		IBufferIterator<MAKeyword> itKey = this.queryBySqlBuilder(sqlBuilder);
+		
+		//save keyword's id which is exist
+		//exist keyword is in itKey
+    	while (itKey.hasNext())
+    	{
+    		MAKeyword dbKeyword = itKey.next();
+    		MAKeyword keyword = mapKey.get(dbKeyword.getKeyword());
+    		keyword.setWordid(dbKeyword.getWordid());
+    		mapKey.remove(dbKeyword.getKeyword());
+    	}
+    	
+    	//create keyword which is not exist
+    	//keyword not exist is in mapKey,now
+    	IIDGeneratorSvc idGenerator = AbstractFootstoneActivator.getService(IIDGeneratorSvc.class);
+		for (MAKeyword keyword : mapKey.values())
+		{
+			long newID = idGenerator.nextIndex(MAKeyword.class);
+			keyword.setWordid(newID);
+		}
+		this.create(mapKey.values().iterator());
 	}
+	
+	/**
+     * 获取最大的ID
+     * @return
+     * @throws MessageException
+     */
+    @Override
+    public long getMaxID() throws MessageException
+    {
+        long result = 0;
+        PreparedStatement statement = dbMgrSvc.createStatement("select max(wordid) as maxID from tblKeyWord");
+        ResultSet rs = null;
+        try
+        {
+            if (statement.execute())
+            {
+                rs = statement.getResultSet();
+                if (rs.next())
+                {
+                    result = rs.getLong("maxID");
+                }
+            }
+        }
+        catch (SQLException e)
+        {
+            throw new MessageException(ResConst.ResKey, ResConst.FailedInExeSql, e);
+        }
+        finally
+        {
+        	if (statement != null)
+        	{
+        		try
+				{
+					statement.close();
+				}
+				catch (SQLException e)
+				{
+				}
+        	}
+        	if (rs != null)
+        	{
+        		try
+				{
+					rs.close();
+				}
+				catch (SQLException e)
+				{
+				}
+        	}
+        }
+        return result;
+    }
 }

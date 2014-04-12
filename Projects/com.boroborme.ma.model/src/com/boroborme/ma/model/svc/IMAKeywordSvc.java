@@ -8,8 +8,11 @@
  */
 package com.boroborme.ma.model.svc;
 
+import java.util.List;
+
 import com.boroborme.ma.model.MAKeyword;
-import com.boroborome.footstone.svc.IDataSvc;
+import com.boroborome.footstone.exception.MessageException;
+import com.boroborome.footstone.svc.IAutoIDDataSvc;
 
 
 /**
@@ -17,6 +20,7 @@ import com.boroborome.footstone.svc.IDataSvc;
  * @author BoRoBoRoMe
  * @param <MAKeyword>
  */
-public interface IMAKeywordSvc extends IDataSvc<MAKeyword>
+public interface IMAKeywordSvc extends IAutoIDDataSvc<MAKeyword>
 {
+	public void saveAndUpdate(List<MAKeyword> lstKeyword) throws MessageException;
 }
