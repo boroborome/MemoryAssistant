@@ -58,7 +58,7 @@ public interface IDatabaseMgrSvc
      * @throws SQLException
      * @throws MessageException 
      */
-    ResultSet executeQuery(String sql, Object...param) throws SQLException, MessageException;
+    ResultSet executeQuery(String sql, Object...param);
 
     /**
      * 执行更新语句

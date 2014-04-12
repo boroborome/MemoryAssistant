@@ -104,15 +104,36 @@ public class DefaultDatabaseMgrSvc implements IDatabaseMgrSvc
 		}
 		catch (SQLException e)
 		{
+			try
+			{
+				statement.close();
+			}
+			catch (SQLException e1)
+			{
+			}
 			throw new MessageException(ResConst.ResKey, ResConst.FailedExeSql, new Object[]{sql}, e);
 		}
 	}
 
 	@Override
-	public ResultSet executeQuery(String sql, Object... param) throws SQLException, MessageException
+	public ResultSet executeQuery(String sql, Object... param)
 	{
 		PreparedStatement statement = SimpleSqlBuilder.createStatement(sql, Arrays.asList(param), this);
-		return statement.executeQuery();
+		try
+		{
+			return statement.executeQuery();
+		}
+		catch (SQLException e)
+		{
+			try
+			{
+				statement.close();
+			}
+			catch (SQLException e1)
+			{
+			}
+			throw new MessageException(ResConst.ResKey, ResConst.FailedExeSql, new Object[]{sql}, e);
+		}
 	}
 
 }

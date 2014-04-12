@@ -6,6 +6,7 @@ package com.boroborome.ma.logic.impl;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -168,57 +169,20 @@ public class MAKeywordSvcImpl implements IMAKeywordSvc
 	@Override
 	public void saveAndUpdate(List<MAKeyword> lstKeyword) throws MessageException
 	{
-		if (lstKeyword == null || lstKeyword.isEmpty())
-		{
-			return;
-		}
-		
-		//Create a sqlBuilder for query keyword
-		Map<String, MAKeyword> mapKey = new HashMap<String, MAKeyword>();
-		StringBuilder conditionBuf = new StringBuilder("keyword in (");
-		for (int keyIndex = lstKeyword.size() -1 ; keyIndex >= 0; --keyIndex)
-		{
-			MAKeyword key = lstKeyword.get(keyIndex);
-			if (!mapKey.containsKey(key.getKeyword()))
-			{
-				if (!mapKey.isEmpty())
-				{
-					conditionBuf.append(',');
-				}
-				conditionBuf.append('?');
-				mapKey.put(key.getKeyword(), key);
-			}
-			else
-			{
-				lstKeyword.remove(keyIndex);
-			}
-		}
-		conditionBuf.append(')');
-		
-		SimpleSqlBuilder sqlBuilder = new SimpleSqlBuilder("select * from tblKeyWord");
-		sqlBuilder.appendCondition(conditionBuf.toString(), mapKey.keySet().toArray());
-		
-		IBufferIterator<MAKeyword> itKey = this.queryBySqlBuilder(sqlBuilder);
-		
-		//save keyword's id which is exist
-		//exist keyword is in itKey
-    	while (itKey.hasNext())
+		Iterable<MAKeyword> itNoId = this.updateID(lstKeyword);
+    	if (itNoId == null)
     	{
-    		MAKeyword dbKeyword = itKey.next();
-    		MAKeyword keyword = mapKey.get(dbKeyword.getKeyword());
-    		keyword.setWordid(dbKeyword.getWordid());
-    		mapKey.remove(dbKeyword.getKeyword());
+    		return;
     	}
-    	
     	//create keyword which is not exist
     	//keyword not exist is in mapKey,now
     	IIDGeneratorSvc idGenerator = AbstractFootstoneActivator.getService(IIDGeneratorSvc.class);
-		for (MAKeyword keyword : mapKey.values())
+		for (MAKeyword keyword : itNoId)
 		{
 			long newID = idGenerator.nextIndex(MAKeyword.class);
 			keyword.setWordid(newID);
 		}
-		this.create(mapKey.values().iterator());
+		this.create(itNoId.iterator());
 	}
 	
 	/**
@@ -274,9 +238,49 @@ public class MAKeywordSvcImpl implements IMAKeywordSvc
     }
 
     @Override
-	public void updateID(List<MAKeyword> lstKeyword)
+	public Iterable<MAKeyword> updateID(List<MAKeyword> lstKeyword)
 	{
-		// TODO Auto-generated method stub
+    	if (lstKeyword == null || lstKeyword.isEmpty())
+		{
+			return null;
+		}
 		
+		//Create a sqlBuilder for query keyword
+		Map<String, MAKeyword> mapKey = new HashMap<String, MAKeyword>();
+		StringBuilder conditionBuf = new StringBuilder("keyword in (");
+		for (int keyIndex = lstKeyword.size() -1 ; keyIndex >= 0; --keyIndex)
+		{
+			MAKeyword key = lstKeyword.get(keyIndex);
+			if (!mapKey.containsKey(key.getKeyword()))
+			{
+				if (!mapKey.isEmpty())
+				{
+					conditionBuf.append(',');
+				}
+				conditionBuf.append('?');
+				mapKey.put(key.getKeyword(), key);
+			}
+			else
+			{
+				lstKeyword.remove(keyIndex);
+			}
+		}
+		conditionBuf.append(')');
+		
+		SimpleSqlBuilder sqlBuilder = new SimpleSqlBuilder("select * from tblKeyWord");
+		sqlBuilder.appendCondition(conditionBuf.toString(), mapKey.keySet().toArray());
+		
+		IBufferIterator<MAKeyword> itKey = this.queryBySqlBuilder(sqlBuilder);
+		
+		//save keyword's id which is exist
+		//exist keyword is in itKey
+    	while (itKey.hasNext())
+    	{
+    		MAKeyword dbKeyword = itKey.next();
+    		MAKeyword keyword = mapKey.get(dbKeyword.getKeyword());
+    		keyword.setWordid(dbKeyword.getWordid());
+    		mapKey.remove(dbKeyword.getKeyword());
+    	}
+    	return mapKey.isEmpty() ? null : mapKey.values();
 	}
 }

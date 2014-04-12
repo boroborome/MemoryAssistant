@@ -6,7 +6,9 @@ package com.boroborome.ma.logic.impl;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
@@ -20,7 +22,6 @@ import com.boroborome.footstone.model.EventContainer;
 import com.boroborome.footstone.model.IBufferIterator;
 import com.boroborome.footstone.sql.IDatabaseMgrSvc;
 import com.boroborome.footstone.sql.IFillSql;
-import com.boroborome.footstone.sql.SimpleSqlBuilder;
 import com.boroborome.footstone.svc.IDataChangeListener;
 import com.boroborome.footstone.svc.IDataCondition;
 import com.boroborome.ma.logic.res.ResConst;
@@ -143,45 +144,54 @@ private static Logger logger = Logger.getLogger(MAInformationSvcImpl.class);
 	public IBufferIterator<MAInformation> query(IDataCondition<MAInformation> condition) throws MessageException
 	{
 		IBufferIterator<MAInformation> result = null;
-		SimpleSqlBuilder builder = new SimpleSqlBuilder("select * from tblInformation");
-		//(select * from tblInfoKeyRelation tbr where tbr.wordid in ())
 		MAInformationCondition c = (MAInformationCondition) condition;
-        if (c.getLstKeyword() != null && !c.getLstKeyword().isEmpty())
+		
+		ResultSet queryResult = null;
+        if (c.getLstKeyword() == null || c.getLstKeyword().isEmpty())
         {
-        	keywordSvc.updateID(c.getLstKeyword());
-//        	builder.appendCondition("keyword like ?", c.getKeywordLike());
+        	queryResult = dbMgrSvc.executeQuery("select * from tblInformation");
+        }
+        else
+        {
+        	Iterable<MAKeyword> itNoID = keywordSvc.updateID(c.getLstKeyword());
+        	if (itNoID != null)
+        	{
+        		return null;
+        	}
+        	
+        	List<Long> lstID = new ArrayList<Long>();
+        	StringBuilder sqlBuf = new StringBuilder("select count(*),ti.* from tblInformation ti join tblInfoKeyRelation tr on ti.createTime=tr.infoid where tr.wordid in (");
+        	for (MAKeyword key : c.getLstKeyword())
+        	{
+        		if (!lstID.isEmpty())
+        		{
+        			sqlBuf.append(',');
+        		}
+        		sqlBuf.append('?');
+        		lstID.add(Long.valueOf(key.getWordid()));
+        	}
+        	sqlBuf.append(") group by ti.createtime,ti.modifytime,ti.content having count(*)>=?");
+        	lstID.add(Long.valueOf(lstID.size()));
+//        	"select count(*),ti.* from tblInformation ti join tblInfoKeyRelation tr on ti.createTime=tr.infoid where tr.wordid in (1,2) group by ti.createtime,ti.modifytime,ti.content having count(*)>=2"
+        	queryResult = dbMgrSvc.executeQuery(sqlBuf.toString(), lstID.toArray());
         }
         
-    	PreparedStatement statement = builder.createStatement(dbMgrSvc);
-    	ResultSet rs = null;
 		try
 		{
-			rs = statement.executeQuery();
-			if (rs != null && !rs.isClosed())
+			if (queryResult != null && !queryResult.isClosed())
 			{
-				result = new MAInformationDBIterator(rs);
+				result = new MAInformationDBIterator(queryResult);
 			}
 		}
 		catch (SQLException e)
 		{
-			if (rs != null)
-			{
-				try
-				{
-					rs.close();
-				}
-				catch (SQLException e1)
-				{
-					logger.error("close rs failed.", e1);
-				}
-			}
 			try
 			{
-				statement.close();
+				queryResult.close();
 			}
 			catch (SQLException e1)
 			{
-				logger.error("close statement failed.", e1);
+				logger.error("close rs failed.", e1);
 			}
 				
 			throw new MessageException(ResConst.ResKey, ResConst.FailedInExeSql);
