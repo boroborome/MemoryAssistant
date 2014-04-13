@@ -8,8 +8,10 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -53,6 +55,8 @@ public class KeywordField extends JTextField
 		super();
 		
 		initPopupWindow();
+		
+		//Close the popup window when the focus is out of keyword field and popup window
 		this.addFocusListener(new FocusListener()
 		{
 
@@ -68,21 +72,9 @@ public class KeywordField extends JTextField
 				tryClosePopupWindow(e.getOppositeComponent());
 			}});
 		
-		//monitoring the value change
-		this.addKeyListener(new KeyListener(){
-
-			@Override
-			public void keyTyped(KeyEvent e)
-			{
-				
-			}
-
-			@Override
-			public void keyPressed(KeyEvent e)
-			{
-				
-			}
-
+		//when the text in keyword field is changed,show the popup window.monitoring the value change
+		this.addKeyListener(new KeyAdapter()
+		{
 			@Override
 			public void keyReleased(KeyEvent e)
 			{
@@ -90,9 +82,47 @@ public class KeywordField extends JTextField
 				{
 					saveKeyword();
 				}
+				else if (e.getKeyChar() == KeyEvent.VK_UP || e.getKeyChar() == KeyEvent.VK_DOWN)
+				{
+					if (popupWindow.isVisible())
+					{
+						popupWindow.requestFocus();
+						tblKey.requestFocus();
+					}
+				}
 				else
 				{
 					updatePopupInfo();
+				}
+			}
+		});
+		
+		//when double click a keyword in popup window,the show this text in keyword field.
+		tblKey.getInnerTable().addMouseListener(new MouseAdapter()
+		{
+
+			@Override
+			public void mouseClicked(MouseEvent e)
+			{
+				if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 2)
+				{
+					int selectRow = tblKey.getSelectedRow();
+					if (selectRow >= 0)
+					{
+						MAKeyword keyword = tblModelKey.getItem(selectRow);
+						Point pos = findCurKeywordPos();
+						if (pos.x == pos.y)
+						{
+							setText(getText() + keyword.getKeyword());
+						}
+						else
+						{
+							String strKeywordList = getText();
+							StringBuilder buf = new StringBuilder(strKeywordList);
+							buf.replace(pos.x, pos.y, keyword.getKeyword());
+							setText(buf.toString());
+						}
+					}
 				}
 			}
 		});
@@ -129,6 +159,23 @@ public class KeywordField extends JTextField
 		}
 	}
 
+	/**
+	 * x:is the start of index in text
+	 * y:is the end of index in text
+	 * @return
+	 */
+	private Point findCurKeywordPos()
+	{
+		String strKeywords = this.getText();
+		Point pos = new Point();
+		pos.y = this.getCaretPosition();
+		int startIndex = pos.y - 1;
+		for (; startIndex >= 0 && strKeywords.charAt(startIndex) != ' '; --startIndex);
+		pos.x = startIndex + 1;
+		
+		return pos;
+	}
+	
 	private void updatePopupInfo()
 	{
 		// find out the right posistion to show the popup window
@@ -140,20 +187,17 @@ public class KeywordField extends JTextField
 		popupWindow.setVisible(true);
 		
 		//find out the word prefix to query
-		String strKeywords = this.getText();
-		int endIndex = this.getCaretPosition() - 1;
-		int startIndex = endIndex;
-		for (; startIndex >= 0 && strKeywords.charAt(startIndex) != ' '; --startIndex);
+		Point preLocation = findCurKeywordPos();
 		
 		//if the prefix is empty then clear the popup window
-		if (startIndex == endIndex)
+		if (preLocation.x == preLocation.y)
 		{
 			tblModelKey.clear();
 		}
 		else
 		{
-			startIndex++;
-			String prefix = strKeywords.substring(startIndex, endIndex + 1);
+			String strKeywords = this.getText();
+			String prefix = strKeywords.substring(preLocation.x, preLocation.y);
 			this.queryAssistant.setCondtion(prefix);
 		}
 	}
