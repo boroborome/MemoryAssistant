@@ -5,6 +5,7 @@ package com.boroborome.ma.view;
 
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.EventQueue;
 import java.awt.Point;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
@@ -78,22 +79,7 @@ public class KeywordField extends JTextField
 			@Override
 			public void keyReleased(KeyEvent e)
 			{
-				if (e.getKeyChar() == ' ')
-				{
-					saveKeyword();
-				}
-				else if (e.getKeyChar() == KeyEvent.VK_UP || e.getKeyChar() == KeyEvent.VK_DOWN)
-				{
-					if (popupWindow.isVisible())
-					{
-						popupWindow.requestFocus();
-						tblKey.requestFocus();
-					}
-				}
-				else
-				{
-					updatePopupInfo();
-				}
+				
 			}
 		});
 		
@@ -126,6 +112,50 @@ public class KeywordField extends JTextField
 				}
 			}
 		});
+	}
+
+	/* (non-Javadoc)
+	 * @see javax.swing.JComponent#processKeyEvent(java.awt.event.KeyEvent)
+	 */
+	@Override
+	protected void processKeyEvent(KeyEvent e)
+	{
+		if (e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_DOWN)
+		{
+			if (e.getID() != KeyEvent.KEY_PRESSED)
+			{
+				return;
+			}
+			
+			if (popupWindow.isVisible() && tblModelKey.getRowCount() > 0)
+			{	System.out.println(e.toString());
+				int selectRow = tblKey.getSelectedRow();
+				if (e.getKeyCode() == KeyEvent.VK_UP)
+				{
+					--selectRow;
+					if (selectRow < 0)
+					{
+						selectRow = tblModelKey.getRowCount() - 1;
+					}
+				}
+				else if (e.getKeyCode() == KeyEvent.VK_DOWN)
+				{
+					++selectRow;
+					if (selectRow >= tblModelKey.getRowCount())
+					{
+						selectRow = 0;
+					}
+				}
+				tblKey.getSelectionModel().setSelectionInterval(selectRow, selectRow);
+				tblKey.scrollRowToVisible(selectRow);
+				return;
+			}
+		}
+		else
+		{
+			super.processKeyEvent(e);
+			updatePopupInfo();
+		}
 	}
 
 	protected void saveKeyword()
@@ -189,17 +219,11 @@ public class KeywordField extends JTextField
 		//find out the word prefix to query
 		Point preLocation = findCurKeywordPos();
 		
+		String strKeywords = this.getText();
 		//if the prefix is empty then clear the popup window
-		if (preLocation.x == preLocation.y)
-		{
-			tblModelKey.clear();
-		}
-		else
-		{
-			String strKeywords = this.getText();
-			String prefix = strKeywords.substring(preLocation.x, preLocation.y);
-			this.queryAssistant.setCondtion(prefix);
-		}
+		String prefix =  (preLocation.x == preLocation.y) ? "" : strKeywords.substring(preLocation.x, preLocation.y);
+		System.out.println("prefix:" + prefix);
+		this.queryAssistant.setCondtion(prefix);
 	}
 
 
@@ -259,6 +283,7 @@ public class KeywordField extends JTextField
 		@Override
 		public void clearView()
 		{
+			System.out.println("clear");
 			tblModelKey.clear();			
 		}
 
@@ -266,6 +291,7 @@ public class KeywordField extends JTextField
 		@Override
 		public Iterator<MAKeyword> query(String condition) throws Exception
 		{
+			System.out.println("query condition:"+ condition);
 			cond.setKeywordLike(condition);
 			Iterator<MAKeyword> itKeyword = maKeywordSvc.query(cond);
 			return itKeyword;
@@ -275,6 +301,7 @@ public class KeywordField extends JTextField
 		@Override
 		public void showData(Iterator<MAKeyword> it) throws Exception
 		{
+			System.out.println("show result." + it.hasNext());
 			tblModelKey.showData(it);			
 		}
 		
