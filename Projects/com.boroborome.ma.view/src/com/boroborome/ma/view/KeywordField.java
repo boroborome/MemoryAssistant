@@ -92,23 +92,7 @@ public class KeywordField extends JTextField
 			{
 				if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 2)
 				{
-					int selectRow = tblKey.getSelectedRow();
-					if (selectRow >= 0)
-					{
-						MAKeyword keyword = tblModelKey.getItem(selectRow);
-						Point pos = findCurKeywordPos();
-						if (pos.x == pos.y)
-						{
-							setText(getText() + keyword.getKeyword());
-						}
-						else
-						{
-							String strKeywordList = getText();
-							StringBuilder buf = new StringBuilder(strKeywordList);
-							buf.replace(pos.x, pos.y, keyword.getKeyword());
-							setText(buf.toString());
-						}
-					}
+					selectKeywordInPopWin();
 				}
 			}
 		});
@@ -120,15 +104,15 @@ public class KeywordField extends JTextField
 	@Override
 	protected void processKeyEvent(KeyEvent e)
 	{
+		//Move the select row in popup window by array key
 		if (e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_DOWN)
 		{
 			if (e.getID() != KeyEvent.KEY_PRESSED)
 			{
 				return;
 			}
-			
 			if (popupWindow.isVisible() && tblModelKey.getRowCount() > 0)
-			{	System.out.println(e.toString());
+			{
 				int selectRow = tblKey.getSelectedRow();
 				if (e.getKeyCode() == KeyEvent.VK_UP)
 				{
@@ -149,6 +133,17 @@ public class KeywordField extends JTextField
 				tblKey.getSelectionModel().setSelectionInterval(selectRow, selectRow);
 				tblKey.scrollRowToVisible(selectRow);
 				return;
+			}
+		}
+		else if (e.getKeyCode() == KeyEvent.VK_ENTER)
+		{
+			if (e.getID() != KeyEvent.KEY_PRESSED)
+			{
+				return;
+			}
+			if (popupWindow.isVisible() && tblModelKey.getRowCount() > 0)
+			{
+				selectKeywordInPopWin();
 			}
 		}
 		else
@@ -267,6 +262,27 @@ public class KeywordField extends JTextField
 			}
 		}
 		this.setText(buf.toString());	
+	}
+
+	private void selectKeywordInPopWin()
+	{
+		int selectRow = tblKey.getSelectedRow();
+		if (selectRow >= 0)
+		{
+			MAKeyword keyword = tblModelKey.getItem(selectRow);
+			Point pos = findCurKeywordPos();
+			if (pos.x == pos.y)
+			{
+				setText(getText() + keyword.getKeyword());
+			}
+			else
+			{
+				String strKeywordList = getText();
+				StringBuilder buf = new StringBuilder(strKeywordList);
+				buf.replace(pos.x, pos.y, keyword.getKeyword());
+				setText(buf.toString());
+			}
+		}
 	}
 
 	private class KeywordQueryLogic implements IQueryLogic<String, MAKeyword>
