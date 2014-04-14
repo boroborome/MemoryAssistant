@@ -5,7 +5,6 @@ package com.boroborome.ma.view;
 
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.EventQueue;
 import java.awt.Point;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
@@ -14,8 +13,10 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.JTextField;
 import javax.swing.JWindow;
@@ -48,6 +49,8 @@ public class KeywordField extends JTextField
 	private QueryAssistant<String, MAKeyword> queryAssistant 
 		= new QueryAssistant<String, MAKeyword>("Thread Query keyword for KeywordField",
 				new KeywordQueryLogic());
+	
+	private Map<Integer, IPopupWindowKeyAction> mapKeyAction = new HashMap<Integer, IPopupWindowKeyAction>();
 	/**
 	 * 
 	 */
@@ -96,62 +99,11 @@ public class KeywordField extends JTextField
 				}
 			}
 		});
+		
+		//Init actions
+		initPopupWindowKeyActions();
 	}
 
-	/* (non-Javadoc)
-	 * @see javax.swing.JComponent#processKeyEvent(java.awt.event.KeyEvent)
-	 */
-	@Override
-	protected void processKeyEvent(KeyEvent e)
-	{
-		//Move the select row in popup window by array key
-		if (e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_DOWN)
-		{
-			if (e.getID() != KeyEvent.KEY_PRESSED)
-			{
-				return;
-			}
-			if (popupWindow.isVisible() && tblModelKey.getRowCount() > 0)
-			{
-				int selectRow = tblKey.getSelectedRow();
-				if (e.getKeyCode() == KeyEvent.VK_UP)
-				{
-					--selectRow;
-					if (selectRow < 0)
-					{
-						selectRow = tblModelKey.getRowCount() - 1;
-					}
-				}
-				else if (e.getKeyCode() == KeyEvent.VK_DOWN)
-				{
-					++selectRow;
-					if (selectRow >= tblModelKey.getRowCount())
-					{
-						selectRow = 0;
-					}
-				}
-				tblKey.getSelectionModel().setSelectionInterval(selectRow, selectRow);
-				tblKey.scrollRowToVisible(selectRow);
-				return;
-			}
-		}
-		else if (e.getKeyCode() == KeyEvent.VK_ENTER)
-		{
-			if (e.getID() != KeyEvent.KEY_PRESSED)
-			{
-				return;
-			}
-			if (popupWindow.isVisible() && tblModelKey.getRowCount() > 0)
-			{
-				selectKeywordInPopWin();
-			}
-		}
-		else
-		{
-			super.processKeyEvent(e);
-			updatePopupInfo();
-		}
-	}
 
 	protected void saveKeyword()
 	{
@@ -321,5 +273,92 @@ public class KeywordField extends JTextField
 			tblModelKey.showData(it);			
 		}
 		
+	}
+
+	/* (non-Javadoc)
+	 * @see javax.swing.JComponent#processKeyEvent(java.awt.event.KeyEvent)
+	 */
+	@Override
+	protected void processKeyEvent(KeyEvent e)
+	{
+		IPopupWindowKeyAction action = this.mapKeyAction.get(Integer.valueOf(e.getKeyCode()));
+		if (action == null)
+		{
+			action = this.mapKeyAction.get(Integer.valueOf(e.getKeyChar()));
+		}
+		if (action != null)
+		{
+			if (e.getID() != KeyEvent.KEY_PRESSED)
+			{
+				return;
+			}
+			if (popupWindow.isVisible() && tblModelKey.getRowCount() > 0)
+			{
+				action.doAction(e);
+			}
+		}
+		else
+		{
+			super.processKeyEvent(e);
+			updatePopupInfo();
+		}
+	}
+
+	private void initPopupWindowKeyActions()
+	{
+		mapKeyAction.put(Integer.valueOf(KeyEvent.VK_ENTER), new IPopupWindowKeyAction()
+		{
+			@Override
+			public void doAction(KeyEvent e)
+			{
+				selectKeywordInPopWin();				
+			}
+		});
+		
+		//Move the select row in popup window by array key
+		IPopupWindowKeyAction arrowAction = new IPopupWindowKeyAction()
+		{
+			@Override
+			public void doAction(KeyEvent e)
+			{
+				int selectRow = tblKey.getSelectedRow();
+				if (e.getKeyCode() == KeyEvent.VK_UP)
+				{
+					--selectRow;
+					if (selectRow < 0)
+					{
+						selectRow = tblModelKey.getRowCount() - 1;
+					}
+				}
+				else if (e.getKeyCode() == KeyEvent.VK_DOWN)
+				{
+					++selectRow;
+					if (selectRow >= tblModelKey.getRowCount())
+					{
+						selectRow = 0;
+					}
+				}
+				tblKey.getSelectionModel().setSelectionInterval(selectRow, selectRow);
+				tblKey.scrollRowToVisible(selectRow);				
+			}
+			
+		};
+		mapKeyAction.put(Integer.valueOf(KeyEvent.VK_UP), arrowAction);
+		mapKeyAction.put(Integer.valueOf(KeyEvent.VK_DOWN), arrowAction);
+		
+		//Close the popup window
+		mapKeyAction.put(Integer.valueOf(KeyEvent.VK_ESCAPE), new IPopupWindowKeyAction()
+		{
+			@Override
+			public void doAction(KeyEvent e)
+			{
+				popupWindow.setVisible(false);
+			}
+		});
+	}
+	
+	private interface IPopupWindowKeyAction
+	{
+		void doAction(KeyEvent e);
 	}
 }
