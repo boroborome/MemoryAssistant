@@ -150,23 +150,7 @@ public class InfoManagePanel extends JPanel
 			public void valueChanged(ListSelectionEvent e)
 			{
 				//if the panel is showing something,we should save it at first
-				if (currentSelectRow != -1)
-				{
-					MAInformation preInfo = new MAInformation();
-					pnlInfoDetail.collectData(preInfo);
-					preInfo.setModifyTime(System.currentTimeMillis());
-					try
-					{
-						IMAInformationSvc maInformationSvc = AbstractFootstoneActivator.getService(IMAInformationSvc.class);
-						maInformationSvc.modify(Arrays.asList(preInfo).iterator());
-						tblModelInfo.justSetItem(currentSelectRow, preInfo);
-					}
-					catch (MessageException exp)
-					{
-						log.error("failed in modify information.", exp);
-			            FootstoneSvcAccess.getExceptionGrave().bury(exp);
-					}
-				}
+				saveCurSelectInfo();
 				
 				currentSelectRow = tblInfo.getSelectedRow();
 				if (currentSelectRow >= 0)
@@ -277,6 +261,27 @@ public class InfoManagePanel extends JPanel
 		}
 	}
 	
+	private void saveCurSelectInfo()
+	{
+		if (currentSelectRow != -1)
+		{
+			MAInformation preInfo = new MAInformation();
+			pnlInfoDetail.collectData(preInfo);
+			preInfo.setModifyTime(System.currentTimeMillis());
+			try
+			{
+				IMAInformationSvc maInformationSvc = AbstractFootstoneActivator.getService(IMAInformationSvc.class);
+				maInformationSvc.modify(Arrays.asList(preInfo).iterator());
+				tblModelInfo.justSetItem(currentSelectRow, preInfo);
+			}
+			catch (MessageException exp)
+			{
+				log.error("failed in modify information.", exp);
+		        FootstoneSvcAccess.getExceptionGrave().bury(exp);
+			}
+		}
+	}
+
 	private class QueryInformationLogic implements IQueryLogic<List<MAKeyword>, MAInformation>
 	{
 		private IMAInformationSvc maInformationSvc;
@@ -302,6 +307,8 @@ public class InfoManagePanel extends JPanel
 		@Override
 		public void showData(Iterator<MAInformation> it) throws Exception
 		{
+			saveCurSelectInfo();
+			currentSelectRow = -1;
 			tblModelInfo.showData(it);			
 		}
 		

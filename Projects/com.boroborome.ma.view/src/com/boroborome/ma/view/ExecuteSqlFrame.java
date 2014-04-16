@@ -66,9 +66,11 @@ public class ExecuteSqlFrame extends JInternalFrame
             pnlMain = new JPanel();
             pnlMain.setLayout(new BorderLayout());
             ExecuteSqlPanel sqlPanel = new ExecuteSqlPanel();
-            sqlPanel.getSqlArea().setText("select * from tbl_taskevent where lasttime < 0\n" +
+            sqlPanel.getSqlArea().setText("select * from tblKeyWord where lasttime < 0\n" +
             		"\n" +
-            		"update tbl_taskevent set lasttime=0 where lasttime<0");
+            		"select * from tblInformation" +
+            		"\n" +
+            		"select * from tblInfoKeyRelation");
             pnlMain.add(sqlPanel, BorderLayout.CENTER);
         }
         return pnlMain;
