@@ -82,4 +82,10 @@ public class MAKeyword
 		}
 		return newLstKeyword;
 	}
+	
+	@Override
+	public String toString()
+	{
+		return this.wordid + ":" + this.keyword;
+	}
 }

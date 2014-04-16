@@ -120,7 +120,7 @@ private static Logger logger = Logger.getLogger(MAInformationSvcImpl.class);
 	@Override
 	public void delete(Iterator<MAInformation> it) throws MessageException
 	{
-		dbMgrSvc.executeSql("delete tblInformation where createTime=?", it,
+		dbMgrSvc.executeSql("delete from tblInformation where createTime=?", it,
 	            new IFillSql<MAInformation>()
 	            {
 	                @Override

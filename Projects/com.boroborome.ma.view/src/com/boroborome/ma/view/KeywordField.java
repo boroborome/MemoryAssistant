@@ -38,6 +38,7 @@ import com.boroborome.ma.view.query.QueryAssistant;
  */
 public class KeywordField extends JTextField
 {
+	public static final char KeywordSplitChar = ' ';
 //	private List<MAKeyword> lstKeyword = new ArrayList<MAKeyword>();
 
 	private JWindow popupWindow;
@@ -147,7 +148,7 @@ public class KeywordField extends JTextField
 		Point pos = new Point();
 		pos.y = this.getCaretPosition();
 		int startIndex = pos.y - 1;
-		for (; startIndex >= 0 && strKeywords.charAt(startIndex) != ' '; --startIndex);
+		for (; startIndex >= 0 && strKeywords.charAt(startIndex) != KeywordSplitChar; --startIndex);
 		pos.x = startIndex + 1;
 		
 		return pos;
@@ -191,6 +192,7 @@ public class KeywordField extends JTextField
 			
 			MAKeyword keyword = new MAKeyword();
 			keyword.setKeyword(key);
+			keyword.setWordid(-1);
 			newLstKeyword.add(keyword);
 		}
 		return newLstKeyword;
@@ -208,7 +210,7 @@ public class KeywordField extends JTextField
 			{
 				if (buf.length() > 0)
 				{
-					buf.append(' ');
+					buf.append(KeywordSplitChar);
 				}
 				buf.append(keyword.getKeyword());
 			}
@@ -222,16 +224,57 @@ public class KeywordField extends JTextField
 		if (selectRow >= 0)
 		{
 			MAKeyword keyword = tblModelKey.getItem(selectRow);
-			Point pos = findCurKeywordPos();
-			if (pos.x == pos.y)
+			
+			//Find out the start and end of current keyword where cursor on
+			int startIndex = this.getCaretPosition();
+			int endIndex = startIndex;
+			
+			String strKeywords = this.getText();
+			int keywordLen = strKeywords.length();
+			if (startIndex >= keywordLen)
+			{
+				startIndex = keywordLen - 1;
+			}
+			for (; startIndex >= 0; --startIndex)
+			{
+				if (strKeywords.charAt(startIndex) == KeywordSplitChar)
+				{
+					++startIndex;
+					break;
+				}
+			}
+			for (; endIndex < keywordLen && strKeywords.charAt(endIndex) != KeywordSplitChar; ++endIndex)
+			{
+				if (strKeywords.charAt(endIndex) == KeywordSplitChar)
+				{
+					--endIndex;
+				}
+			}
+			
+			//Make sure the startIndex and the endIndex is valid.
+			if (startIndex < 0)
+			{
+				startIndex = 0;
+			}
+			else if (startIndex >= keywordLen)
+			{
+				startIndex = keywordLen - 1;
+			}
+			
+			if (endIndex >= keywordLen)
+			{
+				endIndex = keywordLen;
+			}
+			
+			//show selected keyword at the right pos
+			if (startIndex == endIndex)
 			{
 				setText(getText() + keyword.getKeyword());
 			}
 			else
 			{
-				String strKeywordList = getText();
-				StringBuilder buf = new StringBuilder(strKeywordList);
-				buf.replace(pos.x, pos.y, keyword.getKeyword());
+				StringBuilder buf = new StringBuilder(strKeywords);
+				buf.replace(startIndex, endIndex, keyword.getKeyword());
 				setText(buf.toString());
 			}
 		}

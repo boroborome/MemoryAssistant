@@ -76,7 +76,7 @@ public class MAKeywordSvcImpl implements IMAKeywordSvc
 	@Override
 	public void delete(Iterator<MAKeyword> it) throws MessageException
 	{
-		dbMgrSvc.executeSql("delete tblKeyWord where wordid=?", it,
+		dbMgrSvc.executeSql("delete from tblKeyWord where wordid=?", it,
 	            new IFillSql<MAKeyword>()
 	            {
 	                @Override

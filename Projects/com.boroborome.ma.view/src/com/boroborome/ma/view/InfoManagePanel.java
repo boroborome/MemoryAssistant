@@ -21,6 +21,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -63,27 +65,34 @@ public class InfoManagePanel extends JPanel
 
 	private void initActions()
 	{
-		txtKeys.addKeyListener(new KeyListener()
+		txtKeys.getDocument().addDocumentListener(new DocumentListener()
 		{
 
 			@Override
-			public void keyTyped(KeyEvent e)
+			public void insertUpdate(DocumentEvent e)
 			{
-				// TODO Auto-generated method stub
-				
+				updateQueryCondition();				
 			}
 
 			@Override
-			public void keyPressed(KeyEvent e)
+			public void removeUpdate(DocumentEvent e)
 			{
-				queryAssistant.setCondtion(txtKeys.getLstKeyword());
+				updateQueryCondition();				
 			}
 
 			@Override
-			public void keyReleased(KeyEvent e)
+			public void changedUpdate(DocumentEvent e)
 			{
+				updateQueryCondition();				
 			}
-		});		
+		});
+	}
+	
+	private void updateQueryCondition()
+	{
+		List<MAKeyword> lstKey = txtKeys.getLstKeyword();
+		System.out.println(lstKey);
+		queryAssistant.setCondtion(lstKey);
 	}
 
 	private void initUI()
@@ -232,6 +241,7 @@ public class InfoManagePanel extends JPanel
         IMAInformationSvc maInformationSvc = AbstractFootstoneActivator.getService(IMAInformationSvc.class);
 		try
 		{
+			currentSelectRow = -1;//cancel current modify information
 			maInformationSvc.delete(lstInfo.iterator());
 			// TODO ［optimize] if delete partly failed the result will be wrong.
 			for (int rowIndex = selectRows.length - 1; rowIndex >= 0; --rowIndex)
