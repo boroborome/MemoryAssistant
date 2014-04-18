@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.boroborme.ma.model.MAInformation;
+import com.boroborme.ma.model.MAKeyword;
 import com.boroborome.footstone.model.AbstractDBIterator;
 
 /**
@@ -28,6 +29,8 @@ public class MAInformationDBIterator extends AbstractDBIterator<MAInformation>
         item.setCreateTime(rs.getLong("createTime"));
         item.setModifyTime(rs.getLong("modifyTime"));
         item.setContent(rs.getString("content"));
+        String keywords = rs.getString("keywords");
+        item.getLstKeyword().addAll(MAKeyword.string2List(keywords));
         return item;
 	}
 

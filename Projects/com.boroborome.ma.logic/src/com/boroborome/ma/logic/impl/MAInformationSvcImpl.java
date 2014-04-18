@@ -48,7 +48,7 @@ private static Logger logger = Logger.getLogger(MAInformationSvcImpl.class);
 	@Override
 	public void create(Iterator<MAInformation> it) throws MessageException
 	{
-		dbMgrSvc.executeSql("insert into tblInformation(createTime,modifyTime,content) values(?,?,?)", it,
+		dbMgrSvc.executeSql("insert into tblInformation(createTime,modifyTime,content,keywords) values(?,?,?,?)", it,
 	            new IFillSql<MAInformation>()
 	            {
 	                @Override
@@ -59,6 +59,7 @@ private static Logger logger = Logger.getLogger(MAInformationSvcImpl.class);
 	                    statement.setLong(1, value.getCreateTime());
 	                    statement.setLong(2, value.getModifyTime());
 	                    statement.setString(3, value.getContent());
+	                    statement.setString(4, MAKeyword.list2String(value.getLstKeyword()));
 	                }
 	                
 	                @Override
@@ -95,7 +96,7 @@ private static Logger logger = Logger.getLogger(MAInformationSvcImpl.class);
 	@Override
 	public void modify(Iterator<MAInformation> it) throws MessageException
 	{
-		dbMgrSvc.executeSql("update tblInformation set modifyTime=?,content=? where createTime=?", it,
+		dbMgrSvc.executeSql("update tblInformation set modifyTime=?,content=?,keywords=? where createTime=?", it,
 	            new IFillSql<MAInformation>()
 	            {
 	                @Override
@@ -105,7 +106,8 @@ private static Logger logger = Logger.getLogger(MAInformationSvcImpl.class);
 	                	
 	                    statement.setLong(1, value.getModifyTime());
 	                    statement.setString(2, value.getContent());
-	                    statement.setLong(3, value.getCreateTime());
+	                    statement.setString(3, MAKeyword.list2String(value.getLstKeyword()));
+	                    statement.setLong(4, value.getCreateTime());
 	                }
 	                
 	                @Override
@@ -140,6 +142,9 @@ private static Logger logger = Logger.getLogger(MAInformationSvcImpl.class);
 	            });
 	}
 
+	//TODO:[optimize] implement a sql function to summery all keyword of a information.
+	//URL:http://db.apache.org/derby/docs/10.9/devguide/index.html
+	//Title:Derby server-side programming
 	@Override
 	public IBufferIterator<MAInformation> query(IDataCondition<MAInformation> condition) throws MessageException
 	{
@@ -170,7 +175,7 @@ private static Logger logger = Logger.getLogger(MAInformationSvcImpl.class);
         		sqlBuf.append('?');
         		lstID.add(Long.valueOf(key.getWordid()));
         	}
-        	sqlBuf.append(") group by ti.createtime,ti.modifytime,ti.content having count(*)>=?");
+        	sqlBuf.append(") group by ti.createtime,ti.modifytime,ti.content,ti.keywords having count(*)>=?");
         	lstID.add(Long.valueOf(lstID.size()));
 //        	"select count(*),ti.* from tblInformation ti join tblInfoKeyRelation tr on ti.createTime=tr.infoid where tr.wordid in (1,2) group by ti.createtime,ti.modifytime,ti.content having count(*)>=2"
         	queryResult = dbMgrSvc.executeQuery(sqlBuf.toString(), lstID.toArray());

@@ -8,6 +8,7 @@ create index idxKeyWordConent on tblKeyWord(keyword);
 create table tblInformation (createTime BIGINT,
 	modifyTime BIGINT,
 	content varchar(2000),
+	keywords varchar(2000),
 	PRIMARY KEY (createTime));
 create index idxTblInfoMT on tblInformation(modifyTime);
 

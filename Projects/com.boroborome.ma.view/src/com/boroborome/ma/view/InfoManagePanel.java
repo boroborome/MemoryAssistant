@@ -294,6 +294,8 @@ public class InfoManagePanel extends JPanel
 		@Override
 		public void clearView()
 		{
+			saveCurSelectInfo();
+			currentSelectRow = -1;
 			tblModelInfo.clear();
 		}
 
