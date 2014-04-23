@@ -170,7 +170,6 @@ public class KeywordField extends JTextField
 		String strKeywords = this.getText();
 		//if the prefix is empty then clear the popup window
 		String prefix =  (preLocation.x == preLocation.y) ? "" : strKeywords.substring(preLocation.x, preLocation.y);
-		System.out.println("prefix:" + prefix);
 		this.queryAssistant.setCondtion(prefix);
 	}
 
@@ -294,7 +293,6 @@ public class KeywordField extends JTextField
 		@Override
 		public void clearView()
 		{
-			System.out.println("clear");
 			tblModelKey.clear();			
 		}
 
@@ -302,7 +300,6 @@ public class KeywordField extends JTextField
 		@Override
 		public Iterator<MAKeyword> query(String condition) throws Exception
 		{
-			System.out.println("query condition:"+ condition);
 			cond.setKeywordLike(condition);
 			Iterator<MAKeyword> itKeyword = maKeywordSvc.query(cond);
 			return itKeyword;
@@ -312,7 +309,6 @@ public class KeywordField extends JTextField
 		@Override
 		public void showData(Iterator<MAKeyword> it) throws Exception
 		{
-			System.out.println("show result." + it.hasNext());
 			tblModelKey.showData(it);			
 		}
 		
