@@ -1,0 +1,4 @@
+/logs
+/database
+*.log
+*.zip
