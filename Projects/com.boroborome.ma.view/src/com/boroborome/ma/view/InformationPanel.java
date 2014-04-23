@@ -11,10 +11,10 @@ import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import com.boroborme.ma.model.MAInformation;
-import com.boroborme.ma.model.MAKeyword;
 import com.boroborome.footstone.exception.InputException;
 import com.boroborome.footstone.ui.AbstractDataPanel;
+import com.boroborome.ma.model.MAInformation;
+import com.boroborome.ma.model.MAKeyword;
 import com.boroborome.ma.view.res.ResConst;
 
 /**

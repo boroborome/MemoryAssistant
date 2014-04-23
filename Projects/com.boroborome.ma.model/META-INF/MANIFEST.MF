@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Model
+Bundle-SymbolicName: com.boroborome.ma.model
+Bundle-Version: 1.0.0.0
+Bundle-Activator: com.boroborome.ma.model.bundle.Activator
+Bundle-Vendor: BOROBORME
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Import-Package: org.osgi.framework;version="1.3.0"
+Export-Package: com.boroborome.ma.model,
+ com.boroborome.ma.model.svc
+Require-Bundle: com.boroborome.footstone;bundle-version="1.0.0"

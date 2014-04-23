@@ -28,15 +28,15 @@ import javax.swing.event.ListSelectionListener;
 
 import org.apache.log4j.Logger;
 
-import com.boroborme.ma.model.MAInformation;
-import com.boroborme.ma.model.MAInformationCondition;
-import com.boroborme.ma.model.MAKeyword;
-import com.boroborme.ma.model.svc.IMAInformationSvc;
 import com.boroborome.footstone.AbstractFootstoneActivator;
 import com.boroborome.footstone.FootstoneSvcAccess;
 import com.boroborome.footstone.exception.MessageException;
 import com.boroborome.footstone.ui.BaseReadonlyTableModel;
 import com.boroborome.footstone.ui.ExtTable;
+import com.boroborome.ma.model.MAInformation;
+import com.boroborome.ma.model.MAInformationCondition;
+import com.boroborome.ma.model.MAKeyword;
+import com.boroborome.ma.model.svc.IMAInformationSvc;
 import com.boroborome.ma.view.query.IQueryLogic;
 import com.boroborome.ma.view.query.QueryAssistant;
 

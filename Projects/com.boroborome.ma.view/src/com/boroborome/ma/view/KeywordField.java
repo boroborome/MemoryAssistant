@@ -22,12 +22,12 @@ import javax.swing.JTextField;
 import javax.swing.JWindow;
 import javax.swing.SwingUtilities;
 
-import com.boroborme.ma.model.MAKeyword;
-import com.boroborme.ma.model.MAKeywordCondition;
-import com.boroborme.ma.model.svc.IMAKeywordSvc;
 import com.boroborome.footstone.AbstractFootstoneActivator;
 import com.boroborome.footstone.ui.BaseReadonlyTableModel;
 import com.boroborome.footstone.ui.ExtTable;
+import com.boroborome.ma.model.MAKeyword;
+import com.boroborome.ma.model.MAKeywordCondition;
+import com.boroborome.ma.model.svc.IMAKeywordSvc;
 import com.boroborome.ma.view.query.IQueryLogic;
 import com.boroborome.ma.view.query.QueryAssistant;
 

@@ -14,9 +14,6 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import com.boroborme.ma.model.MAKeyword;
-import com.boroborme.ma.model.MAKeywordCondition;
-import com.boroborme.ma.model.svc.IMAKeywordSvc;
 import com.boroborome.footstone.AbstractFootstoneActivator;
 import com.boroborome.footstone.exception.MessageException;
 import com.boroborome.footstone.model.EventContainer;
@@ -28,6 +25,9 @@ import com.boroborome.footstone.svc.IDataChangeListener;
 import com.boroborome.footstone.svc.IDataCondition;
 import com.boroborome.footstone.svc.IIDGeneratorSvc;
 import com.boroborome.ma.logic.res.ResConst;
+import com.boroborome.ma.model.MAKeyword;
+import com.boroborome.ma.model.MAKeywordCondition;
+import com.boroborome.ma.model.svc.IMAKeywordSvc;
 
 /**
  * @author boroborome

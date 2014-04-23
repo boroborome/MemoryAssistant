@@ -6,9 +6,9 @@ package com.boroborome.ma.logic.impl;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.boroborme.ma.model.MAInformation;
-import com.boroborme.ma.model.MAKeyword;
 import com.boroborome.footstone.model.AbstractDBIterator;
+import com.boroborome.ma.model.MAInformation;
+import com.boroborome.ma.model.MAKeyword;
 
 /**
  * @author boroborome

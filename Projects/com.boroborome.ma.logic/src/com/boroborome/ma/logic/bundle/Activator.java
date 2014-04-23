@@ -5,9 +5,6 @@ import java.sql.DriverManager;
 
 import org.osgi.framework.BundleContext;
 
-import com.boroborme.ma.model.MAKeyword;
-import com.boroborme.ma.model.svc.IMAInformationSvc;
-import com.boroborme.ma.model.svc.IMAKeywordSvc;
 import com.boroborome.footstone.AbstractFootstoneActivator;
 import com.boroborome.footstone.FootstoneSvcAccess;
 import com.boroborome.footstone.sql.DefaultDatabaseMgrSvc;
@@ -18,6 +15,9 @@ import com.boroborome.footstone.svc.ISystemInstallSvc;
 import com.boroborome.ma.logic.impl.MAInformationSvcImpl;
 import com.boroborome.ma.logic.impl.MAKeywordSvcImpl;
 import com.boroborome.ma.logic.res.ResConst;
+import com.boroborome.ma.model.MAKeyword;
+import com.boroborome.ma.model.svc.IMAInformationSvc;
+import com.boroborome.ma.model.svc.IMAKeywordSvc;
 
 public class Activator extends AbstractFootstoneActivator
 {

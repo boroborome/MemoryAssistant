@@ -23,14 +23,10 @@ Export-Package: com.boroborome.footstone;uses:="com.boroborome.footstone.resourc
  com.boroborome.footstone.util,
  com.boroborome.footstone.xml;uses:="org.dom4j,com.boroborome.footstone.exception,com.boroborome.footstone.dataenergy"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Import-Package: javax.swing,
- javax.swing.event,
- javax.swing.table,
- javax.swing.text,
- javax.xml.parsers,
- org.apache.ibatis.jdbc;version="3.0.4",
+Import-Package: 
  org.osgi.framework;version="1.3.0",
  org.w3c.dom,
  org.xml.sax
 Bundle-ClassPath: .
-Require-Bundle: org.apache.log4j;bundle-version="1.2.13"
+Require-Bundle: org.apache.log4j;bundle-version="1.2.13",
+ org.mybatis.mybatis;bundle-version="3.0.4"
