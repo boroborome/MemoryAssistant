@@ -9,8 +9,6 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -33,6 +31,7 @@ import com.boroborome.footstone.FootstoneSvcAccess;
 import com.boroborome.footstone.exception.MessageException;
 import com.boroborome.footstone.ui.BaseReadonlyTableModel;
 import com.boroborome.footstone.ui.ExtTable;
+import com.boroborome.footstone.util.ConvertUtil;
 import com.boroborome.ma.model.MAInformation;
 import com.boroborome.ma.model.MAInformationCondition;
 import com.boroborome.ma.model.MAKeyword;
@@ -136,7 +135,7 @@ public class InfoManagePanel extends JPanel
 			@Override
 			public Object[] formatItem(MAInformation data)
 			{
-				return new Object[]{data.getCreateTime(), 
+				return new Object[]{ConvertUtil.timeToStr(data.getCreateTime()), 
 						MAKeyword.list2String(data.getLstKeyword()), 
 						data.getContent()};
 			}
@@ -225,6 +224,8 @@ public class InfoManagePanel extends JPanel
 		try
 		{
 			currentSelectRow = -1;//cancel current modify information
+			tblInfo.getSelectionModel().clearSelection();
+			
 			maInformationSvc.delete(lstInfo.iterator());
 			// TODO ［optimize] if delete partly failed the result will be wrong.
 			for (int rowIndex = selectRows.length - 1; rowIndex >= 0; --rowIndex)
@@ -241,6 +242,8 @@ public class InfoManagePanel extends JPanel
 
 	private void doAddInfo()
 	{
+		tblInfo.getSelectionModel().clearSelection();
+		
 		MAInformation info = new MAInformation();
 		info.setLstKeyword(txtKeys.getLstKeyword());
 		long curTime = System.currentTimeMillis();
