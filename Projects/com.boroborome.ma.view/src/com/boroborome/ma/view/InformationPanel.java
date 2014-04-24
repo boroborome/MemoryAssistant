@@ -40,6 +40,7 @@ public class InformationPanel extends AbstractDataPanel<MAInformation>
 				GridBagConstraints.HORIZONTAL, new Insets(0, 12, 0, 0), 0, 0));
 		
 		txtInfoDetail = new JTextArea();
+		txtInfoDetail.setLineWrap(true);
 		this.add(new JScrollPane(txtInfoDetail), new GridBagConstraints(0, 1, 2, 1, 1, 1, GridBagConstraints.NORTHWEST,
 				GridBagConstraints.BOTH, new Insets(12, 0, 0, 0), 0, 0));
 		

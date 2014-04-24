@@ -151,7 +151,7 @@ public class MainFrame extends JFrame implements ISpaceName
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setJMenuBar(getMainMenuBar());
         this.setContentPane(getPnlMain());
-        this.setTitle("Task Manager"); //$NON-NLS-1$
+        this.setTitle("Memory Assistant"); //$NON-NLS-1$
     }
 
     /**
