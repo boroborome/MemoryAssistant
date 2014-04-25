@@ -12,6 +12,9 @@ import java.util.List;
  */
 public class MAKeyword
 {
+	public static final char KeywordSplitChar = ' ';
+	public static final String KeywordSplitStr = " ";
+
 	private long wordid;
 	private String keyword;
 	public MAKeyword()
@@ -56,7 +59,7 @@ public class MAKeyword
 			{
 				if (buf.length() > 0)
 				{
-					buf.append(' ');
+					buf.append(KeywordSplitChar);
 				}
 				buf.append(keyword.getKeyword());
 			}
@@ -68,7 +71,7 @@ public class MAKeyword
 	{
 		//TODO [optimize] should filter repeat keyword
 		List<MAKeyword> newLstKeyword = new ArrayList<MAKeyword>();
-		String[] aryKeys = lstKeywrod.split(" ");
+		String[] aryKeys = lstKeywrod.split(KeywordSplitStr);
 		for (String key : aryKeys)
 		{
 			if (key == null || key.isEmpty())
@@ -78,6 +81,7 @@ public class MAKeyword
 			
 			MAKeyword keyword = new MAKeyword();
 			keyword.setKeyword(key);
+			keyword.setWordid(-1);
 			newLstKeyword.add(keyword);
 		}
 		return newLstKeyword;

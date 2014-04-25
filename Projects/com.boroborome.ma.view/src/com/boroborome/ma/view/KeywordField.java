@@ -12,7 +12,6 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -30,10 +29,10 @@ import com.boroborome.footstone.ui.BaseReadonlyTableModel;
 import com.boroborome.footstone.ui.ExtTable;
 import com.boroborome.ma.model.MAKeyword;
 import com.boroborome.ma.model.MAKeywordCondition;
+import com.boroborome.ma.model.MAKeywordFilterIterator;
 import com.boroborome.ma.model.svc.IMAKeywordSvc;
 import com.boroborome.ma.view.query.IQueryLogic;
 import com.boroborome.ma.view.query.QueryAssistant;
-import com.sun.xml.internal.ws.server.UnsupportedMediaException;
 
 /**
  * @author boroborome
@@ -42,8 +41,8 @@ import com.sun.xml.internal.ws.server.UnsupportedMediaException;
  */
 public class KeywordField extends JTextField
 {
-	public static final char KeywordSplitChar = ' ';
 	private Set<String> setExistKeyword = new HashSet<String>();
+	private Set<String> setAvailableKeyword = new HashSet<String>();
 
 	private JWindow popupWindow;
 
@@ -146,7 +145,7 @@ public class KeywordField extends JTextField
 		Point pos = new Point();
 		pos.y = this.getCaretPosition();
 		int startIndex = pos.y - 1;
-		for (; startIndex >= 0 && strKeywords.charAt(startIndex) != KeywordSplitChar; --startIndex);
+		for (; startIndex >= 0 && strKeywords.charAt(startIndex) != MAKeyword.KeywordSplitChar; --startIndex);
 		pos.x = startIndex + 1;
 		
 		return pos;
@@ -170,35 +169,40 @@ public class KeywordField extends JTextField
 		String prefix =  (preLocation.x == preLocation.y) ? "" : strKeywords.substring(preLocation.x, preLocation.y);
 		
 		setExistKeyword.clear();
-		setExistKeyword.addAll(Arrays.asList(strKeywords.split(String.valueOf(KeywordField.KeywordSplitChar))));
+		setExistKeyword.addAll(Arrays.asList(strKeywords.split(MAKeyword.KeywordSplitStr)));
 		this.queryAssistant.setCondtion(prefix);
 		
 	}
 
 
 	/**
+	 * the keyword list shown in the keyword field<br>
+	 * it is readonly.
 	 * @return the lstKeyword
 	 */
 	public List<MAKeyword> getLstKeyword()
 	{
-		//TODO [optimize] should filter repeat keyword
-		List<MAKeyword> newLstKeyword = new ArrayList<MAKeyword>();
-		String[] aryKeys = this.getText().split(" ");
-		for (String key : aryKeys)
-		{
-			if (key == null || key.isEmpty())
-			{
-				continue;
-			}
-			
-			MAKeyword keyword = new MAKeyword();
-			keyword.setKeyword(key);
-			keyword.setWordid(-1);
-			newLstKeyword.add(keyword);
-		}
-		return newLstKeyword;
+		return MAKeyword.string2List(getText());
 	}
 
+
+	/**
+	 * Set the available keyword set in popup window<br>
+	 * if this set is not empty,only keyword in this set can show in popup window.
+	 * @param setKeyword
+	 */
+	public void setAvailableKeyword(Set<String> setKeyword)
+	{
+		synchronized (setAvailableKeyword)
+		{
+			setAvailableKeyword.clear();
+			if (setKeyword != null)
+			{
+				setAvailableKeyword.addAll(setKeyword);
+			}
+		}
+	}
+	
 	/**
 	 * @param lstKeyword the lstKeyword to set
 	 */
@@ -211,7 +215,7 @@ public class KeywordField extends JTextField
 			{
 				if (buf.length() > 0)
 				{
-					buf.append(KeywordSplitChar);
+					buf.append(MAKeyword.KeywordSplitChar);
 				}
 				buf.append(keyword.getKeyword());
 			}
@@ -238,15 +242,15 @@ public class KeywordField extends JTextField
 			}
 			for (; startIndex >= 0; --startIndex)
 			{
-				if (strKeywords.charAt(startIndex) == KeywordSplitChar)
+				if (strKeywords.charAt(startIndex) == MAKeyword.KeywordSplitChar)
 				{
 					++startIndex;
 					break;
 				}
 			}
-			for (; endIndex < keywordLen && strKeywords.charAt(endIndex) != KeywordSplitChar; ++endIndex)
+			for (; endIndex < keywordLen && strKeywords.charAt(endIndex) != MAKeyword.KeywordSplitChar; ++endIndex)
 			{
-				if (strKeywords.charAt(endIndex) == KeywordSplitChar)
+				if (strKeywords.charAt(endIndex) == MAKeyword.KeywordSplitChar)
 				{
 					--endIndex;
 				}
@@ -306,14 +310,17 @@ public class KeywordField extends JTextField
 		{
 			cond.setKeywordLike(condition);
 			Iterator<MAKeyword> itKeyword = maKeywordSvc.query(cond);
-			return new FilterKeywordIterator(itKeyword, setExistKeyword);
+			return new MAKeywordFilterIterator(itKeyword, setExistKeyword, setAvailableKeyword);
 		}
 
 
 		@Override
 		public void showData(Iterator<MAKeyword> it) throws Exception
 		{
-			tblModelKey.showData(it);			
+			synchronized(setAvailableKeyword)
+			{
+				tblModelKey.showData(it);			
+			}
 		}
 		
 	}
@@ -404,55 +411,5 @@ public class KeywordField extends JTextField
 	{
 		void doAction(KeyEvent e);
 	}
-	
-	private static class FilterKeywordIterator implements Iterator<MAKeyword>
-	{
-		private Iterator<MAKeyword> innerIt;
-		private MAKeyword curItem;
-		private Set<String> setExcludeKeyword;
 
-		public FilterKeywordIterator(Iterator<MAKeyword> innerIt, Set<String> setExcludeKeyword)
-		{
-			this.innerIt = innerIt;
-			this.setExcludeKeyword = setExcludeKeyword;
-			readNext();
-		}
-		
-		private void readNext()
-		{
-			curItem = null;
-			while (innerIt.hasNext())
-			{
-				MAKeyword keyword = innerIt.next();
-				if (setExcludeKeyword.contains(keyword.getKeyword()))
-				{
-					continue;
-				}
-				curItem = keyword;
-				break;
-			}
-			
-		}
-		
-		@Override
-		public boolean hasNext()
-		{
-			return curItem != null;
-		}
-
-		@Override
-		public MAKeyword next()
-		{
-			MAKeyword result = curItem;
-			readNext();
-			return result;
-		}
-
-		@Override
-		public void remove()
-		{
-			throw new UnsupportedMediaException();
-		}
-		
-	}
 }

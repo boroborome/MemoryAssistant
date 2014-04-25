@@ -13,7 +13,6 @@ import java.sql.SQLException;
 
 import org.apache.log4j.Logger;
 
-import com.boroborome.footstone.exception.MessageException;
 import com.boroborome.footstone.exception.RuntimeMessageException;
 import com.boroborome.footstone.res.ResConst;
 

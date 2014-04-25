@@ -11,8 +11,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -29,6 +31,7 @@ import org.apache.log4j.Logger;
 import com.boroborome.footstone.AbstractFootstoneActivator;
 import com.boroborome.footstone.FootstoneSvcAccess;
 import com.boroborome.footstone.exception.MessageException;
+import com.boroborome.footstone.model.AbstractWrapIterator;
 import com.boroborome.footstone.ui.BaseReadonlyTableModel;
 import com.boroborome.footstone.ui.ExtTable;
 import com.boroborome.footstone.util.ConvertUtil;
@@ -313,8 +316,43 @@ public class InfoManagePanel extends JPanel
 		{
 			saveCurSelectInfo();
 			currentSelectRow = -1;
-			tblModelInfo.showData(it);			
+			KeywordCollectIterator collectIt = new KeywordCollectIterator(it);
+			tblModelInfo.showData(collectIt);
+			txtKeys.setAvailableKeyword(collectIt.getSetKeyword());
 		}
 		
+	}
+	
+	private static class KeywordCollectIterator extends AbstractWrapIterator<MAInformation>
+	{
+		private Set<String> setKeyword = new HashSet<String>();
+		
+		public KeywordCollectIterator(Iterator<MAInformation> innerIt)
+		{
+			super(innerIt);
+		}
+
+		@Override
+		public void beforeNext(MAInformation value)
+		{
+			//if the result keyword is more than 100, then ignore the others
+			if (setKeyword.size() > 100)
+			{
+				return;
+			}
+			
+			for (MAKeyword key : value.getLstKeyword())
+			{
+				setKeyword.add(key.getKeyword());
+			}
+		}
+
+		/**
+		 * @return the setKeyword
+		 */
+		public Set<String> getSetKeyword()
+		{
+			return setKeyword;
+		}
 	}
 }
