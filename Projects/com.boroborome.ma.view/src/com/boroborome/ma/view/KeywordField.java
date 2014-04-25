@@ -231,39 +231,20 @@ public class KeywordField extends JTextField
 			MAKeyword keyword = tblModelKey.getItem(selectRow);
 			
 			//Find out the start and end of current keyword where cursor on
-			int startIndex = this.getCaretPosition();
-			int endIndex = startIndex;
-			
+			int curCare = this.getCaretPosition();
 			String strKeywords = this.getText();
 			int keywordLen = strKeywords.length();
-			if (startIndex >= keywordLen)
-			{
-				startIndex = keywordLen - 1;
-			}
-			for (; startIndex >= 0; --startIndex)
-			{
-				if (strKeywords.charAt(startIndex) == MAKeyword.KeywordSplitChar)
-				{
-					++startIndex;
-					break;
-				}
-			}
-			for (; endIndex < keywordLen && strKeywords.charAt(endIndex) != MAKeyword.KeywordSplitChar; ++endIndex)
-			{
-				if (strKeywords.charAt(endIndex) == MAKeyword.KeywordSplitChar)
-				{
-					--endIndex;
-				}
-			}
+			
+			//find out the keyword's start position
+			int startIndex = findStartIndex(curCare, strKeywords);
+			
+			//find out the keyword's end position
+			int endIndex = findEndIndex(curCare, strKeywords);
 			
 			//Make sure the startIndex and the endIndex is valid.
 			if (startIndex < 0)
 			{
 				startIndex = 0;
-			}
-			else if (startIndex >= keywordLen)
-			{
-				startIndex = keywordLen - 1;
 			}
 			
 			if (endIndex >= keywordLen)
@@ -272,19 +253,60 @@ public class KeywordField extends JTextField
 			}
 			
 			//show selected keyword at the right pos
-			if (startIndex == endIndex)
+			StringBuilder buf = new StringBuilder(strKeywords);
+			if (startIndex > endIndex)
 			{
-				setText(getText() + keyword.getKeyword());
+				System.out.println(startIndex);
+			}
+			buf.replace(startIndex, endIndex, keyword.getKeyword());
+			
+			//Set the text and set the care to the new keyword's tail
+			String newKeywords = buf.toString();
+			setText(newKeywords);
+			if (curCare > buf.length())
+			{
+				curCare = buf.length();
 			}
 			else
 			{
-				StringBuilder buf = new StringBuilder(strKeywords);
-				buf.replace(startIndex, endIndex, keyword.getKeyword());
-				setText(buf.toString());
+				curCare = this.findEndIndex(curCare, newKeywords);
 			}
+			this.setCaretPosition(curCare);
 			
 			setExistKeyword.add(keyword.getKeyword());
 		}
+	}
+
+
+	private int findStartIndex(int startIndex, String strKeywords)
+	{
+		int keywordLen = strKeywords.length();
+		for (--startIndex; startIndex > 0; --startIndex)
+		{
+			if (startIndex >= keywordLen)
+			{
+				continue;
+			}
+			if (strKeywords.charAt(startIndex) == MAKeyword.KeywordSplitChar)
+			{
+				++startIndex;
+				break;
+			}
+		}
+		return startIndex;
+	}
+
+
+	private int findEndIndex(int endIndex, String strKeywords)
+	{
+		for (int keywordLen = strKeywords.length(); endIndex < keywordLen && strKeywords.charAt(endIndex) != MAKeyword.KeywordSplitChar; ++endIndex)
+		{
+			if (strKeywords.charAt(endIndex) == MAKeyword.KeywordSplitChar)
+			{
+				--endIndex;
+			}
+		}
+		return endIndex;
 	}
 
 	private class KeywordQueryLogic implements IQueryLogic<String, MAKeyword>
