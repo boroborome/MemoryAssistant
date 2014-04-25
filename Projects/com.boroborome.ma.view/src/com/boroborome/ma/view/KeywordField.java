@@ -13,10 +13,13 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.swing.JTextField;
 import javax.swing.JWindow;
@@ -30,6 +33,7 @@ import com.boroborome.ma.model.MAKeywordCondition;
 import com.boroborome.ma.model.svc.IMAKeywordSvc;
 import com.boroborome.ma.view.query.IQueryLogic;
 import com.boroborome.ma.view.query.QueryAssistant;
+import com.sun.xml.internal.ws.server.UnsupportedMediaException;
 
 /**
  * @author boroborome
@@ -39,7 +43,7 @@ import com.boroborome.ma.view.query.QueryAssistant;
 public class KeywordField extends JTextField
 {
 	public static final char KeywordSplitChar = ' ';
-//	private List<MAKeyword> lstKeyword = new ArrayList<MAKeyword>();
+	private Set<String> setExistKeyword = new HashSet<String>();
 
 	private JWindow popupWindow;
 
@@ -106,12 +110,6 @@ public class KeywordField extends JTextField
 	}
 
 
-	protected void saveKeyword()
-	{
-		// TODO implement save keyword.
-		
-	}
-
 	private void initPopupWindow()
 	{
 		popupWindow = new JWindow();
@@ -170,7 +168,11 @@ public class KeywordField extends JTextField
 		String strKeywords = this.getText();
 		//if the prefix is empty then clear the popup window
 		String prefix =  (preLocation.x == preLocation.y) ? "" : strKeywords.substring(preLocation.x, preLocation.y);
+		
+		setExistKeyword.clear();
+		setExistKeyword.addAll(Arrays.asList(strKeywords.split(String.valueOf(KeywordField.KeywordSplitChar))));
 		this.queryAssistant.setCondtion(prefix);
+		
 	}
 
 
@@ -276,6 +278,8 @@ public class KeywordField extends JTextField
 				buf.replace(startIndex, endIndex, keyword.getKeyword());
 				setText(buf.toString());
 			}
+			
+			setExistKeyword.add(keyword.getKeyword());
 		}
 	}
 
@@ -302,7 +306,7 @@ public class KeywordField extends JTextField
 		{
 			cond.setKeywordLike(condition);
 			Iterator<MAKeyword> itKeyword = maKeywordSvc.query(cond);
-			return itKeyword;
+			return new FilterKeywordIterator(itKeyword, setExistKeyword);
 		}
 
 
@@ -399,5 +403,56 @@ public class KeywordField extends JTextField
 	private interface IPopupWindowKeyAction
 	{
 		void doAction(KeyEvent e);
+	}
+	
+	private static class FilterKeywordIterator implements Iterator<MAKeyword>
+	{
+		private Iterator<MAKeyword> innerIt;
+		private MAKeyword curItem;
+		private Set<String> setExcludeKeyword;
+
+		public FilterKeywordIterator(Iterator<MAKeyword> innerIt, Set<String> setExcludeKeyword)
+		{
+			this.innerIt = innerIt;
+			this.setExcludeKeyword = setExcludeKeyword;
+			readNext();
+		}
+		
+		private void readNext()
+		{
+			curItem = null;
+			while (innerIt.hasNext())
+			{
+				MAKeyword keyword = innerIt.next();
+				if (setExcludeKeyword.contains(keyword.getKeyword()))
+				{
+					continue;
+				}
+				curItem = keyword;
+				break;
+			}
+			
+		}
+		
+		@Override
+		public boolean hasNext()
+		{
+			return curItem != null;
+		}
+
+		@Override
+		public MAKeyword next()
+		{
+			MAKeyword result = curItem;
+			readNext();
+			return result;
+		}
+
+		@Override
+		public void remove()
+		{
+			throw new UnsupportedMediaException();
+		}
+		
 	}
 }
