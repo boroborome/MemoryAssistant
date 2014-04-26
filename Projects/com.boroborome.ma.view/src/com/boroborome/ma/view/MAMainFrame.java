@@ -4,6 +4,9 @@
 package com.boroborome.ma.view;
 
 import java.awt.BorderLayout;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.net.URL;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -30,6 +33,10 @@ public class MAMainFrame extends JFrame
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setContentPane(createPnlMain());
         this.setTitle("Task Manager"); //$NON-NLS-1$
+        
+        URL urlIcon = MAMainFrame.class.getResource("BiiBallLite.ico");
+        Image img = Toolkit.getDefaultToolkit().getImage(urlIcon);
+        this.setIconImage(img);
     }
     /**
      * This method initializes jContentPane
