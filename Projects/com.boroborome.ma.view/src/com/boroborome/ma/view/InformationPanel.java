@@ -6,10 +6,22 @@ package com.boroborome.ma.view;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DropTarget;
+import java.awt.dnd.DropTargetAdapter;
+import java.awt.dnd.DropTargetDropEvent;
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
 
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+
+import org.apache.log4j.Logger;
 
 import com.boroborome.footstone.exception.InputException;
 import com.boroborome.footstone.ui.AbstractDataPanel;
@@ -23,12 +35,78 @@ import com.boroborome.ma.view.res.ResConst;
  */
 public class InformationPanel extends AbstractDataPanel<MAInformation>
 {
+	private static Logger logger = Logger.getLogger(InformationPanel.class);
 	private KeywordField txtKeys;
 	private JTextArea txtInfoDetail;
 
 	public InformationPanel()
 	{
 		initUI();
+		makeDropable();
+	}
+	private void makeDropable()
+	{
+		new DropTarget(this.txtInfoDetail, DnDConstants.ACTION_COPY, new DropTargetAdapter()
+		{
+			@Override
+			public void drop(DropTargetDropEvent event)
+			{
+				System.out.println("drop");
+				doAcceptDropFile(event);
+			}
+			
+		});
+	}
+	private void doAcceptDropFile(DropTargetDropEvent event)
+	{
+		StringBuilder buffer = new StringBuilder(this.txtInfoDetail.getText());
+		int carePos = txtInfoDetail.getCaretPosition();
+		boolean isFirstFile = true;
+		
+		//接受复制操作  
+        event.acceptDrop(DnDConstants.ACTION_COPY_OR_MOVE);  
+        //获取拖放的内容  
+        Transferable transferable = event.getTransferable();  
+        DataFlavor[] flavors = transferable.getTransferDataFlavors();  
+        //遍历拖放内容里的所有数据格式
+        for (int i = 0; i < flavors.length; i++)  
+        {    
+            DataFlavor d = flavors[i];  
+            //如果拖放内容的数据格式是文件列表  
+            if (d.equals(DataFlavor.javaFileListFlavor))  
+            {  
+            	try
+            	{
+                    //取出拖放操作里的文件列表  
+                    List fileList = (List) transferable.getTransferData(d);
+                    for (Object f : fileList)  
+                    {  
+                    	File file = (File) f;
+                    	String fileName =  file.getAbsolutePath();
+                    	if (!isFirstFile)
+                    	{
+                    		buffer.insert(carePos, '\n');
+                    		++carePos;
+                    	}
+                    	isFirstFile = false;
+                    	
+                    	buffer.insert(carePos, fileName);
+                    	carePos += fileName.length();
+                    }  
+				}
+				catch (UnsupportedFlavorException e)
+				{
+					logger.trace(e);
+				}
+				catch (IOException e)
+				{
+					logger.trace(e);
+				}  
+            }
+            //强制拖放操作结束，停止阻塞拖放源  
+            event.dropComplete(true);  
+        }
+        this.txtInfoDetail.setText(buffer.toString());
 	}
 	private void initUI()
 	{
@@ -43,7 +121,6 @@ public class InformationPanel extends AbstractDataPanel<MAInformation>
 		txtInfoDetail.setLineWrap(true);
 		this.add(new JScrollPane(txtInfoDetail), new GridBagConstraints(0, 1, 2, 1, 1, 1, GridBagConstraints.NORTHWEST,
 				GridBagConstraints.BOTH, new Insets(12, 0, 0, 0), 0, 0));
-		
 	}
 	
 	@Override
