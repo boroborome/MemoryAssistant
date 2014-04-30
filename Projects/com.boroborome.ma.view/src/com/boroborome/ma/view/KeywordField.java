@@ -364,7 +364,7 @@ public class KeywordField extends JTextField
 			{
 				return;
 			}
-			if (popupWindow.isVisible() && tblModelKey.getRowCount() > 0)
+			if (popupWindow.isVisible())
 			{
 				action.doAction(e);
 			}
