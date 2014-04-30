@@ -20,6 +20,7 @@ import java.util.List;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextPane;
 
 import org.apache.log4j.Logger;
 
@@ -37,7 +38,7 @@ public class InformationPanel extends AbstractDataPanel<MAInformation>
 {
 	private static Logger logger = Logger.getLogger(InformationPanel.class);
 	private KeywordField txtKeys;
-	private JTextArea txtInfoDetail;
+	private JTextPane txtInfoDetail;
 
 	public InformationPanel()
 	{
@@ -117,8 +118,8 @@ public class InformationPanel extends AbstractDataPanel<MAInformation>
 		this.add(txtKeys, new GridBagConstraints(1, 0, 1, 1, 1, 0, GridBagConstraints.NORTHWEST,
 				GridBagConstraints.HORIZONTAL, new Insets(0, 12, 0, 0), 0, 0));
 		
-		txtInfoDetail = new JTextArea();
-		txtInfoDetail.setLineWrap(true);
+		txtInfoDetail = new JTextPane();
+//		txtInfoDetail.setLineWrap(true);
 		this.add(new JScrollPane(txtInfoDetail), new GridBagConstraints(0, 1, 2, 1, 1, 1, GridBagConstraints.NORTHWEST,
 				GridBagConstraints.BOTH, new Insets(12, 0, 0, 0), 0, 0));
 	}
