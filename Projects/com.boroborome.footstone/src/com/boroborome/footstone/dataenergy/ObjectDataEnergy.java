@@ -17,8 +17,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
-import com.boroborome.footstone.model.MapItem;
 import com.boroborome.footstone.util.CommonRes;
+import com.boroborome.footstone.util.MapIterator;
 import com.boroborome.footstone.xml.XmlEnergyUtil;
 
 
@@ -234,39 +234,5 @@ public class ObjectDataEnergy implements IDataEnergy
             this.obj = obj;
             this.attributeName = attributeName;
         }
-        
-    }
-    
-    @SuppressWarnings("unchecked")
-    private static class MapIterator implements Iterator
-    {
-        private Map map;
-        private Iterator itKey;
-        
-        public MapIterator(Map map)
-        {
-            this.map = map;
-            itKey = map.values().iterator();
-        }
-        
-        @Override
-        public boolean hasNext()
-        {
-            return itKey.hasNext();
-        }
-
-        @Override
-        public Object next()
-        {
-            Object key = itKey.next();
-            return new MapItem(key, map.get(key));
-        }
-
-        @Override
-        public void remove()
-        {
-            //Nothing to do
-        }
-        
     }
 }

@@ -1,8 +1,5 @@
 package com.boroborome.footstone.bundle;
 
-import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
-
 import org.apache.log4j.PropertyConfigurator;
 import org.osgi.framework.BundleContext;
 

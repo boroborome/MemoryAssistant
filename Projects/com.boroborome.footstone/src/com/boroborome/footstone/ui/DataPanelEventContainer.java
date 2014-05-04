@@ -36,8 +36,7 @@ public class DataPanelEventContainer extends EventContainer<IDataPanelListener> 
 	/*
      * 这个事件容器所属的数据面板
      */
-    @SuppressWarnings("unchecked")
-	private AbstractDataPanel source;
+	private AbstractDataPanel<?> source;
     
     /*
      * 是否改变的标记
@@ -48,8 +47,7 @@ public class DataPanelEventContainer extends EventContainer<IDataPanelListener> 
      * 构造函数
      * @param source 事件容器的所有者
      */
-    @SuppressWarnings("unchecked")
-    public DataPanelEventContainer(final AbstractDataPanel source)
+    public DataPanelEventContainer(final AbstractDataPanel<?> source)
     {
         super(IDataPanelListener.class);
         setSource(source);
@@ -77,8 +75,7 @@ public class DataPanelEventContainer extends EventContainer<IDataPanelListener> 
      * 获取事件容器所属的数据面板
      * @return 事件容器所属的数据面板
      */
-    @SuppressWarnings("unchecked")
-    public AbstractDataPanel getSource()
+    public AbstractDataPanel<?> getSource()
     {
         return source;
     }
@@ -87,8 +84,7 @@ public class DataPanelEventContainer extends EventContainer<IDataPanelListener> 
      * 设置事件容器所属的数据面板
      * @param source 事件容器所属的数据面板
      */
-    @SuppressWarnings("unchecked")
-    public void setSource(final AbstractDataPanel source)
+    public void setSource(final AbstractDataPanel<?> source)
     {
         this.source = source;
     }
@@ -155,7 +151,6 @@ public class DataPanelEventContainer extends EventContainer<IDataPanelListener> 
     /* (non-Javadoc)
      * @see com.boroborome.extui.IDataPanelListener#dataChanged(com.boroborome.extui.IDataPanel)
      */
-    @SuppressWarnings("unchecked")
     @Override
     public void dataChanged(final AbstractDataPanel dataPanel)
     {

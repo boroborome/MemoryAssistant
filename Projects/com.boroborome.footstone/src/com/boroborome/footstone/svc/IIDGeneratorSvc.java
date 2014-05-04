@@ -26,12 +26,12 @@ public interface IIDGeneratorSvc
      * @param type
      * @param startIndex 开始索引，nextIndex的返回结果从startIndex的下一个开始
      */
-    void init(Class type, long startIndex);
+    void init(Class<?> type, long startIndex);
     
     /**
      * 获取一个索引
      * @param type
      * @return
      */
-    long nextIndex(Class type);
+    long nextIndex(Class<?> type);
 }

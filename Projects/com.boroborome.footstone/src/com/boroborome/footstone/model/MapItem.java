@@ -24,10 +24,10 @@ import com.boroborome.footstone.dataenergy.SerialAttribute;
  * @author        BoRoBoRoMe
  * @version       1.0 2010-3-8
  */
-public class MapItem
+public class MapItem<K,V>
 {
-    private Object key;
-    private Object value;
+    private K key;
+    private V value;
     
     /**
      * 构造函数
@@ -41,7 +41,7 @@ public class MapItem
      * @param key
      * @param value
      */
-    public MapItem(Object key, Object value)
+    public MapItem(K key, V value)
     {
         super();
         this.key = key;
@@ -52,7 +52,7 @@ public class MapItem
      * @return key
      */
     @SerialAttribute()
-    public Object getKey()
+    public K getKey()
     {
         return key;
     }
@@ -60,7 +60,7 @@ public class MapItem
      * 设置key
      * @param key key
      */
-    public void setKey(Object key)
+    public void setKey(K key)
     {
         this.key = key;
     }
@@ -69,7 +69,7 @@ public class MapItem
      * @return value
      */
     @SerialAttribute()
-    public Object getValue()
+    public V getValue()
     {
         return value;
     }
@@ -77,7 +77,7 @@ public class MapItem
      * 设置value
      * @param value value
      */
-    public void setValue(Object value)
+    public void setValue(V value)
     {
         this.value = value;
     }

@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
-import com.boroborome.footstone.model.MapItem;
 import com.boroborome.footstone.xml.XmlEnergyUtil;
 
 /**
@@ -350,48 +349,5 @@ public class CompareKit
             }
             return v;
         }
-    }
-    
-    /**
-     * <DT><B>Title:</B></DT>
-     *    <DD>Map值枚举器</DD>
-     * <DT><B>Description:</B></DT>
-     *    <DD>用于遍历Map中信息</DD>
-     * <P>Copyright:  Copyright (c) 2008</P>
-     * <P>Company:    BoRoBoRoMe Co. Ltd.</P>
-     * @author        BoRoBoRoMe
-     * @version       1.0 2010-3-22
-     */
-    @SuppressWarnings("unchecked")
-    private static class MapIterator implements Iterator
-    {
-        private Map map;
-        private Iterator itKey;
-        
-        public MapIterator(Map map)
-        {
-            this.map = map;
-            itKey = map.values().iterator();
-        }
-        
-        @Override
-        public boolean hasNext()
-        {
-            return itKey.hasNext();
-        }
-
-        @Override
-        public Object next()
-        {
-            Object key = itKey.next();
-            return new MapItem(key, map.get(key));
-        }
-
-        @Override
-        public void remove()
-        {
-            //Nothing to do
-        }
-        
     }
 }

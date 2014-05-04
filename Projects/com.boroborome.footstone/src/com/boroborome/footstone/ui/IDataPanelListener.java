@@ -28,5 +28,5 @@ public interface IDataPanelListener extends EventListener
      * @param dataPanel 改变内容的面板
      */
     @SuppressWarnings("unchecked")
-	void dataChanged(final AbstractDataPanel dataPanel);
+	void dataChanged(final AbstractDataPanel<?> dataPanel);
 }

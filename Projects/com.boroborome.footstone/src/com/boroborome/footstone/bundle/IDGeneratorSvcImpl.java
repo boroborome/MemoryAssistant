@@ -34,16 +34,16 @@ public class IDGeneratorSvcImpl implements IIDGeneratorSvc
     /**
      * 保存某个类型对应的索引
      */
-    private Map<Class, IndexCreator> mapIndex = new HashMap<Class, IndexCreator>();
+    private Map<Class<?>, IndexCreator> mapIndex = new HashMap<Class<?>, IndexCreator>();
 
     @Override
-    public void init(Class type, long startIndex)
+    public void init(Class<?> type, long startIndex)
     {
         mapIndex.put(type, new IndexCreator(startIndex));
     }
 
     @Override
-    public long nextIndex(Class type)
+    public long nextIndex(Class<?> type)
     {
         IndexCreator creator = mapIndex.get(type);
         if (creator == null)

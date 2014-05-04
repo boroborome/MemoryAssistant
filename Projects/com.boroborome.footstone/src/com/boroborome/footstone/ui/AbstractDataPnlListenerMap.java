@@ -12,8 +12,6 @@
  */
 package com.boroborome.footstone.ui;
 
-import java.awt.Component;
-
 /**
  * <P>Title:      [产品名称和版本号]</P>
  * <P>Description:数据面板上控件监听的映射结构
@@ -24,21 +22,19 @@ import java.awt.Component;
  * @author        BoRoBoRoMe
  * @version       1.0 2008-10-18
  */
-public abstract class AbstractDataPnlListenerMap
+public abstract class AbstractDataPnlListenerMap<ComT>
 {
     /**
      * 本监听所能处理控件类型
      * 这里不使用泛型JComponent限制类型参数，因为有时控件为接口
      */
-    @SuppressWarnings("unchecked")
-    public final Class comType;
+    public final Class<ComT> comType;
     
     /**
      * 构造函数
      * @param type 本监听管理器所支持的数据类型
      */
-    @SuppressWarnings("unchecked")
-    public AbstractDataPnlListenerMap(Class type)
+    public AbstractDataPnlListenerMap(Class<ComT> type)
     {
         comType = type;
     }
@@ -49,8 +45,7 @@ public abstract class AbstractDataPnlListenerMap
      * @param pnl
      * @param com
      */
-    @SuppressWarnings("unchecked")
-    abstract void bind(final AbstractDataPanel pnl, final Component com);
+    abstract void bind(final AbstractDataPanel<?> pnl, final ComT com);
     
     /**
      * 将本监听从pnl的控件上的去掉<br>
@@ -58,6 +53,5 @@ public abstract class AbstractDataPnlListenerMap
      * @param pnl
      * @param com
      */
-    @SuppressWarnings("unchecked")
-    abstract void unbind(final AbstractDataPanel pnl, final Component com);
+    abstract void unbind(final AbstractDataPanel<?> pnl, final ComT com);
 }

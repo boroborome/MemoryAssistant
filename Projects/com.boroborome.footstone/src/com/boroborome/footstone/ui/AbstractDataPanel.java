@@ -60,144 +60,126 @@ public abstract class AbstractDataPanel<T> extends JPanel
      * AbstractDataPanel对界面控件监听逻辑列表
      * ComItem列表
      */
-    private static List<AbstractDataPnlListenerMap> lstTypeListener;
+    private static List<AbstractDataPnlListenerMap<?>> lstTypeListener;
     
     /**
      * 获取全局唯一类型处理注册器
      * @return 全局唯一类型处理注册器
      */
-    public static List<AbstractDataPnlListenerMap> getLstTypeListener()
+    public static List<AbstractDataPnlListenerMap<?>> getLstTypeListener()
     {
         if (lstTypeListener == null)
         {
-            lstTypeListener = new ArrayList<AbstractDataPnlListenerMap>();
+            lstTypeListener = new ArrayList<AbstractDataPnlListenerMap<?>>();
             // 各种文本录入框
-            lstTypeListener.add(new AbstractDataPnlListenerMap(JTextComponent.class)
+            lstTypeListener.add(new AbstractDataPnlListenerMap<JTextComponent>(JTextComponent.class)
             {
-                @SuppressWarnings("unchecked")
                 @Override
-                public void bind(AbstractDataPanel pnl, Component com)
+                public void bind(AbstractDataPanel<?> pnl, JTextComponent com)
                 {
-                    ((JTextComponent) com).getDocument().addDocumentListener(pnl.eventContainer);
+                    com.getDocument().addDocumentListener(pnl.eventContainer);
                 }
-                @SuppressWarnings("unchecked")
                 @Override
-                public void unbind(AbstractDataPanel pnl, Component com)
+                public void unbind(AbstractDataPanel<?> pnl, JTextComponent com)
                 {
-                    ((JTextComponent) com).getDocument().removeDocumentListener(pnl.eventContainer);
+                    com.getDocument().removeDocumentListener(pnl.eventContainer);
                 }
             });
 
             // 下拉框和勾选框（按钮也包含在内，但没有意义）
-            lstTypeListener.add(new AbstractDataPnlListenerMap(ItemSelectable.class)
+            lstTypeListener.add(new AbstractDataPnlListenerMap<ItemSelectable>(ItemSelectable.class)
             {
-                @SuppressWarnings("unchecked")
                 @Override
-                public void bind(AbstractDataPanel pnl, Component com)
+                public void bind(AbstractDataPanel<?> pnl, ItemSelectable com)
                 {
-                    ((ItemSelectable) com).addItemListener(pnl.eventContainer);
+                    com.addItemListener(pnl.eventContainer);
                 }
-                @SuppressWarnings("unchecked")
                 @Override
-                public void unbind(AbstractDataPanel pnl, Component com)
+                public void unbind(AbstractDataPanel<?> pnl, ItemSelectable com)
                 {
-                    ((ItemSelectable) com).removeItemListener(pnl.eventContainer);
+                    com.removeItemListener(pnl.eventContainer);
                 }
             });
 
             // 表格的处理
-            lstTypeListener.add(new AbstractDataPnlListenerMap(JTable.class)
+            lstTypeListener.add(new AbstractDataPnlListenerMap<JTable>(JTable.class)
             {
-                @SuppressWarnings("unchecked")
                 @Override
-                public void bind(AbstractDataPanel pnl, Component com)
+                public void bind(AbstractDataPanel<?> pnl, JTable tbl)
                 {
-                    JTable tbl = (JTable) com;
                     tbl.addPropertyChangeListener("model", pnl.tablePropertyListener); //$NON-NLS-1$
                     tbl.getModel().addTableModelListener(pnl.eventContainer);
                 }
-                @SuppressWarnings("unchecked")
                 @Override
-                public void unbind(AbstractDataPanel pnl, Component com)
+                public void unbind(AbstractDataPanel<?> pnl, JTable tbl)
                 {
-                    JTable tbl = (JTable) com;
                     tbl.removePropertyChangeListener("model", pnl.tablePropertyListener); //$NON-NLS-1$
                     tbl.getModel().removeTableModelListener(pnl.eventContainer);
                 }
             });
             // 数据面板的处理方式
-            lstTypeListener.add(new AbstractDataPnlListenerMap(AbstractDataPanel.class)
+            lstTypeListener.add(new AbstractDataPnlListenerMap<AbstractDataPanel>(AbstractDataPanel.class)
             {
-                @SuppressWarnings("unchecked")
                 @Override
-                public void bind(AbstractDataPanel pnl, Component com)
+                public void bind(AbstractDataPanel<?> pnl, AbstractDataPanel com)
                 {
-                    ((AbstractDataPanel) com).getEventContainer().addEventListener(pnl.eventContainer);
+                    com.getEventContainer().addEventListener(pnl.eventContainer);
                 }
 
-                @SuppressWarnings("unchecked")
                 @Override
-                public void unbind(AbstractDataPanel pnl, Component com)
+                public void unbind(AbstractDataPanel<?> pnl, AbstractDataPanel com)
                 {
-                    ((AbstractDataPanel) com).getEventContainer().removeEventListener(pnl.eventContainer);
+                    com.getEventContainer().removeEventListener(pnl.eventContainer);
                 }
             });
 
             // ExtTable类型表格
-            lstTypeListener.add(new AbstractDataPnlListenerMap(ExtTable.class)
+            lstTypeListener.add(new AbstractDataPnlListenerMap<ExtTable>(ExtTable.class)
             {
-                @SuppressWarnings("unchecked")
                 @Override
-                public void bind(AbstractDataPanel pnl, Component com)
+                public void bind(AbstractDataPanel<?> pnl, ExtTable com)
                 {
-                    pnl.dataPanelContainerListener.add(((ExtTable) com).getInnerTable());
+                    pnl.dataPanelContainerListener.add(com.getInnerTable());
                 }
-                @SuppressWarnings("unchecked")
                 @Override
-                public void unbind(AbstractDataPanel pnl, Component com)
+                public void unbind(AbstractDataPanel<?> pnl, ExtTable com)
                 {
-                    pnl.dataPanelContainerListener.remove(((ExtTable) com).getInnerTable());
+                    pnl.dataPanelContainerListener.remove(com.getInnerTable());
                 }
             });
 
             // JScrollPane类型表格
-            lstTypeListener.add(new AbstractDataPnlListenerMap(JScrollPane.class)
+            lstTypeListener.add(new AbstractDataPnlListenerMap<JScrollPane>(JScrollPane.class)
             {
-                @SuppressWarnings("unchecked")
                 @Override
-                public void bind(AbstractDataPanel pnl, Component com)
+                public void bind(AbstractDataPanel<?> pnl, JScrollPane com)
                 {
-                    pnl.dataPanelContainerListener.add(((JScrollPane) com).getViewport().getView());
+                    pnl.dataPanelContainerListener.add(com.getViewport().getView());
                 }
-                @SuppressWarnings("unchecked")
                 @Override
-                public void unbind(AbstractDataPanel pnl, Component com)
+                public void unbind(AbstractDataPanel<?> pnl, JScrollPane com)
                 {
-                    pnl.dataPanelContainerListener.remove(((JScrollPane) com).getViewport().getView());
+                    pnl.dataPanelContainerListener.remove(com.getViewport().getView());
                 }
             });
 
             // 遍历容器
-            lstTypeListener.add(new AbstractDataPnlListenerMap(Container.class)
+            lstTypeListener.add(new AbstractDataPnlListenerMap<Container>(Container.class)
             {
-                @SuppressWarnings("unchecked")
                 @Override
-                public void bind(AbstractDataPanel pnl, Component com)
+                public void bind(AbstractDataPanel<?> pnl, Container com)
                 {
-                    Container c = (Container) com;
-                    for (int i = 0, l = c.getComponentCount(); i < l; i++)
+                    for (int i = 0, l = com.getComponentCount(); i < l; i++)
                     {
-                        pnl.dataPanelContainerListener.add(c.getComponent(i));
+                        pnl.dataPanelContainerListener.add(com.getComponent(i));
                     }
                 }
-                @SuppressWarnings("unchecked")
                 @Override
-                public void unbind(AbstractDataPanel pnl, Component com)
+                public void unbind(AbstractDataPanel<?> pnl, Container com)
                 {
-                    Container c = (Container) com;
-                    for (int i = 0, l = c.getComponentCount(); i < l; i++)
+                    for (int i = 0, l = com.getComponentCount(); i < l; i++)
                     {
-                        pnl.dataPanelContainerListener.remove(c.getComponent(i));
+                        pnl.dataPanelContainerListener.remove(com.getComponent(i));
                     }
                 }
             });

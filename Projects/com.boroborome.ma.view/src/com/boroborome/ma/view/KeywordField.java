@@ -297,7 +297,7 @@ public class KeywordField extends JTextField
 	}
 
 
-	private int findEndIndex(int endIndex, String strKeywords)
+	private static int findEndIndex(int endIndex, String strKeywords)
 	{
 		for (int keywordLen = strKeywords.length(); endIndex < keywordLen && strKeywords.charAt(endIndex) != MAKeyword.KeywordSplitChar; ++endIndex)
 		{
