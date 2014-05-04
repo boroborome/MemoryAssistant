@@ -36,8 +36,6 @@ import com.boroborome.ma.view.query.QueryAssistant;
 
 /**
  * @author boroborome
- * TODO this control should return the keyword's id?
- * TODO we should implement the fun:select keyword from popup window
  */
 public class KeywordField extends JTextField
 {
@@ -99,7 +97,7 @@ public class KeywordField extends JTextField
 			{
 				if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 2)
 				{
-					selectKeywordInPopWin();
+					doSelectKeywordInPopWin();
 				}
 			}
 		});
@@ -153,14 +151,6 @@ public class KeywordField extends JTextField
 	
 	private void updatePopupInfo()
 	{
-		// find out the right posistion to show the popup window
-		Point newPos = this.getLocation();
-		SwingUtilities.convertPointToScreen(newPos, this.getParent());
-		newPos.y += this.getHeight();
-		newPos.x += this.getFontMetrics(getFont()).stringWidth(this.getText().substring(0, this.getCaretPosition()));
-		popupWindow.setLocation(newPos);
-		popupWindow.setVisible(true);
-		
 		//find out the word prefix to query
 		Point preLocation = findCurKeywordPos();
 		
@@ -170,8 +160,15 @@ public class KeywordField extends JTextField
 		
 		setExistKeyword.clear();
 		setExistKeyword.addAll(Arrays.asList(strKeywords.split(MAKeyword.KeywordSplitStr)));
-		this.queryAssistant.setCondtion(prefix);
 		
+		if (prefix == null || prefix.isEmpty())
+		{
+			this.popupWindow.setVisible(false);
+		}
+		else
+		{
+			queryAssistant.setCondtion(prefix);
+		}
 	}
 
 
@@ -223,7 +220,7 @@ public class KeywordField extends JTextField
 		this.setText(buf.toString());	
 	}
 
-	private void selectKeywordInPopWin()
+	private void doSelectKeywordInPopWin()
 	{
 		int selectRow = tblKey.getSelectedRow();
 		if (selectRow >= 0)
@@ -269,16 +266,18 @@ public class KeywordField extends JTextField
 			}
 			else
 			{
-				curCare = this.findEndIndex(curCare, newKeywords);
+				curCare = findEndIndex(curCare, newKeywords);
 			}
 			this.setCaretPosition(curCare);
 			
 			setExistKeyword.add(keyword.getKeyword());
+			
+			popupWindow.setVisible(false);
 		}
 	}
 
 
-	private int findStartIndex(int startIndex, String strKeywords)
+	private static int findStartIndex(int startIndex, String strKeywords)
 	{
 		int keywordLen = strKeywords.length();
 		for (--startIndex; startIndex > 0; --startIndex)
@@ -342,6 +341,20 @@ public class KeywordField extends JTextField
 			synchronized(setAvailableKeyword)
 			{
 				tblModelKey.showData(it);			
+				if (tblModelKey.getRowCount() <= 0)
+				{
+					popupWindow.setVisible(false);
+				}
+				else
+				{
+					// find out the right posistion to show the popup window
+					Point newPos = getLocation();
+					SwingUtilities.convertPointToScreen(newPos, getParent());
+					newPos.y += getHeight();
+					newPos.x += getFontMetrics(getFont()).stringWidth(getText().substring(0, getCaretPosition()));
+					popupWindow.setLocation(newPos);
+					popupWindow.setVisible(true);
+				}
 			}
 		}
 		
@@ -383,7 +396,7 @@ public class KeywordField extends JTextField
 			@Override
 			public void doAction(KeyEvent e)
 			{
-				selectKeywordInPopWin();				
+				doSelectKeywordInPopWin();				
 			}
 		});
 		

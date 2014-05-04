@@ -48,6 +48,7 @@ public class QueryAssistant<CondtionType, DataType>
 	 */
 	public void setCondtion(CondtionType condition)
 	{
+		System.out.println("this:" + this.hashCode());
 		if (this.condition == condition)
 		{
 			return;
@@ -55,12 +56,17 @@ public class QueryAssistant<CondtionType, DataType>
 		if (condition == null || !condition.equals(this.condition))
 		{
 			this.condition = condition;
-			conditionChanged = true;
-			if (queryThread == null)
+			synchronized(QueryAssistant.this)
 			{
-				queryThread = new QueryThread();
-				queryThread.setName(threadName);
-				queryThread.start();
+				System.out.println("conditionChanged = true;" + condition);
+				conditionChanged = true;
+				if (queryThread == null)
+				{
+					System.out.println("queryThread != null" + condition);
+					queryThread = new QueryThread();
+					queryThread.setName(threadName);
+					queryThread.start();
+				}
 			}
 		}
 	}
@@ -75,24 +81,38 @@ public class QueryAssistant<CondtionType, DataType>
 			{
 				do
 				{
-					//TODO [optimize] we should better to add a delay before start
+					System.out.println("query");
 					conditionChanged = false;
+					//sleep
+					Thread.sleep(100);
+					if (conditionChanged)
+					{
+						continue;
+					}
+					
+					//clear table
 					logic.clearView();
 					if (conditionChanged)
 					{
 						continue;
 					}
 					
+					//query
 					Iterator<DataType> it = logic.query(condition);
 					if (conditionChanged)
 					{
 						continue;
 					}
 					
+					//show result
 					logic.showData(it);
-					if (conditionChanged)
+					synchronized(QueryAssistant.this)
 					{
-						continue;
+						if (conditionChanged)
+						{
+							continue;
+						}
+						queryThread = null;
 					}
 				}
 				while (false);
