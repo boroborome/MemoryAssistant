@@ -21,8 +21,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -41,6 +39,9 @@ import com.boroborome.ma.model.MAKeyword;
 import com.boroborome.ma.model.svc.IMAInformationSvc;
 import com.boroborome.ma.view.query.IQueryLogic;
 import com.boroborome.ma.view.query.QueryAssistant;
+import com.boroborome.ma.view.wgt.IKeywordFieldListener;
+import com.boroborome.ma.view.wgt.KeywordField;
+import com.boroborome.ma.view.wgt.KeywordFieldEvent;
 
 /**
  * @author boroborome
@@ -67,35 +68,16 @@ public class InfoManagePanel extends JPanel
 
 	private void initActions()
 	{
-		txtKeys.getDocument().addDocumentListener(new DocumentListener()
+		txtKeys.getEventContainer().addEventListener(new IKeywordFieldListener()
 		{
-
 			@Override
-			public void insertUpdate(DocumentEvent e)
+			public void onKeywordChange(KeywordFieldEvent e)
 			{
-				updateQueryCondition();				
-			}
-
-			@Override
-			public void removeUpdate(DocumentEvent e)
-			{
-				updateQueryCondition();				
-			}
-
-			@Override
-			public void changedUpdate(DocumentEvent e)
-			{
-				updateQueryCondition();				
+				queryAssistant.setCondtion(e.getLstKey());
 			}
 		});
 	}
 	
-	private void updateQueryCondition()
-	{
-		List<MAKeyword> lstKey = txtKeys.getLstKeyword();
-		queryAssistant.setCondtion(lstKey);
-	}
-
 	private void initUI()
 	{
 		//TODO [optimize] the ui of information management should be improve to more usefull

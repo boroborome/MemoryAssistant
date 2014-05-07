@@ -29,6 +29,7 @@ import com.boroborome.footstone.ui.AbstractDataPanel;
 import com.boroborome.ma.model.MAInformation;
 import com.boroborome.ma.model.MAKeyword;
 import com.boroborome.ma.view.res.ResConst;
+import com.boroborome.ma.view.wgt.KeywordField;
 
 /**
  * @author boroborome
