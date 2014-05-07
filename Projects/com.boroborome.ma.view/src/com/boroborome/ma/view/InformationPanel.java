@@ -52,7 +52,6 @@ public class InformationPanel extends AbstractDataPanel<MAInformation>
 			@Override
 			public void drop(DropTargetDropEvent event)
 			{
-				System.out.println("drop");
 				doAcceptDropFile(event);
 			}
 			

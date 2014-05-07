@@ -93,7 +93,6 @@ public class InfoManagePanel extends JPanel
 	private void updateQueryCondition()
 	{
 		List<MAKeyword> lstKey = txtKeys.getLstKeyword();
-		System.out.println("update key:" + lstKey);
 		queryAssistant.setCondtion(lstKey);
 	}
 

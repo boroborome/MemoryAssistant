@@ -17,6 +17,8 @@ public class QueryAssistant<CondtionType, DataType>
 	
 	private CondtionType condition;
 	private boolean conditionChanged = false;
+	private Object conditionLock = new Object();
+	
 	private IQueryLogic<CondtionType, DataType> logic;
 	
 	//TODO [optimize] can implements with a thread pool
@@ -48,21 +50,18 @@ public class QueryAssistant<CondtionType, DataType>
 	 */
 	public void setCondtion(CondtionType condition)
 	{
-		System.out.println("this:" + this.hashCode());
-		if (this.condition == condition)
+		synchronized(conditionLock)
 		{
-			return;
-		}
-		if (condition == null || !condition.equals(this.condition))
-		{
-			this.condition = condition;
-			synchronized(QueryAssistant.this)
+			if (this.condition == condition)
 			{
-				System.out.println("conditionChanged = true;" + condition);
+				return;
+			}
+			if (condition == null || !condition.equals(this.condition))
+			{
+				this.condition = condition;
 				conditionChanged = true;
 				if (queryThread == null)
 				{
-					System.out.println("queryThread != null" + condition);
 					queryThread = new QueryThread();
 					queryThread.setName(threadName);
 					queryThread.start();
@@ -81,7 +80,6 @@ public class QueryAssistant<CondtionType, DataType>
 			{
 				do
 				{
-					System.out.println("query");
 					conditionChanged = false;
 					//sleep
 					Thread.sleep(100);
@@ -106,16 +104,17 @@ public class QueryAssistant<CondtionType, DataType>
 					
 					//show result
 					logic.showData(it);
-					synchronized(QueryAssistant.this)
+					synchronized(conditionLock)
 					{
 						if (conditionChanged)
 						{
 							continue;
 						}
 						queryThread = null;
+						break;
 					}
 				}
-				while (false);
+				while (true);
 				
 			}
 			catch (Exception e)
