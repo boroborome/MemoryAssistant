@@ -2,7 +2,7 @@
 <project name="com.boroborome.ma.model" default="pack">
 	<property name="src.dir" value="src"/>
 	<property name="bin.dir" value="bin"/>
-	<property name="output.dir" value="../../Release/lib"/>
+	<property name="output.dir" value="../../Release/plugins"/>
 	
 	<target name="pack">
 		<!-- deltree dir="${output.dir}/resource"/ -->
