@@ -1,11 +1,3 @@
-/*
- * <P>Title:      任务事件管理器 V1.0</P>
- * <P>Description:任务事件管理器接口</P>
- * <P>Copyright:  Copyright (c) 2008</P>
- * <P>Company:    BoRoBoRoMe Co. Ltd.</P>
- * @author        BoRoBoRoMe
- * @version       1.0 2011-6-26
- */
 package com.boroborome.ma.model.svc;
 
 import java.util.List;
@@ -22,7 +14,21 @@ import com.boroborome.ma.model.MAKeyword;
  */
 public interface IMAKeywordSvc extends IAutoIDDataSvc<MAKeyword>
 {
+	/**
+	 * Refresh the id of keyword and save them into database<br>
+	 * this funcation do two things<br>
+	 * 1.if the keyword is exist,then query the database and set the id of keyword<br>
+	 * 2.if the keyword is not exist,then create new id for this keyword<br>
+	 * 3.save the keyword not exist into database.
+	 * @param lstKeyword
+	 * @throws MessageException
+	 */
 	public void saveAndUpdate(List<MAKeyword> lstKeyword) throws MessageException;
 
+	/**
+	 * find out the id of the keyword from database,if it is not exist,then set -1 to id.
+	 * @param lstKeyword
+	 * @return
+	 */
 	public Iterable<MAKeyword> updateID(List<MAKeyword> lstKeyword);
 }

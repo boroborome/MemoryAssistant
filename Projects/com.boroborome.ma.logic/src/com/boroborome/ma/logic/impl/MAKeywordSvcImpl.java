@@ -56,7 +56,7 @@ public class MAKeywordSvcImpl implements IMAKeywordSvc
 	                public void fill(PreparedStatement statement, MAKeyword value) throws SQLException
 	                {
 	                    statement.setLong(1, value.getWordid());
-	                    statement.setString(2, value.getKeyword());
+	                    statement.setString(2, value.getKeyword().toLowerCase());
 	                }
 	                
 	                @Override
@@ -100,7 +100,7 @@ public class MAKeywordSvcImpl implements IMAKeywordSvc
         MAKeywordCondition c = (MAKeywordCondition) condition;
         if (c.getKeywordLike() != null && !c.getKeywordLike().isEmpty())
         {
-        	builder.appendCondition("keyword like ?", c.getKeywordLike() + '%');
+        	builder.appendCondition("keyword like ?", c.getKeywordLike().toLowerCase() + '%');
         }
         
     	return queryBySqlBuilder(builder);
