@@ -1,0 +1,69 @@
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<head>
+<title>数据引擎使用说明</title>
+</head>
+<body>
+数据引擎使用说明<br>
+数据引擎的目的是要实现不同数据间的自由转换,应用场景如下
+<ol>
+<li>
+备份数据<br>
+将数据从数据库中查出来,同时保存到xml文件。<br>
+</li>
+
+<li>
+恢复数据<br>
+从Xml文件读取数据，将数据导致数据库。<br>
+</li>
+<li>
+将数据库中数据显示在界面<br>
+从数据库查询数据，将数据显示在界面。
+</li>
+<li>
+保存列表中数据到Xml文件<br>
+对于已经处理好的界面列表数据，可以通过此引擎逻辑，将信息保存到Xml文件。
+</li>
+<li>
+异常说明<br>
+各种异常说明不是需要显示给用户就是要记录日志，都是需要本地化的资源<br>
+这部分信息通过MessageException表示出需要读取的资源和资源存放位置，由捕获异常的界面部分处理本地化显示。
+</li>
+</ol>
+
+数据引擎还具有如下特点：
+<ul>
+<li>不占用内存，所有数据时事转换成目标数据。</li>
+<li>一种数据可以同时转换成多中其他类型的数据。<br>
+比如：从Xml文件中间信息保存到数据库的同时可以使用界面显示的引擎显示数据；或者将数据保存到多个数据库。</li>
+</ul>
+
+</br>
+对象引擎和XML引擎之间支持如下几种转换方式
+<ul>
+<li>自动处理带有SerialAttribute标记的属性。简单类型属性支持：数字，字符串，Class等。</li>
+<li>复杂属性会转换为XML的节点。<br>
+对于某些复杂类型属性，不想保存整个对象，只想保存关键属性的情况,可以增加一个关键字属性，让这个关键字属性参与序列化。
+<pre>
+private MyObject obj;
+
+//这个属性不参与序列化
+public MyObject getObj()
+{
+	return obj;
+}
+
+//使用这个属性来保存对象信息
+@SerialAttribute
+public String getObjKey()
+{
+	return obj.getKey();
+}
+</pre></li>
+<li>需要支持节点转换。比如List中有某种类型的数据，但这些数据不需要保存整个的信息，只需要保存关键属性，在转换时会遇到困难。</li>
+</ul>
+<p>
+对象引擎提供了默认实例，默认实例使用这个配置文件：/res/com/boroborome/common/dataenergy/objectMapTable.xml
+</p>
+</body>
+</html>

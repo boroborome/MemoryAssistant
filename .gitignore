@@ -17,5 +17,7 @@ Projects/com.boroborome.ma.view/bin/
 /bin/
 *.class
 Projects/com.boroborome.ma.view/bin/com/boroborome/ma/view/bundle/Activator$1.class
-*.class
 */.settings/*
+.gradle
+.idea
+TaskMgr
