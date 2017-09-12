@@ -20,3 +20,9 @@ spring:
 
 flyway:
   locations: classpath:/db/migration, /db/h2
+
+happy3w:
+  footstone:
+    installsvc:
+      install: db/install.sql
+      uninstall: db/uninstall.sql
