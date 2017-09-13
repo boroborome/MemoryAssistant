@@ -39,7 +39,7 @@ public interface IDatabaseMgrSvc
 	 */
 	public<T> void executeSql(String sql, Iterator<T> it, IFillSql<T> fileMethod) throws MessageException;
 	
-	PreparedStatement createStatement(String sql) throws MessageException;
+//	PreparedStatement createStatement(String sql) throws MessageException;
 	
 	boolean executeUpdateSql(String sql, Object... param);
 	

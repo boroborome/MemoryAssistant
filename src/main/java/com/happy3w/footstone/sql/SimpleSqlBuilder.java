@@ -61,14 +61,13 @@ public class SimpleSqlBuilder
     	lstParam.addAll(Arrays.asList(param));
     	haveNoCondtion = false;
     }
-    
-    public PreparedStatement createStatement(IDatabaseMgrSvc dbMgrSvc) throws MessageException
+
+	public void fillParameters(PreparedStatement ps) {
+    	fillParameters(ps, lstParam);
+	}
+
+    public static void fillParameters(PreparedStatement statement, List lstParam) throws MessageException
     {
-    	return createStatement(sqlString.toString(), this.lstParam, dbMgrSvc);
-    }
-    public static PreparedStatement createStatement(String sql, List lstParam, IDatabaseMgrSvc dbMgrSvc) throws MessageException
-    {
-    	PreparedStatement statement = dbMgrSvc.createStatement(sql);
     	try
     	{
 	    	for (int indexParam = 0, countParam = lstParam.size(); indexParam < countParam; ++indexParam)
@@ -99,8 +98,8 @@ public class SimpleSqlBuilder
     	catch (SQLException e)
     	{
     		throw new MessageException(ResConst.ResKey, ResConst.FailedInSetSqlParam, 
-					new Object[]{sql}, e);
+					new Object[]{"Unkown"}, e);
     	}
-    	return statement;
     }
+
 }

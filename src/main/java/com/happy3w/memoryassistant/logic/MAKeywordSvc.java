@@ -3,6 +3,25 @@
  */
 package com.happy3w.memoryassistant.logic;
 
+import com.happy3w.footstone.exception.MessageException;
+import com.happy3w.footstone.model.EventContainer;
+import com.happy3w.footstone.model.IBufferIterator;
+import com.happy3w.footstone.sql.IDatabaseMgrSvc;
+import com.happy3w.footstone.sql.IFillSql;
+import com.happy3w.footstone.sql.SimpleSqlBuilder;
+import com.happy3w.footstone.svc.IAutoIDDataSvc;
+import com.happy3w.footstone.svc.IDataChangeListener;
+import com.happy3w.footstone.svc.IDataCondition;
+import com.happy3w.footstone.svc.IIDGeneratorSvc;
+import com.happy3w.memoryassistant.model.MAKeyword;
+import com.happy3w.memoryassistant.model.MAKeywordCondition;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCallback;
+import org.springframework.stereotype.Service;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,24 +29,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-import com.happy3w.footstone.svc.IAutoIDDataSvc;
-import org.apache.log4j.Logger;
-
-import com.happy3w.footstone.exception.MessageException;
-import com.happy3w.footstone.model.EventContainer;
-import com.happy3w.footstone.model.IBufferIterator;
-import com.happy3w.footstone.sql.IDatabaseMgrSvc;
-import com.happy3w.footstone.sql.IFillSql;
-import com.happy3w.footstone.sql.SimpleSqlBuilder;
-import com.happy3w.footstone.svc.IDataChangeListener;
-import com.happy3w.footstone.svc.IDataCondition;
-import com.happy3w.footstone.svc.IIDGeneratorSvc;
-import com.happy3w.memoryassistant.logic.res.ResConst;
-import com.happy3w.memoryassistant.model.MAKeyword;
-import com.happy3w.memoryassistant.model.MAKeywordCondition;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 /**
  * @author boroborome
@@ -43,6 +44,10 @@ public class MAKeywordSvc implements IAutoIDDataSvc<MAKeyword>
 
 	@Autowired
 	private IDatabaseMgrSvc dbMgrSvc;
+
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
+
 	private EventContainer<IDataChangeListener<MAKeyword>> eventContainer = new EventContainer<IDataChangeListener<MAKeyword>>(IDataChangeListener.class);
     
 	public MAKeywordSvc(IDatabaseMgrSvc dbMgrSvc)
@@ -124,41 +129,52 @@ public class MAKeywordSvc implements IAutoIDDataSvc<MAKeyword>
 			return null;
 		}
 		
-		IBufferIterator<MAKeyword> result = null;
-		PreparedStatement statement = sqlBuilder.createStatement(dbMgrSvc);
-    	ResultSet rs = null;
-		try
-		{
-			rs = statement.executeQuery();
-			if (rs != null && !rs.isClosed())
-			{
-				result = new MAKeywordDBIterator(rs);
-			}
-		}
-		catch (SQLException e)
-		{
-			if (rs != null)
-			{
-				try
+		IBufferIterator<MAKeyword> result = jdbcTemplate.execute(sqlBuilder.toString(), new PreparedStatementCallback<IBufferIterator<MAKeyword>>() {
+			@Override
+			public IBufferIterator<MAKeyword> doInPreparedStatement(PreparedStatement ps) throws SQLException, DataAccessException {
+				sqlBuilder.fillParameters(ps);
+				ResultSet rs = ps.executeQuery();
+				if (rs != null && !rs.isClosed())
 				{
-					rs.close();
+					return new MAKeywordDBIterator(rs);
 				}
-				catch (SQLException e1)
-				{
-					log.error("close rs failed.", e1);
-				}
+				return null;
 			}
-			try
-			{
-				statement.close();
-			}
-			catch (SQLException e1)
-			{
-				log.error("close statement failed.", e1);
-			}
-				
-			throw new MessageException(ResConst.ResKey, ResConst.FailedInExeSql);
-		}
+		});
+//		PreparedStatement statement = sqlBuilder.fillParameters(dbMgrSvc);
+//    	ResultSet rs = null;
+//		try
+//		{
+//			rs = statement.executeQuery();
+//			if (rs != null && !rs.isClosed())
+//			{
+//				result = new MAKeywordDBIterator(rs);
+//			}
+//		}
+//		catch (SQLException e)
+//		{
+//			if (rs != null)
+//			{
+//				try
+//				{
+//					rs.close();
+//				}
+//				catch (SQLException e1)
+//				{
+//					log.error("close rs failed.", e1);
+//				}
+//			}
+//			try
+//			{
+//				statement.close();
+//			}
+//			catch (SQLException e1)
+//			{
+//				log.error("close statement failed.", e1);
+//			}
+//
+//			throw new MessageException(ResConst.ResKey, ResConst.FailedInExeSql);
+//		}
 		
 		//This statement and rs will be used by MAKeywordDBIterator.
 		//So they can't be closed here
@@ -196,48 +212,7 @@ public class MAKeywordSvc implements IAutoIDDataSvc<MAKeyword>
     @Override
     public long getMaxID() throws MessageException
     {
-        long result = 0;
-        PreparedStatement statement = dbMgrSvc.createStatement("select max(wordid) as maxID from tblKeyWord");
-        ResultSet rs = null;
-        try
-        {
-            if (statement.execute())
-            {
-                rs = statement.getResultSet();
-                if (rs.next())
-                {
-                    result = rs.getLong("maxID");
-                }
-            }
-        }
-        catch (SQLException e)
-        {
-            throw new MessageException(ResConst.ResKey, ResConst.FailedInExeSql, e);
-        }
-        finally
-        {
-        	if (statement != null)
-        	{
-        		try
-				{
-					statement.close();
-				}
-				catch (SQLException e)
-				{
-				}
-        	}
-        	if (rs != null)
-        	{
-        		try
-				{
-					rs.close();
-				}
-				catch (SQLException e)
-				{
-				}
-        	}
-        }
-        return result;
+		return jdbcTemplate.queryForObject("select max(wordid) as maxID from tblKeyWord", Long.class);
     }
 
 	public Iterable<MAKeyword> updateID(List<MAKeyword> lstKeyword)

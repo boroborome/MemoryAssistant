@@ -3,20 +3,6 @@
  */
 package com.happy3w.memoryassistant.logic;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import com.happy3w.footstone.svc.IDataSvc;
-import com.happy3w.memoryassistant.logic.res.ResConst;
-import com.happy3w.memoryassistant.model.MAInformation;
-import com.happy3w.memoryassistant.model.MAInformationCondition;
-import com.happy3w.memoryassistant.model.MAKeyword;
-import org.apache.log4j.Logger;
-
 import com.happy3w.footstone.exception.MessageException;
 import com.happy3w.footstone.model.EventContainer;
 import com.happy3w.footstone.model.IBufferIterator;
@@ -24,18 +10,30 @@ import com.happy3w.footstone.sql.IDatabaseMgrSvc;
 import com.happy3w.footstone.sql.IFillSql;
 import com.happy3w.footstone.svc.IDataChangeListener;
 import com.happy3w.footstone.svc.IDataCondition;
+import com.happy3w.footstone.svc.IDataSvc;
+import com.happy3w.memoryassistant.logic.res.ResConst;
+import com.happy3w.memoryassistant.model.MAInformation;
+import com.happy3w.memoryassistant.model.MAInformationCondition;
+import com.happy3w.memoryassistant.model.MAKeyword;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author boroborome
  *
  */
+@Slf4j
 @Service
 public class MAInformationSvc implements IDataSvc<MAInformation>
 {
-private static Logger logger = Logger.getLogger(MAInformationSvc.class);
-	
 	private IDatabaseMgrSvc dbMgrSvc;
 	private EventContainer<IDataChangeListener<MAInformation>> eventContainer = new EventContainer<IDataChangeListener<MAInformation>>(IDataChangeListener.class);
 	@Autowired
@@ -199,7 +197,7 @@ private static Logger logger = Logger.getLogger(MAInformationSvc.class);
 			}
 			catch (SQLException e1)
 			{
-				logger.error("close rs failed.", e1);
+				log.error("close rs failed.", e1);
 			}
 				
 			throw new MessageException(ResConst.ResKey, ResConst.FailedInExeSql);
