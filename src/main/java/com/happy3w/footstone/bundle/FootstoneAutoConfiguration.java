@@ -3,7 +3,8 @@ package com.happy3w.footstone.bundle;
 import com.happy3w.footstone.exception.IExceptionGrave;
 import com.happy3w.footstone.res.ResConst;
 import com.happy3w.footstone.resource.IResourceMgrSvc;
-import com.happy3w.footstone.sql.DefaultDatabaseMgrSvc;
+import com.happy3w.footstone.resource.ResourceMgrSvc;
+import com.happy3w.footstone.sql.DatabaseMgrSvc;
 import com.happy3w.footstone.sql.IDatabaseMgrSvc;
 import com.happy3w.footstone.svc.IIDGeneratorSvc;
 import com.happy3w.footstone.ui.action.IObjectActionSvc;
@@ -20,9 +21,9 @@ import java.io.IOException;
 public class FootstoneAutoConfiguration {
     @Bean
     public IResourceMgrSvc resourceMgrSvc() {
-        IResourceMgrSvc svc = new ResourceMgrSvcImpl();
+        IResourceMgrSvc svc = new ResourceMgrSvc();
         try {
-            svc.regRes(ResConst.ResKey, ResConst.class.getResourceAsStream("resource.properties"));
+            svc.regRes(ResConst.ResKey, ResConst.class.getClassLoader().getResourceAsStream("com/happy3w/footstone/resource.properties"));
         } catch (IOException e) {
             log.error("Unexpected error when load resource.", e);
         }
@@ -46,6 +47,6 @@ public class FootstoneAutoConfiguration {
 
     @Bean
     public IDatabaseMgrSvc iDatabaseMgrSvc() {
-        return new DefaultDatabaseMgrSvc();
+        return new DatabaseMgrSvc();
     }
 }

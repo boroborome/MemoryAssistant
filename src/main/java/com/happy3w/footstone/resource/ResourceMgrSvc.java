@@ -6,7 +6,9 @@
  * @author        BoRoBoRoMe
  * @version       1.0 2011-7-2
  */
-package com.happy3w.footstone.bundle;
+package com.happy3w.footstone.resource;
+
+import com.happy3w.footstone.util.ReadOnlyMap;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,15 +16,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-import com.happy3w.footstone.resource.IResourceMgrSvc;
-import com.happy3w.footstone.resource.PropertyResourceBundleExt;
-import com.happy3w.footstone.util.ReadOnlyMap;
-
 /**
  * @author BoRoBoRoMe
  *
  */
-public class ResourceMgrSvcImpl implements IResourceMgrSvc
+public class ResourceMgrSvc implements IResourceMgrSvc
 {
     /**
      * 资源影射表

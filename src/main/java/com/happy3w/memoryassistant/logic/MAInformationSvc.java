@@ -34,6 +34,7 @@ import java.util.List;
 @Service
 public class MAInformationSvc implements IDataSvc<MAInformation>
 {
+
 	private IDatabaseMgrSvc dbMgrSvc;
 	private EventContainer<IDataChangeListener<MAInformation>> eventContainer = new EventContainer<IDataChangeListener<MAInformation>>(IDataChangeListener.class);
 	@Autowired

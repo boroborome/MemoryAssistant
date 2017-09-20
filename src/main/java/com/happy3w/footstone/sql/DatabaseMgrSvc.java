@@ -34,12 +34,11 @@ import java.util.Iterator;
  * @author        boroborome
  * @version       1.0 Mar 29, 2014
  */
-@Service("iDatabaseMgrSvc")
-public class DefaultDatabaseMgrSvc implements IDatabaseMgrSvc
+public class DatabaseMgrSvc implements IDatabaseMgrSvc
 {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
-	public DefaultDatabaseMgrSvc()
+	public DatabaseMgrSvc()
 	{
 		super();
 	}
