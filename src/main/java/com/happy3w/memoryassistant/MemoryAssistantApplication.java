@@ -4,9 +4,11 @@ import com.happy3w.memoryassistant.utils.ContextHolder;
 import com.happy3w.memoryassistant.view.MainFrame;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 
+import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -15,19 +17,24 @@ import java.awt.event.WindowEvent;
 public class MemoryAssistantApplication {
 
 	public static void main(String[] args) {
-		ConfigurableApplicationContext context = SpringApplication.run(MemoryAssistantApplication.class, args);
+		ConfigurableApplicationContext context = new SpringApplicationBuilder(MemoryAssistantApplication.class).headless(false).run(args);
+//		ConfigurableApplicationContext context = SpringApplication.run(MemoryAssistantApplication.class, args);
 		ContextHolder.setContext(context);
 
-		MainFrame frame = new MainFrame();
-//		MAMainFrame frame = new MAMainFrame();
-		frame.addWindowListener(new WindowAdapter()
-		{
+		SwingUtilities.invokeLater(new Runnable() {
 			@Override
-			public void windowClosed(WindowEvent e)
-			{
-				System.exit(0);
+			public void run() {
+				MainFrame frame = new MainFrame();
+				frame.addWindowListener(new WindowAdapter()
+				{
+					@Override
+					public void windowClosed(WindowEvent e)
+					{
+						System.exit(0);
+					}
+				});
+				frame.setVisible(true);
 			}
 		});
-		frame.setVisible(true);
 	}
 }
