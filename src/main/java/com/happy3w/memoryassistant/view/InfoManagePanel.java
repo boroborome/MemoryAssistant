@@ -9,7 +9,7 @@ import com.happy3w.footstone.model.AbstractWrapIterator;
 import com.happy3w.footstone.ui.BaseReadonlyTableModel;
 import com.happy3w.footstone.ui.ExtTable;
 import com.happy3w.footstone.util.TimeUtils;
-import com.happy3w.memoryassistant.logic.MAInformationSvc;
+import com.happy3w.memoryassistant.service.MAInformationSvc;
 import com.happy3w.memoryassistant.model.MAInformation;
 import com.happy3w.memoryassistant.model.MAInformationCondition;
 import com.happy3w.memoryassistant.model.MAKeyword;

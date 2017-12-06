@@ -1,17 +1,19 @@
 package com.happy3w.memoryassistant.model;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@Entity
-@Table(name = "tblInformation")
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Getter
 @Setter
+@Entity
+@Table(name = "tblInformation")
 public class MAInformation
 {
 
@@ -35,8 +37,8 @@ public class MAInformation
 	@Basic
 	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(name = "tblInfoKeyRelation",
-			joinColumns = @JoinColumn(name = "tblKeyWord_wordid", referencedColumnName = "wordid"),
-			inverseJoinColumns = @JoinColumn(name = "tblInformation_createTime", referencedColumnName = "infoid"))
+			joinColumns = @JoinColumn(name = "tblKeyWord_wordid", referencedColumnName = "id"),
+			inverseJoinColumns = @JoinColumn(name = "tblInformation_createTime", referencedColumnName = "id"))
 //	@Column(name = "milestoneItems")
 //	@Convert(converter = DbConverter.class)
 	private List<MAKeyword> lstKeyword = new ArrayList<MAKeyword>();

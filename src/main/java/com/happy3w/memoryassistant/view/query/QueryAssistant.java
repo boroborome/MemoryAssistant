@@ -29,7 +29,7 @@ public class QueryAssistant<CondtionType, DataType>
 	{
 		if (logic == null)
 		{
-			throw new IllegalArgumentException("Argument logic can't be null.");
+			throw new IllegalArgumentException("Argument service can't be null.");
 		}
 		this.logic = logic;
 		this.threadName = threadName;

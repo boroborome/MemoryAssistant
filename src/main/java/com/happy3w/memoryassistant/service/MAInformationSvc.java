@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.happy3w.memoryassistant.logic;
+package com.happy3w.memoryassistant.service;
 
 import com.happy3w.footstone.exception.MessageException;
 import com.happy3w.footstone.model.AbstractBufferIterator;

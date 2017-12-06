@@ -7,7 +7,7 @@
  * @version       1.0 2011-7-2
  * @since         v1.0
  */
-package com.happy3w.memoryassistant.logic.res;
+package com.happy3w.memoryassistant.service.res;
 
 /**
  * @author BoRoBoRoMe

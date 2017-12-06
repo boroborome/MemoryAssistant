@@ -9,6 +9,8 @@ spring:
     show-sql: false
     hibernate:
       ddl-auto: create-drop
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
 
   jackson:
     date-format: yyyy-MM-dd'T'HH:mm:ss.SSS'Z'

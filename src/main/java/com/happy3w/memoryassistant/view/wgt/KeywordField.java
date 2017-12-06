@@ -27,7 +27,7 @@ import javax.swing.SwingUtilities;
 import com.happy3w.footstone.model.EventContainer;
 import com.happy3w.footstone.ui.BaseReadonlyTableModel;
 import com.happy3w.footstone.ui.ExtTable;
-import com.happy3w.memoryassistant.logic.MAKeywordSvc;
+import com.happy3w.memoryassistant.service.MAKeywordSvc;
 import com.happy3w.memoryassistant.model.MAKeyword;
 import com.happy3w.memoryassistant.model.MAKeywordCondition;
 import com.happy3w.memoryassistant.model.MAKeywordFilterIterator;
