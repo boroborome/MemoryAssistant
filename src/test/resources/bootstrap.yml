@@ -1,0 +1,20 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: memory-assistant
+  zipkin:
+    enabled: false
+  cloud:
+    config:
+      enabled: false
+      discovery:
+        enabled: false
+    consul:
+      enabled: false
+      discovery:
+        enabled: false
+        heartbeat:
+          enabled: false
+      config:
+        enabled: false

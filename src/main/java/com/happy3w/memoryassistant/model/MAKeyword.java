@@ -1,54 +1,28 @@
-/**
- * 
- */
 package com.happy3w.memoryassistant.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author boroborome
- *
- */
+@Entity
+@Table(name = "tblKeyWord")
+@Getter
+@Setter
 public class MAKeyword
 {
 	public static final char KeywordSplitChar = ' ';
 	public static final String KeywordSplitStr = " ";
 
+	@Id
+	@Column(name = "wordid")
 	private long wordid;
+
+	@Basic
+	@Column(name = "keyword")
 	private String keyword;
-	public MAKeyword()
-	{
-		super();
-	}
-	/**
-	 * @return the wordid
-	 */
-	public long getWordid()
-	{
-		return wordid;
-	}
-	/**
-	 * @param wordid the wordid to set
-	 */
-	public void setWordid(long wordid)
-	{
-		this.wordid = wordid;
-	}
-	/**
-	 * @return the keyword
-	 */
-	public String getKeyword()
-	{
-		return keyword;
-	}
-	/**
-	 * @param keyword the keyword to set
-	 */
-	public void setKeyword(String keyword)
-	{
-		this.keyword = keyword;
-	}
 	
 	public static String list2String(List<MAKeyword> lstKeyword)
 	{

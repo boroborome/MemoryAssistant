@@ -2,7 +2,6 @@ package com.happy3w.memoryassistant;
 
 import com.happy3w.memoryassistant.utils.ContextHolder;
 import com.happy3w.memoryassistant.view.MainFrame;
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;

@@ -1,9 +1,9 @@
 spring:
   datasource:
-    url: jdbc:derby:database;create=true;databaseName=madb
-    driver-class-name: org.apache.derby.jdbc.EmbeddedDriver
-    username: madb
-    password:
+    url: jdbc:mysql://qdm210374521.my3w.com:3306/qdm210374521_db
+    username: qdm210374521
+    password: db1600online
+    driver-class-name:
   jpa:
     database-platform: org.hibernate.dialect.DerbyDialect
     show-sql: false
@@ -17,7 +17,7 @@ spring:
 
 flyway:
   locations: classpath:/db/migration
-  baseline-on-migrate: true
+
 happy3w:
   footstone:
     installsvc:

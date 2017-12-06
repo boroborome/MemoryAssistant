@@ -11,6 +11,7 @@ package com.happy3w.footstone;
 import com.happy3w.footstone.exception.IExceptionGrave;
 import com.happy3w.footstone.resource.IResourceMgrSvc;
 import com.happy3w.footstone.sql.IDatabaseMgrSvc;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 
 /**
  * <DT><B>Title:</B></DT>
@@ -25,14 +26,15 @@ import com.happy3w.footstone.sql.IDatabaseMgrSvc;
  */
 public final class FootstoneSvcAccess
 {
+    private static ConfigurableListableBeanFactory beanFactory;
+
     /**
      * 获取异常处理
      * @return
      */
     public static IExceptionGrave getExceptionGrave()
     {
-        return null;
-//        return (IExceptionGrave) Activator.getService(IExceptionGrave.class.getName());
+        return beanFactory.getBean(IExceptionGrave.class);
     }
     
     /**
@@ -41,11 +43,15 @@ public final class FootstoneSvcAccess
      */
     public static IResourceMgrSvc getResourceMgrSvc()
     {
-        return null;
+        return beanFactory.getBean(IResourceMgrSvc.class);
 //        return (IResourceMgrSvc) Activator.getService(IResourceMgrSvc.class.getName());
     }
 
     public static IDatabaseMgrSvc getDatabaseSvc() {
         return null;
+    }
+
+    public static void setBeanFactory(ConfigurableListableBeanFactory beanFactory) {
+        FootstoneSvcAccess.beanFactory = beanFactory;
     }
 }

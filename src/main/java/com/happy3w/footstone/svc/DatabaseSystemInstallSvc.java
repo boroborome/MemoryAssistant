@@ -10,6 +10,9 @@ package com.happy3w.footstone.svc;
 
 import com.happy3w.footstone.exception.MessageException;
 import com.happy3w.footstone.sql.IDatabaseMgrSvc;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Service;
 
 /**
  * <DT><B>Title:</B></DT>
@@ -21,32 +24,14 @@ import com.happy3w.footstone.sql.IDatabaseMgrSvc;
  * @author        boroborome
  * @version       1.0 Apr 1, 2014
  */
+@Service
 public class DatabaseSystemInstallSvc implements ISystemInstallSvc
 {
+	@Autowired
+	private Environment env;
+
+	@Autowired
 	private IDatabaseMgrSvc databaseMgrSvc;
-	private Class loader;
-	private String installFile;
-	private String uninstallFile;
-	
-	/**
-	 * 构造函数
-	 * @param databaseMgrSvc
-	 * @param loader The class used to load file.any class with the same package of sql file can be here.
-	 * @param installFile
-	 * @param uninstallFile
-	 */
-	public DatabaseSystemInstallSvc(IDatabaseMgrSvc databaseMgrSvc, Class loader, String installFile, String uninstallFile)
-	{
-		super();
-		if (databaseMgrSvc == null || loader == null || installFile == null || uninstallFile == null)
-		{
-			throw new IllegalArgumentException("DatabaseSystemInstallSvc does not accept null parameter.");
-		}
-		this.databaseMgrSvc = databaseMgrSvc;
-		this.loader = loader;
-		this.installFile = installFile;
-		this.uninstallFile = uninstallFile;
-	}
 
 	/* (non-Javadoc)
 	 * @see com.boroborome.footstone.svc.ISystemInstallSvc#uninstall()
@@ -54,7 +39,8 @@ public class DatabaseSystemInstallSvc implements ISystemInstallSvc
 	@Override
 	public void uninstall() throws MessageException
 	{
-		databaseMgrSvc.runSqlFile(loader.getResourceAsStream(uninstallFile));
+		String uninstallFile = env.getProperty("happy3w.footstone.installsvc.uninstall");
+		databaseMgrSvc.runSqlFile(this.getClass().getClassLoader().getResourceAsStream(uninstallFile));
 	}
 
 	/* (non-Javadoc)
@@ -63,7 +49,8 @@ public class DatabaseSystemInstallSvc implements ISystemInstallSvc
 	@Override
 	public void install() throws MessageException
 	{
-		databaseMgrSvc.runSqlFile(loader.getResourceAsStream(installFile));
+		String installFile = env.getProperty("happy3w.footstone.installsvc.install");
+		databaseMgrSvc.runSqlFile(this.getClass().getClassLoader().getResourceAsStream(installFile));
 	}
 
 }

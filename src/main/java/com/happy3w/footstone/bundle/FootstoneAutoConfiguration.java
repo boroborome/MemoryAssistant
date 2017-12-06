@@ -17,7 +17,7 @@ import java.io.IOException;
 
 @Slf4j
 @Configuration
-@ComponentScan(basePackages = {"com.happy3w.footstone.bundle", "com.happy3w.footstone.sql"})
+@ComponentScan(basePackages = {"com.happy3w.footstone.bundle", "com.happy3w.footstone.sql", "com.happy3w.footstone.svc"})
 public class FootstoneAutoConfiguration {
     @Bean
     public IResourceMgrSvc resourceMgrSvc() {
@@ -28,6 +28,11 @@ public class FootstoneAutoConfiguration {
             log.error("Unexpected error when load resource.", e);
         }
         return svc;
+    }
+
+    @Bean
+    public FootstoneFactoryProcessor footstoneFactoryProcessor() {
+        return new FootstoneFactoryProcessor();
     }
 
     @Bean

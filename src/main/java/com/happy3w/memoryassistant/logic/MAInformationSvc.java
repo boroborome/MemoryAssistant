@@ -44,7 +44,6 @@ public class MAInformationSvc implements IDataSvc<MAInformation>
 	{
 		super();
 		this.dbMgrSvc = dbMgrSvc;
-		this.keywordSvc = keywordSvc;
 	}
 
 	@Override
