@@ -3,9 +3,16 @@
  */
 package com.happy3w.memoryassistant.view;
 
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import com.happy3w.footstone.exception.InputException;
+import com.happy3w.footstone.ui.AbstractDataPanel;
+import com.happy3w.memoryassistant.model.MAInformation;
+import com.happy3w.memoryassistant.model.MAKeyword;
+import com.happy3w.memoryassistant.view.res.ResConst;
+import com.happy3w.memoryassistant.view.wgt.KeywordField;
+import org.apache.log4j.Logger;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -16,20 +23,6 @@ import java.awt.dnd.DropTargetDropEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-
-import javax.swing.JLabel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextPane;
-
-import com.happy3w.memoryassistant.model.MAInformation;
-import com.happy3w.memoryassistant.model.MAKeyword;
-import com.happy3w.memoryassistant.view.res.ResConst;
-import com.happy3w.memoryassistant.view.wgt.KeywordField;
-import org.apache.log4j.Logger;
-
-import com.happy3w.footstone.exception.InputException;
-import com.happy3w.footstone.ui.AbstractDataPanel;
 
 /**
  * @author boroborome
@@ -154,8 +147,7 @@ public class InformationPanel extends AbstractDataPanel<MAInformation>
 		value.setContent(this.txtInfoDetail.getText());
 		if (this.oldValue != null)
 		{
-			value.setCreateTime(oldValue.getCreateTime());
-			value.setModifyTime(oldValue.getModifyTime());
+			value.setId(oldValue.getId());
 		}
 	}
 

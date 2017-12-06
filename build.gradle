@@ -36,6 +36,7 @@ dependencies {
 	compile 'com.ibatis:ibatis2-common:2.1.7.597'
 	compile('org.projectlombok:lombok:1.16.14')
 	compile('org.flywaydb:flyway-core:4.0.1')
+	compile('joda-time:joda-time:2.9.7')
 	compileOnly('org.projectlombok:lombok:1.16.14')
 
 //	runtime('com.h2database:h2')

@@ -3,27 +3,12 @@
  */
 package com.happy3w.memoryassistant.view;
 
-import java.awt.Component;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JSplitPane;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-
+import com.happy3w.footstone.FootstoneSvcAccess;
+import com.happy3w.footstone.exception.MessageException;
+import com.happy3w.footstone.model.AbstractWrapIterator;
+import com.happy3w.footstone.ui.BaseReadonlyTableModel;
+import com.happy3w.footstone.ui.ExtTable;
+import com.happy3w.footstone.util.TimeUtils;
 import com.happy3w.memoryassistant.logic.MAInformationSvc;
 import com.happy3w.memoryassistant.model.MAInformation;
 import com.happy3w.memoryassistant.model.MAInformationCondition;
@@ -36,12 +21,14 @@ import com.happy3w.memoryassistant.view.wgt.KeywordField;
 import com.happy3w.memoryassistant.view.wgt.KeywordFieldEvent;
 import org.apache.log4j.Logger;
 
-import com.happy3w.footstone.FootstoneSvcAccess;
-import com.happy3w.footstone.exception.MessageException;
-import com.happy3w.footstone.model.AbstractWrapIterator;
-import com.happy3w.footstone.ui.BaseReadonlyTableModel;
-import com.happy3w.footstone.ui.ExtTable;
-import com.happy3w.footstone.util.ConvertUtil;
+import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.*;
+import java.util.List;
 
 /**
  * @author boroborome
@@ -120,7 +107,7 @@ public class InfoManagePanel extends JPanel
 			@Override
 			public Object[] formatItem(MAInformation data)
 			{
-				return new Object[]{ConvertUtil.timeToStr(data.getCreateTime()), 
+				return new Object[]{TimeUtils.formatToPattern(data.getCreatedTime(), null, "yyyy-MM-dd HH:mm:ss"),
 						MAKeyword.list2String(data.getLstKeyword()), 
 						data.getContent()};
 			}
@@ -231,9 +218,7 @@ public class InfoManagePanel extends JPanel
 		
 		MAInformation info = new MAInformation();
 		info.setLstKeyword(txtKeys.getLstKeyword());
-		long curTime = System.currentTimeMillis();
-		info.setCreateTime(curTime);
-		info.setModifyTime(curTime);
+
 		MAInformationSvc maInformationSvc = ContextHolder.getBean(MAInformationSvc.class);
 		try
 		{
@@ -254,7 +239,6 @@ public class InfoManagePanel extends JPanel
 		{
 			MAInformation preInfo = new MAInformation();
 			pnlInfoDetail.collectData(preInfo);
-			preInfo.setModifyTime(System.currentTimeMillis());
 			try
 			{
 				MAInformationSvc maInformationSvc = ContextHolder.getBean(MAInformationSvc.class);

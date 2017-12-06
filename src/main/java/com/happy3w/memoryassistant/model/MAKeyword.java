@@ -17,8 +17,9 @@ public class MAKeyword
 	public static final String KeywordSplitStr = " ";
 
 	@Id
-	@Column(name = "wordid")
-	private long wordid;
+	@Column(name = "id")
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private long id;
 
 	@Basic
 	@Column(name = "keyword")
@@ -55,7 +56,7 @@ public class MAKeyword
 			
 			MAKeyword keyword = new MAKeyword();
 			keyword.setKeyword(key);
-			keyword.setWordid(-1);
+			keyword.setId(-1);
 			newLstKeyword.add(keyword);
 		}
 		return newLstKeyword;
@@ -64,6 +65,6 @@ public class MAKeyword
 	@Override
 	public String toString()
 	{
-		return this.wordid + ":" + this.keyword;
+		return this.id + ":" + this.keyword;
 	}
 }

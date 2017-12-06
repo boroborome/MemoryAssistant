@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -13,13 +14,19 @@ import java.util.List;
 @Setter
 public class MAInformation
 {
-	@Id
-	@Column(name = "createTime")
-	private long createTime;
+
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
+
+	@Basic
+	@Column(name = "createdTime")
+	private Date createdTime;
 
 	@Basic
 	@Column(name = "modifyTime")
-	private long modifyTime;
+	private Date modifyTime;
 
 	@Basic
 	@Column(name = "content")
@@ -33,6 +40,17 @@ public class MAInformation
 //	@Column(name = "milestoneItems")
 //	@Convert(converter = DbConverter.class)
 	private List<MAKeyword> lstKeyword = new ArrayList<MAKeyword>();
+
+
+    @PreUpdate
+    @PrePersist
+    void onPrePersistOrUpdate() {
+        if (createdTime == null) {
+            this.createdTime = new Date();
+        }
+
+        modifyTime = new Date();
+    }
 
 	public static class DbConverter implements AttributeConverter<List<MAKeyword>, String> {
 
