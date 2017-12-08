@@ -4,11 +4,12 @@ spring:
     driver-class-name: org.apache.derby.jdbc.EmbeddedDriver
     username: madb
     password:
+    initialize: true
   jpa:
-    database-platform: org.hibernate.dialect.DerbyDialect
+    database-platform:
     show-sql: false
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: none
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
 
@@ -23,5 +24,5 @@ flyway:
 happy3w:
   footstone:
     installsvc:
-      install: db/install.sql
+      install: db/migration/V1_0_0__baseline.sql
       uninstall: db/uninstall.sql

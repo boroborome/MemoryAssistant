@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.happy3w.memoryassistant.service;
 
 import com.happy3w.footstone.exception.MessageException;
@@ -10,22 +7,26 @@ import com.happy3w.footstone.model.IBufferIterator;
 import com.happy3w.footstone.svc.IDataChangeListener;
 import com.happy3w.footstone.svc.IDataCondition;
 import com.happy3w.footstone.svc.IDataSvc;
+import com.happy3w.memoryassistant.model.MAInfoKey;
 import com.happy3w.memoryassistant.model.MAInformation;
 import com.happy3w.memoryassistant.model.MAInformationCondition;
 import com.happy3w.memoryassistant.model.MAKeyword;
+import com.happy3w.memoryassistant.repository.MAInfoKeyRepository;
 import com.happy3w.memoryassistant.repository.MAInformationRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
-/**
- * @author boroborome
- *
- */
 @Slf4j
 @Service
 public class MAInformationSvc implements IDataSvc<MAInformation>
@@ -37,39 +38,79 @@ public class MAInformationSvc implements IDataSvc<MAInformation>
 	@Autowired
 	private MAInformationRepository maInformationRepository;
 
+	@Autowired
+	private MAInfoKeyRepository maInfoKeyRepository;
+
 	public MAInformationSvc()
 	{
 		super();
 	}
 
 	@Override
-	public void create(Iterator<MAInformation> it) throws MessageException
-	{
-		it.forEachRemaining(info -> {
-			maInformationRepository.save(info);
-			eventContainer.fireEvents(IDataChangeListener.EVENT_CREATED, info);
-		});
+	@Transactional
+	public void create(Iterator<MAInformation> it) throws MessageException {
+		saveOrModify(it, IDataChangeListener.EVENT_CREATED);
 	}
 
 	
 	@Override
-	public void modify(Iterator<MAInformation> it) throws MessageException
-	{
+	@Transactional
+	public void modify(Iterator<MAInformation> it) throws MessageException {
+		saveOrModify(it, IDataChangeListener.EVENT_MODIFIED);
+	}
+
+	private void saveOrModify(Iterator<MAInformation> it, String eventType) throws MessageException {
 		it.forEachRemaining(info -> {
-			maInformationRepository.save(info);
-			eventContainer.fireEvents(IDataChangeListener.EVENT_MODIFIED, info);
+			keywordSvc.saveAndUpdate(info.getLstKeyword());
+			maInformationRepository.saveAndFlush(info);
+			maInfoKeyRepository.deleteAllByInfoid(info.getId());
+			maInfoKeyRepository.save(info.getLstKeyword().stream()
+					.map(key -> new MAInfoKey(info.getId(), key.getId()))
+					.collect(Collectors.toList())
+			);
+			eventContainer.fireEvents(eventType, info);
 		});
 	}
 
 	@Override
+	@Transactional
 	public void delete(Iterator<MAInformation> it) throws MessageException
 	{
 		it.forEachRemaining(info -> {
+			maInfoKeyRepository.deleteAllByInfoid(info.getId());
 			maInformationRepository.delete(info.getId());
 			eventContainer.fireEvents(IDataChangeListener.EVENT_DELETED, info);
 		});
 	}
 
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
+
+	public List<MAInformation> findAllByLstKeywordFullMatch(List<Long> keyIDs) {
+		StringBuilder buff = new StringBuilder("select ti.* from tblInformation ti join tblInfoKeyRelation tr " +
+				"on ti.tid=tr.infoid where tr.wordid in (");
+		for (Long l : keyIDs)
+		{
+			buff.append("?,");
+		}
+		buff.setLength(buff.length() - 1);
+		buff.append(") group by ti.tid,ti.createdTime,ti.modifytime,ti.content,ti.keywords having count(*)>=?");
+
+		List<Long> parameters = new ArrayList<>(keyIDs);
+		parameters.add((long) keyIDs.size());
+		return jdbcTemplate.query(buff.toString(),
+				parameters.toArray(),
+				new BeanPropertyRowMapper<MAInformation>(MAInformation.class) {
+					@Override
+					public MAInformation mapRow(ResultSet rs, int rowNum) throws SQLException {
+						MAInformation info = super.mapRow(rs, rowNum);
+						info.setId(rs.getLong("tid"));
+						info.setLstKeyword(MAKeyword.string2List(rs.getString("keywords")));
+						return info;
+					}
+				}
+				);
+	}
 	//TODO:[optimize] implement a sql function to summery all keyword of a information.
 	//URL:http://db.apache.org/derby/docs/10.9/devguide/index.html
 	//Title:Derby server-side programming
@@ -97,7 +138,8 @@ public class MAInformationSvc implements IDataSvc<MAInformation>
         	{
         		lstID.add(Long.valueOf(key.getId()));
         	}
-        	queryResult = maInformationRepository.findAllByLstKeywordFullMatch(lstID);
+//			queryResult = jdbcTemplate.query("");
+        	queryResult = findAllByLstKeywordFullMatch(lstID);
         }
 		
 		//This statement and rs will be used by MAKeywordDBIterator.

@@ -148,6 +148,7 @@ public class InformationPanel extends AbstractDataPanel<MAInformation>
 		if (this.oldValue != null)
 		{
 			value.setId(oldValue.getId());
+			value.setCreatedTime(oldValue.getCreatedTime());
 		}
 	}
 

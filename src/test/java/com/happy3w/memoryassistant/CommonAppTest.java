@@ -6,6 +6,7 @@ import org.springframework.boot.test.context.ConfigFileApplicationContextInitial
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Profile;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
@@ -25,6 +26,6 @@ import org.springframework.transaction.annotation.Transactional;
         DbUnitTestExecutionListener.class,
 //        WithSecurityContextTestExecutionListener.class
 })
-@Profile("test")
+@ActiveProfiles("test")
 public class CommonAppTest {
 }

@@ -6,6 +6,7 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,7 +19,7 @@ public class MAInformation
 {
 
     @Id
-    @Column(name = "id")
+    @Column(name = "tid")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
@@ -35,12 +36,12 @@ public class MAInformation
 	private String content;
 
 	@Basic
-	@ManyToMany(cascade = CascadeType.ALL)
-	@JoinTable(name = "tblInfoKeyRelation",
-			joinColumns = @JoinColumn(name = "tblKeyWord_wordid", referencedColumnName = "id"),
-			inverseJoinColumns = @JoinColumn(name = "tblInformation_createTime", referencedColumnName = "id"))
-//	@Column(name = "milestoneItems")
-//	@Convert(converter = DbConverter.class)
+//	@ManyToMany(cascade = {CascadeType.ALL})
+//	@JoinTable(name = "tblInfoKeyRelation",
+//			joinColumns = @JoinColumn(name = "infoid"),
+//			inverseJoinColumns = @JoinColumn(name = "wordid"))
+	@Column(name = "keywords")
+	@Convert(converter = DbConverter.class)
 	private List<MAKeyword> lstKeyword = new ArrayList<MAKeyword>();
 
 
@@ -53,6 +54,22 @@ public class MAInformation
 
         modifyTime = new Date();
     }
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		MAInformation that = (MAInformation) o;
+		return id == that.id &&
+				Objects.equals(content, that.content) &&
+				Objects.equals(lstKeyword, that.lstKeyword);
+	}
+
+	@Override
+	public int hashCode() {
+
+		return Objects.hash(id);
+	}
 
 	public static class DbConverter implements AttributeConverter<List<MAKeyword>, String> {
 

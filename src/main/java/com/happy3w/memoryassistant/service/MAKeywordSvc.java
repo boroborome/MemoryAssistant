@@ -7,7 +7,6 @@ import com.happy3w.footstone.model.IBufferIterator;
 import com.happy3w.footstone.svc.IAutoIDDataSvc;
 import com.happy3w.footstone.svc.IDataChangeListener;
 import com.happy3w.footstone.svc.IDataCondition;
-import com.happy3w.footstone.svc.IIDGeneratorSvc;
 import com.happy3w.memoryassistant.model.MAKeyword;
 import com.happy3w.memoryassistant.model.MAKeywordCondition;
 import com.happy3w.memoryassistant.repository.MAKeywordRepository;
@@ -23,9 +22,6 @@ import java.util.Map;
 @Service
 public class MAKeywordSvc implements IAutoIDDataSvc<MAKeyword>
 {
-	@Autowired
-	private IIDGeneratorSvc iidGeneratorSvc;
-
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 

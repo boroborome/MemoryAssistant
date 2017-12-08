@@ -28,6 +28,15 @@ repositories {
 	mavenCentral()
 }
 
+bootRun {
+	systemProperties System.properties
+	jvmArgs "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005"
+}
+
+test {
+	systemProperties System.properties
+//    jvmArgs "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5008"
+}
 
 dependencies {
 	compile('org.springframework.boot:spring-boot-starter-data-jpa')
@@ -40,14 +49,9 @@ dependencies {
 	compileOnly('org.projectlombok:lombok:1.16.14')
 
 //	runtime('com.h2database:h2')
-	testRuntime("org.junit.jupiter:junit-jupiter-engine:${junitJupiterVersion}")
 
 	testCompile('org.springframework.boot:spring-boot-starter-test')
-	testCompile('org.springframework:spring-test')
-	testCompile 'org.springframework.boot:spring-boot-test'
 	testCompile 'com.github.springtestdbunit:spring-test-dbunit:1.3.0'
-	testCompile("org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}")
-	testCompile("org.junit.jupiter:junit-jupiter-params:${junitJupiterVersion}")
 	testCompile("org.junit.platform:junit-platform-launcher:${junitPlatformVersion}")
 	testCompile("org.junit.platform:junit-platform-runner:${junitPlatformVersion}")
 	testCompile('org.dbunit:dbunit:2.5.3')

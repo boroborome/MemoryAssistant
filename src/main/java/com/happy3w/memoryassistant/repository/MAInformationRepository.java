@@ -11,8 +11,9 @@ import java.util.List;
 
 @Repository
 public interface MAInformationRepository extends JpaRepository<MAInformation, Long> {
-    @Query(value = "select count(*),ti.* from tblInformation ti join tblInfoKeyRelation tr on ti.createTime=tr.infoid " +
-            "where tr.wordid in (?) group by ti.createtime,ti.modifytime,ti.content,ti.keywords having count(*)>=?1.size()",
+    @Query(value = "select ti.* from tblInformation ti join tblInfoKeyRelation tr on ti.tid=tr.infoid " +
+            "where tr.wordid in (?) group by ti.tid,ti.createdTime,ti.modifytime,ti.content,ti.keywords having count(*)>=?",
         nativeQuery = true)
-    List<MAInformation> findAllByLstKeywordFullMatch(Collection<Long> keywords);
+//    @Query(value = "select info from MAInformation info inner join info.lstKeyword where info.lstKeyword in ?1")
+    List<MAInformation> findAllByLstKeywordFullMatch(Collection<Long> keywords, int size);
 }

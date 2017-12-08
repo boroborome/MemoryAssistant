@@ -84,6 +84,7 @@ public class MainFrame extends JFrame implements ISpaceName
         super();
         
         initialize();
+        showFrame(InformationFrame.class);
     }
 
     /* (non-Javadoc)

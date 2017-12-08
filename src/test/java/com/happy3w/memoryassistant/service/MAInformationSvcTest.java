@@ -1,5 +1,6 @@
 package com.happy3w.memoryassistant.service;
 
+import com.happy3w.footstone.model.AbstractBufferIterator;
 import com.happy3w.memoryassistant.CommonAppTest;
 import com.happy3w.memoryassistant.model.MAInformation;
 import com.happy3w.memoryassistant.model.MAKeyword;
@@ -8,8 +9,11 @@ import com.happy3w.memoryassistant.repository.MAKeywordRepository;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 
+import javax.persistence.EntityManager;
 import java.util.Arrays;
+import java.util.List;
 
 public class MAInformationSvcTest extends CommonAppTest {
 
@@ -19,8 +23,17 @@ public class MAInformationSvcTest extends CommonAppTest {
     @Autowired
     private MAKeywordRepository maKeywordRepository;
 
+    @Autowired
+    private MAInformationSvc maInformationSvc;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private EntityManager entityManager;
+
     @Test
-    public void should_read_infor_with_keyword_when_query_info() {
+    public void should_read_info_with_keyword_when_query_info() {
 
         MAKeyword key1 = MAKeyword.builder()
                 .keyword("key1")
@@ -35,18 +48,27 @@ public class MAInformationSvcTest extends CommonAppTest {
                 ))
                 .build();
 
-        maKeywordRepository.save(key1);
-        maKeywordRepository.save(key2);
+        maInformationSvc.create(AbstractBufferIterator.from(info));
 
         Assert.assertTrue(key1.getId() > 0);
         Assert.assertTrue(key2.getId() > 0);
-
-        maInformationRepository.save(info);
         Assert.assertTrue(info.getId() > 0);
 
+        entityManager.flush();
+        jdbcTemplate.queryForList("select * from tblInfoKeyRelation");
+        jdbcTemplate.queryForList("select * from tblInformation");
+        jdbcTemplate.queryForList("select * from tblKeyWord");
 
         MAInformation newInfo = maInformationRepository.findOne(info.getId());
         Assert.assertNotNull(newInfo);
         Assert.assertFalse(newInfo.getLstKeyword().isEmpty());
+
+        List<MAInformation> key1List = maInformationSvc.findAllByLstKeywordFullMatch(Arrays.asList(key1.getId()));
+        Assert.assertFalse(key1List.isEmpty());
+        List<MAInformation> key2List = maInformationSvc.findAllByLstKeywordFullMatch(Arrays.asList(key2.getId()));
+        Assert.assertFalse(key2List.isEmpty());
+        List<MAInformation> key12List = maInformationSvc.findAllByLstKeywordFullMatch(Arrays.asList(key1.getId(), key2.getId()));
+        Assert.assertFalse(key12List.isEmpty());
     }
+
 }

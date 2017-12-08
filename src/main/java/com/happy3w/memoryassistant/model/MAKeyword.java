@@ -13,13 +13,14 @@ import java.util.List;
 @Table(name = "tblKeyWord")
 @Getter
 @Setter
+@EqualsAndHashCode
 public class MAKeyword
 {
 	public static final char KeywordSplitChar = ' ';
 	public static final String KeywordSplitStr = " ";
 
 	@Id
-	@Column(name = "id")
+	@Column(name = "tid")
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 

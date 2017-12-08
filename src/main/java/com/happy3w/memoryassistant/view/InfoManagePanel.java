@@ -20,6 +20,7 @@ import com.happy3w.memoryassistant.view.wgt.IKeywordFieldListener;
 import com.happy3w.memoryassistant.view.wgt.KeywordField;
 import com.happy3w.memoryassistant.view.wgt.KeywordFieldEvent;
 import org.apache.log4j.Logger;
+import org.springframework.util.ObjectUtils;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -239,16 +240,18 @@ public class InfoManagePanel extends JPanel
 		{
 			MAInformation preInfo = new MAInformation();
 			pnlInfoDetail.collectData(preInfo);
-			try
-			{
-				MAInformationSvc maInformationSvc = ContextHolder.getBean(MAInformationSvc.class);
-				maInformationSvc.modify(Arrays.asList(preInfo).iterator());
-				tblModelInfo.justSetItem(currentSelectRow, preInfo);
-			}
-			catch (MessageException exp)
-			{
-				log.error("failed in modify information.", exp);
-		        FootstoneSvcAccess.getExceptionGrave().bury(exp);
+			if (!ObjectUtils.nullSafeEquals(pnlInfoDetail.getOldValue(), preInfo)) {
+				try
+				{
+					MAInformationSvc maInformationSvc = ContextHolder.getBean(MAInformationSvc.class);
+					maInformationSvc.modify(Arrays.asList(preInfo).iterator());
+					tblModelInfo.justSetItem(currentSelectRow, preInfo);
+				}
+				catch (MessageException exp)
+				{
+					log.error("failed in modify information.", exp);
+					FootstoneSvcAccess.getExceptionGrave().bury(exp);
+				}
 			}
 		}
 	}
