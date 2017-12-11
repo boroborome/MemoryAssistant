@@ -6,6 +6,8 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyVetoException;
+import java.sql.*;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,6 +26,9 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
 
+import com.happy3w.memoryassistant.model.MAInformation;
+import com.happy3w.memoryassistant.model.MAKeyword;
+import com.happy3w.memoryassistant.service.MAInformationSvc;
 import com.happy3w.memoryassistant.utils.ContextHolder;
 import com.happy3w.memoryassistant.view.res.ResConst;
 import org.apache.log4j.Logger;
@@ -34,14 +39,6 @@ import com.happy3w.footstone.resource.ISpaceName;
 import com.happy3w.footstone.sql.IDatabaseMgrSvc;
 import com.happy3w.footstone.svc.ISystemInstallSvc;
 
-/**
- * <P>Title:      工具包 Util v1.0</P>
- * <P>Description:数据库工作者的主窗口</P>
- * <P>Copyright:  Copyright (c) 2008</P>
- * <P>Company:    BoRoBoRoMe Co. Ltd.</P>
- * @author        BoRoBoRoMe
- * @version       1.0 2008-4-5
- */
 public class MainFrame extends JFrame implements ISpaceName
 {
     private static Logger log = Logger.getLogger(MainFrame.class);
@@ -133,12 +130,6 @@ public class MainFrame extends JFrame implements ISpaceName
         }
     }
 
-    
-    /**
-     * This method initializes this
-     * 
-     * @return void
-     */
     private void initialize()
     {
         this.setSize(1000, 650);
@@ -148,11 +139,6 @@ public class MainFrame extends JFrame implements ISpaceName
         this.setTitle("Memory Assistant"); //$NON-NLS-1$
     }
 
-    /**
-     * This method initializes jContentPane
-     * 
-     * @return javax.swing.JPanel
-     */
     private JPanel getPnlMain()
     {
         if (pnlMain == null)
@@ -189,12 +175,47 @@ public class MainFrame extends JFrame implements ISpaceName
 //        toolBar.add(createBtnShowWindow("Manage Event", TaskEventFrame.class));
 //        toolBar.add(createBtnShowWindow("Test", CheckCloseInternalFrame.class));
         toolBar.add(createBtnShowWindow("Manage Info", InformationFrame.class));
+        toolBar.add(createUpgradeAction());
         if (ContextHolder.getBean(IDatabaseMgrSvc.class) != null && log.isDebugEnabled())
         {
             toolBar.add(createBtnShowWindow("Execute Sql", ExecuteSqlFrame.class));
         }
         return toolBar;
     }
+
+
+    private void doUpgrade() throws ClassNotFoundException, SQLException {
+        MAInformationSvc maInformationSvc = ContextHolder.getBean(MAInformationSvc.class);
+
+        String driver = "org.apache.derby.jdbc.EmbeddedDriver";
+        String url = "jdbc:derby:database/madb;create=true";
+
+        this.getClass().getClassLoader().loadClass(driver);
+        Connection connection = DriverManager.getConnection(url);
+        Statement statement = connection.createStatement();
+        ResultSet orgDataSet = statement.executeQuery("select * from tblInformation");
+        while (orgDataSet.next()) {
+            MAInformation maInformation = new MAInformation();
+            maInformation.setContent(orgDataSet.getString("content"));
+            maInformation.setLstKeyword(MAKeyword.string2List(orgDataSet.getString("keywords")));
+
+            maInformationSvc.create(Arrays.asList(maInformation).iterator());
+        }
+    }
+
+    private JButton createUpgradeAction() {
+        JButton btn = new JButton("Upgrade");
+        btn.setPreferredSize(new Dimension(80, 20));
+        btn.addActionListener(e -> {
+            try {
+                doUpgrade();
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
+        });
+        return btn;
+    }
+
     private JButton createBtnShowWindow(String title, Class<? extends JInternalFrame> frameClass)
     {
         JButton btn = new JButton(title);
@@ -244,11 +265,6 @@ public class MainFrame extends JFrame implements ISpaceName
         }
     }
 
-    /**
-     * This method initializes mainMenuBar	
-     * 	
-     * @return javax.swing.JMenuBar	
-     */
     private JMenuBar getMainMenuBar()
     {
         if (mainMenuBar == null)

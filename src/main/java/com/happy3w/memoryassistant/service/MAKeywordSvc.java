@@ -40,7 +40,8 @@ public class MAKeywordSvc implements IAutoIDDataSvc<MAKeyword>
 	{
 		it.forEachRemaining(key -> {
 			key.setKeyword(key.getKeyword().toLowerCase());
-			maKeywordRepository.save(key);
+			MAKeyword newKey = maKeywordRepository.save(key);
+			key.setId(newKey.getId());
 			eventContainer.fireEvents(IDataChangeListener.EVENT_CREATED, key);
 		});
 	}
