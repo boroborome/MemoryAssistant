@@ -175,7 +175,7 @@ public class MainFrame extends JFrame implements ISpaceName
 //        toolBar.add(createBtnShowWindow("Manage Event", TaskEventFrame.class));
 //        toolBar.add(createBtnShowWindow("Test", CheckCloseInternalFrame.class));
         toolBar.add(createBtnShowWindow("Manage Info", InformationFrame.class));
-        toolBar.add(createUpgradeAction());
+//        toolBar.add(createUpgradeAction());
         if (ContextHolder.getBean(IDatabaseMgrSvc.class) != null && log.isDebugEnabled())
         {
             toolBar.add(createBtnShowWindow("Execute Sql", ExecuteSqlFrame.class));
