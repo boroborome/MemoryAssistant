@@ -1,31 +1,11 @@
 
 package com.happy3w.memoryassistant.view;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.beans.PropertyVetoException;
-import java.sql.*;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.JButton;
-import javax.swing.JDesktopPane;
-import javax.swing.JFrame;
-import javax.swing.JInternalFrame;
-import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
-import javax.swing.JToolBar;
-
+import com.happy3w.footstone.FootstoneSvcAccess;
+import com.happy3w.footstone.resource.IResourceMgrSvc;
+import com.happy3w.footstone.resource.ISpaceName;
+import com.happy3w.footstone.sql.IDatabaseMgrSvc;
+import com.happy3w.footstone.svc.ISystemInstallSvc;
 import com.happy3w.memoryassistant.model.MAInformation;
 import com.happy3w.memoryassistant.model.MAKeyword;
 import com.happy3w.memoryassistant.service.MAInformationSvc;
@@ -33,11 +13,20 @@ import com.happy3w.memoryassistant.utils.ContextHolder;
 import com.happy3w.memoryassistant.view.res.ResConst;
 import org.apache.log4j.Logger;
 
-import com.happy3w.footstone.FootstoneSvcAccess;
-import com.happy3w.footstone.resource.IResourceMgrSvc;
-import com.happy3w.footstone.resource.ISpaceName;
-import com.happy3w.footstone.sql.IDatabaseMgrSvc;
-import com.happy3w.footstone.svc.ISystemInstallSvc;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.beans.PropertyVetoException;
+import java.net.URL;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainFrame extends JFrame implements ISpaceName
 {
