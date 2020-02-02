@@ -1,6 +1,3 @@
-/**
- *
- */
 package com.happy3w.memoryassistant.view;
 
 import com.happy3w.footstone.exception.InputException;
@@ -24,10 +21,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-/**
- * @author boroborome
- *
- */
 public class InformationPanel extends AbstractDataPanel<MAInformation> {
     private static Logger logger = Logger.getLogger(InformationPanel.class);
     private KeywordField txtKeys;
@@ -92,16 +85,25 @@ public class InformationPanel extends AbstractDataPanel<MAInformation> {
 
     private void initUI() {
         this.setLayout(new GridBagLayout());
-        this.add(new JLabel("Key:"), new GridBagConstraints(0, 0, 1, 1, 0, 0, GridBagConstraints.NORTHWEST,
-                GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
+        this.add(new JLabel("Key:"),
+                new GridBagConstraints(0, 0, 1, 1,
+                        0, 0,
+                        GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
+                        new Insets(0, 0, 0, 0), 0, 0));
         txtKeys = new KeywordField();
-        this.add(txtKeys, new GridBagConstraints(1, 0, 1, 1, 1, 0, GridBagConstraints.NORTHWEST,
-                GridBagConstraints.HORIZONTAL, new Insets(0, 12, 0, 0), 0, 0));
+        this.add(txtKeys,
+                new GridBagConstraints(1, 0, 1, 1,
+                        1, 0,
+                        GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL,
+                        new Insets(0, 12, 0, 0), 0, 0));
 
         txtInfoDetail = new JTextPane();
 //		txtInfoDetail.setLineWrap(true);
-        this.add(new JScrollPane(txtInfoDetail), new GridBagConstraints(0, 1, 2, 1, 1, 1, GridBagConstraints.NORTHWEST,
-                GridBagConstraints.BOTH, new Insets(12, 0, 0, 0), 0, 0));
+        this.add(new JScrollPane(txtInfoDetail),
+                new GridBagConstraints(0, 1, 2, 1,
+                        1, 1,
+                        GridBagConstraints.NORTHWEST, GridBagConstraints.BOTH,
+                        new Insets(12, 0, 0, 0), 0, 0));
     }
 
     @Override
