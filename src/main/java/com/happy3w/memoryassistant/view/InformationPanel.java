@@ -9,6 +9,9 @@ import com.happy3w.memoryassistant.view.wgt.KeywordField;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
+import javax.swing.event.UndoableEditEvent;
+import javax.swing.event.UndoableEditListener;
+import javax.swing.undo.UndoManager;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -17,14 +20,20 @@ import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetAdapter;
 import java.awt.dnd.DropTargetDropEvent;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
 public class InformationPanel extends AbstractDataPanel<MAInformation> {
+    private static final String CANCEL_ACTION = "cancel";
     private static Logger logger = Logger.getLogger(InformationPanel.class);
     private KeywordField txtKeys;
     private JTextPane txtInfoDetail;
+    private UndoManager undoManager = new UndoManager();
 
     public InformationPanel() {
         initUI();
@@ -97,17 +106,61 @@ public class InformationPanel extends AbstractDataPanel<MAInformation> {
                         GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL,
                         new Insets(0, 12, 0, 0), 0, 0));
 
+        JPanel buttonPanel = createButtonPane();
+        this.add(buttonPanel,
+                new GridBagConstraints(0, 1, 2, 1,
+                        1, 0,
+                        GridBagConstraints.NORTHWEST, GridBagConstraints.BOTH,
+                        new Insets(4, 0, 0, 0), 0, 0));
+
         txtInfoDetail = new JTextPane();
 //		txtInfoDetail.setLineWrap(true);
         this.add(new JScrollPane(txtInfoDetail),
-                new GridBagConstraints(0, 1, 2, 1,
+                new GridBagConstraints(0, 2, 2, 1,
                         1, 1,
                         GridBagConstraints.NORTHWEST, GridBagConstraints.BOTH,
-                        new Insets(12, 0, 0, 0), 0, 0));
+                        new Insets(4, 0, 0, 0), 0, 0));
+        txtInfoDetail.getDocument().addUndoableEditListener(new UndoableEditListener() {//注册撤销可编辑监听器
+            public void undoableEditHappened(UndoableEditEvent e) {
+                undoManager.addEdit(e.getEdit());
+            }
+        });
+    }
+
+    private JPanel createButtonPane() {
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridBagLayout());
+        int x = 0;
+        panel.add(createSaveButton(),
+                new GridBagConstraints(x++, 0, 1, 1,
+                        0, 0,
+                        GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL,
+                        new Insets(0, 12, 0, 0), 0, 0));
+
+        panel.add(new JLabel(),
+                new GridBagConstraints(x++, 0, 1, 1,
+                        1, 0,
+                        GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL,
+                        new Insets(0, 12, 0, 0), 0, 0));
+        return panel;
+    }
+
+    private JButton createSaveButton() {
+        JButton button = new JButton("Undo");
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (undoManager.canUndo()) {
+                    undoManager.undo();
+                }
+            }
+        });
+        return button;
     }
 
     @Override
     public void showData(MAInformation value) {
+        undoManager.discardAllEdits();
         if (value == null) {
             txtKeys.setLstKeyword(null);
             txtInfoDetail.setText(null);
