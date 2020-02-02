@@ -18,7 +18,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyVetoException;
-import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -28,15 +27,14 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MainFrame extends JFrame implements ISpaceName
-{
+public class MainFrame extends JFrame implements ISpaceName {
     private static Logger log = Logger.getLogger(MainFrame.class);
-    
+
     /**
      * 默认的资源名字空间
      */
     public static final String DefualtSpaceName = "MainFrame";  //  @jve:decl-index=0: //$NON-NLS-1$
-    
+
     private static final long serialVersionUID = 1L;
     private JPanel pnlMain = null;
     private JMenuBar mainMenuBar = null;
@@ -51,7 +49,7 @@ public class MainFrame extends JFrame implements ISpaceName
     private JMenuItem mItmSetting = null;
     private JMenuItem mItmAbout = null;
     private JMenuItem mItmRebuildDB = null;
-    
+
     private String spaceName = DefualtSpaceName;  //  @jve:decl-index=0:
 
     private JMenuItem mItmQuerySetting = null;
@@ -61,14 +59,13 @@ public class MainFrame extends JFrame implements ISpaceName
     private JTabbedPane tabWorkspace;
 
     private Map<Class<? extends JInternalFrame>, JInternalFrame> mapFrame = new HashMap<Class<? extends JInternalFrame>, JInternalFrame>();
-    
+
     /**
      * This is the default constructor
      */
-    public MainFrame()
-    {
+    public MainFrame() {
         super();
-        
+
         initialize();
         showFrame(InformationFrame.class);
     }
@@ -77,8 +74,7 @@ public class MainFrame extends JFrame implements ISpaceName
      * @see com.boroborome.common.resource.ISpaceName#getSpaceName()
      */
     @Override
-    public String getSpaceName()
-    {
+    public String getSpaceName() {
         return spaceName;
     }
 
@@ -86,41 +82,34 @@ public class MainFrame extends JFrame implements ISpaceName
      * @see com.boroborome.common.resource.ISpaceName#setSpaceName(java.lang.String)
      */
     @Override
-    public void setSpaceName(final String spaceName)
-    {
+    public void setSpaceName(final String spaceName) {
         this.spaceName = spaceName;
     }
 
     /**
      * 构建数据库
      */
-    private void rebuildDB()
-    {
+    private void rebuildDB() {
         int result = JOptionPane.showConfirmDialog(this,
-                "The operation will rebuild the database, and all data will be clean.\nAre you sure you want to do?", 
+                "The operation will rebuild the database, and all data will be clean.\nAre you sure you want to do?",
                 "Are you sure?", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
-        if (result != JOptionPane.YES_OPTION)
-        {
+        if (result != JOptionPane.YES_OPTION) {
             return;
         }
-        
+
         ISystemInstallSvc systemInstallSvc = ContextHolder.getBean(ISystemInstallSvc.class);
-        try
-        {
+        try {
             //数据库删除停止事件分发
             systemInstallSvc.uninstall();
             systemInstallSvc.install();
             JOptionPane.showMessageDialog(this, "Rebuild success.You shuld restart this program.");
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             log.error("start distributeEventSvc failed.", e);
             FootstoneSvcAccess.getExceptionGrave().bury(e);
         }
     }
 
-    private void initialize()
-    {
+    private void initialize() {
         this.setSize(1000, 650);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setJMenuBar(getMainMenuBar());
@@ -128,10 +117,8 @@ public class MainFrame extends JFrame implements ISpaceName
         this.setTitle("Memory Assistant"); //$NON-NLS-1$
     }
 
-    private JPanel getPnlMain()
-    {
-        if (pnlMain == null)
-        {
+    private JPanel getPnlMain() {
+        if (pnlMain == null) {
             lblStatus = new JLabel();
             lblStatus.setMinimumSize(new Dimension(10, 20));
             lblStatus.setText(""); //$NON-NLS-1$
@@ -147,17 +134,14 @@ public class MainFrame extends JFrame implements ISpaceName
         return pnlMain;
     }
 
-    private JTabbedPane getTabWorkspace()
-    {
-        if (tabWorkspace == null)
-        {
+    private JTabbedPane getTabWorkspace() {
+        if (tabWorkspace == null) {
             tabWorkspace = new JTabbedPane();
         }
         return tabWorkspace;
     }
 
-    private JToolBar createToolBar()
-    {
+    private JToolBar createToolBar() {
         toolBar = new JToolBar();
         toolBar.setFloatable(true);
 //        toolBar.add(createBtnShowWindow("Manage Task", TaskItemFrame.class));
@@ -165,8 +149,7 @@ public class MainFrame extends JFrame implements ISpaceName
 //        toolBar.add(createBtnShowWindow("Test", CheckCloseInternalFrame.class));
         toolBar.add(createBtnShowWindow("Manage Info", InformationFrame.class));
 //        toolBar.add(createUpgradeAction());
-        if (ContextHolder.getBean(IDatabaseMgrSvc.class) != null && log.isDebugEnabled())
-        {
+        if (ContextHolder.getBean(IDatabaseMgrSvc.class) != null && log.isDebugEnabled()) {
             toolBar.add(createBtnShowWindow("Execute Sql", ExecuteSqlFrame.class));
         }
         return toolBar;
@@ -205,59 +188,43 @@ public class MainFrame extends JFrame implements ISpaceName
         return btn;
     }
 
-    private JButton createBtnShowWindow(String title, Class<? extends JInternalFrame> frameClass)
-    {
+    private JButton createBtnShowWindow(String title, Class<? extends JInternalFrame> frameClass) {
         JButton btn = new JButton(title);
         btn.setPreferredSize(new Dimension(80, 20));
         btn.addActionListener(new ShowWindowAction(frameClass));
         return btn;
     }
 
-    private void showFrame(Class<? extends JInternalFrame> frameClass)
-    {
+    private void showFrame(Class<? extends JInternalFrame> frameClass) {
         JInternalFrame frame = this.mapFrame.get(frameClass);
-        if (frame == null)
-        {
-            try
-            {
+        if (frame == null) {
+            try {
                 frame = frameClass.newInstance();
-            }
-            catch (InstantiationException e)
-            {
+            } catch (InstantiationException e) {
                 FootstoneSvcAccess.getExceptionGrave().bury(e);
                 return;
-            }
-            catch (IllegalAccessException e)
-            {
+            } catch (IllegalAccessException e) {
                 FootstoneSvcAccess.getExceptionGrave().bury(e);
                 return;
             }
             mapFrame.put(frameClass, frame);
         }
-        if (frame.isVisible())
-        {
+        if (frame.isVisible()) {
             frame.toFront();
-        }
-        else
-        {
+        } else {
             this.desktopPane.add(frame);
 //            frame.setMaximumSize(desktopPane.getSize());
-            try
-            {
+            try {
                 frame.setMaximum(true);
-            }
-            catch (PropertyVetoException e)
-            {
+            } catch (PropertyVetoException e) {
                 e.printStackTrace();
             }
             frame.setVisible(true);
         }
     }
 
-    private JMenuBar getMainMenuBar()
-    {
-        if (mainMenuBar == null)
-        {
+    private JMenuBar getMainMenuBar() {
+        if (mainMenuBar == null) {
             mainMenuBar = new JMenuBar();
             mainMenuBar.add(getMenuFile());
 //            mainMenuBar.add(getMenuManage());
@@ -269,14 +236,12 @@ public class MainFrame extends JFrame implements ISpaceName
     }
 
     /**
-     * This method initializes desktopPane	
-     * 	
-     * @return javax.swing.JDesktopPane	
+     * This method initializes desktopPane
+     *
+     * @return javax.swing.JDesktopPane
      */
-    private JDesktopPane getDesktopPane()
-    {
-        if (desktopPane == null)
-        {
+    private JDesktopPane getDesktopPane() {
+        if (desktopPane == null) {
             desktopPane = new JDesktopPane();
             desktopPane.add(new JButton("Hello"));
         }
@@ -284,14 +249,12 @@ public class MainFrame extends JFrame implements ISpaceName
     }
 
     /**
-     * This method initializes menuFile	
-     * 	
-     * @return javax.swing.JMenu	
+     * This method initializes menuFile
+     *
+     * @return javax.swing.JMenu
      */
-    private JMenu getMenuFile()
-    {
-        if (menuFile == null)
-        {
+    private JMenu getMenuFile() {
+        if (menuFile == null) {
             menuFile = new JMenu();
             menuFile.setText("File"); //$NON-NLS-1$
             menuFile.add(getMItmExit());
@@ -300,20 +263,16 @@ public class MainFrame extends JFrame implements ISpaceName
     }
 
     /**
-     * This method initializes mItmExit	
-     * 	
-     * @return javax.swing.JMenuItem	
+     * This method initializes mItmExit
+     *
+     * @return javax.swing.JMenuItem
      */
-    private JMenuItem getMItmExit()
-    {
-        if (mItmExit == null)
-        {
+    private JMenuItem getMItmExit() {
+        if (mItmExit == null) {
             mItmExit = new JMenuItem();
-            AbstractAction a = new AbstractAction()
-            {
+            AbstractAction a = new AbstractAction() {
                 @Override
-                public void actionPerformed(final ActionEvent e)
-                {
+                public void actionPerformed(final ActionEvent e) {
                     System.exit(0);
                 }
             };
@@ -325,14 +284,12 @@ public class MainFrame extends JFrame implements ISpaceName
 
 
     /**
-     * This method initializes menuManage	
-     * 	
-     * @return javax.swing.JMenu	
+     * This method initializes menuManage
+     *
+     * @return javax.swing.JMenu
      */
-    private JMenu getMenuManage()
-    {
-        if (menuManage == null)
-        {
+    private JMenu getMenuManage() {
+        if (menuManage == null) {
             menuManage = new JMenu();
             menuManage.setText(".Manage"); //$NON-NLS-1$
         }
@@ -340,14 +297,12 @@ public class MainFrame extends JFrame implements ISpaceName
     }
 
     /**
-     * This method initializes menuQuery	
-     * 	
-     * @return javax.swing.JMenu	
+     * This method initializes menuQuery
+     *
+     * @return javax.swing.JMenu
      */
-    private JMenu getMenuQuery()
-    {
-        if (menuQuery == null)
-        {
+    private JMenu getMenuQuery() {
+        if (menuQuery == null) {
             menuQuery = new JMenu();
             menuQuery.setText(".Query"); //$NON-NLS-1$
         }
@@ -355,14 +310,12 @@ public class MainFrame extends JFrame implements ISpaceName
     }
 
     /**
-     * This method initializes menuSetting	
-     * 	
-     * @return javax.swing.JMenu	
+     * This method initializes menuSetting
+     *
+     * @return javax.swing.JMenu
      */
-    private JMenu getMenuSetting()
-    {
-        if (menuSetting == null)
-        {
+    private JMenu getMenuSetting() {
+        if (menuSetting == null) {
             menuSetting = new JMenu();
             menuSetting.setText("Setting"); //$NON-NLS-1$
 //            menuSetting.add(getMItmQuerySetting());
@@ -373,14 +326,12 @@ public class MainFrame extends JFrame implements ISpaceName
     }
 
     /**
-     * This method initializes menuAbout	
-     * 	
-     * @return javax.swing.JMenu	
+     * This method initializes menuAbout
+     *
+     * @return javax.swing.JMenu
      */
-    private JMenu getMenuAbout()
-    {
-        if (menuAbout == null)
-        {
+    private JMenu getMenuAbout() {
+        if (menuAbout == null) {
             menuAbout = new JMenu();
             menuAbout.setText("Help"); //$NON-NLS-1$
             menuAbout.add(getMItmAbout());
@@ -421,7 +372,7 @@ public class MainFrame extends JFrame implements ISpaceName
 //        
 //        
 //    }
-    
+
 //    /**
 //     * <P>Title:      工具包 Util v1.0</P>
 //     * <P>Description:管理动作</P>
@@ -464,21 +415,17 @@ public class MainFrame extends JFrame implements ISpaceName
 //    }
 
     /**
-     * This method initializes mItmSetting	
-     * 	
-     * @return javax.swing.JMenuItem	
+     * This method initializes mItmSetting
+     *
+     * @return javax.swing.JMenuItem
      */
-    private JMenuItem getMItmSetting()
-    {
-        if (mItmSetting == null)
-        {
+    private JMenuItem getMItmSetting() {
+        if (mItmSetting == null) {
             mItmSetting = new JMenuItem();
             mItmSetting.setText(".SysSet"); //$NON-NLS-1$
-            mItmSetting.addActionListener(new ActionListener()
-            {
+            mItmSetting.addActionListener(new ActionListener() {
                 @Override
-                public void actionPerformed(ActionEvent e)
-                {
+                public void actionPerformed(ActionEvent e) {
 //                    configSettings();
                 }
             });
@@ -487,20 +434,16 @@ public class MainFrame extends JFrame implements ISpaceName
     }
 
     /**
-     * This method initializes mItmAbout	
-     * 	
-     * @return javax.swing.JMenuItem	
+     * This method initializes mItmAbout
+     *
+     * @return javax.swing.JMenuItem
      */
-    private JMenuItem getMItmAbout()
-    {
-        if (mItmAbout == null)
-        {
+    private JMenuItem getMItmAbout() {
+        if (mItmAbout == null) {
             mItmAbout = new JMenuItem();
-            mItmAbout.addActionListener(new ActionListener()
-            {
+            mItmAbout.addActionListener(new ActionListener() {
                 @Override
-                public void actionPerformed(ActionEvent e)
-                {
+                public void actionPerformed(ActionEvent e) {
                     showAbout();
                 }
             });
@@ -509,27 +452,22 @@ public class MainFrame extends JFrame implements ISpaceName
         return mItmAbout;
     }
 
-    protected void showAbout()
-    {
+    protected void showAbout() {
         JOptionPane.showMessageDialog(this, ContextHolder.getBean(IResourceMgrSvc.class).getRes(ResConst.ResKey, ResConst.About));
     }
 
     /**
-     * This method initializes mItmRebuildDB	
-     * 	
-     * @return javax.swing.JMenuItem	
+     * This method initializes mItmRebuildDB
+     *
+     * @return javax.swing.JMenuItem
      */
-    private JMenuItem getMItmRebuildDB()
-    {
-        if (mItmRebuildDB == null)
-        {
+    private JMenuItem getMItmRebuildDB() {
+        if (mItmRebuildDB == null) {
             mItmRebuildDB = new JMenuItem();
             mItmRebuildDB.setText("RebuildDB"); //$NON-NLS-1$
-            mItmRebuildDB.addActionListener(new ActionListener()
-            {
+            mItmRebuildDB.addActionListener(new ActionListener() {
                 @Override
-                public void actionPerformed(ActionEvent e)
-                {
+                public void actionPerformed(ActionEvent e) {
                     rebuildDB();
                 }
             });
@@ -538,43 +476,37 @@ public class MainFrame extends JFrame implements ISpaceName
     }
 
     /**
-     * This method initializes mItmQuerySet	
-     * 	
-     * @return javax.swing.JMenuItem	
+     * This method initializes mItmQuerySet
+     *
+     * @return javax.swing.JMenuItem
      */
-    private JMenuItem getMItmQuerySetting()
-    {
-        if (mItmQuerySetting == null)
-        {
+    private JMenuItem getMItmQuerySetting() {
+        if (mItmQuerySetting == null) {
             mItmQuerySetting = new JMenuItem();
             mItmQuerySetting.setText(".QuerySetting"); //$NON-NLS-1$
-            mItmQuerySetting.addActionListener(new ActionListener()
-            {
+            mItmQuerySetting.addActionListener(new ActionListener() {
                 @Override
-                public void actionPerformed(ActionEvent e)
-                {
+                public void actionPerformed(ActionEvent e) {
 //                    querySettings();
                 }
             });
         }
         return mItmQuerySetting;
     }
-    private class ShowWindowAction implements ActionListener
-    {
+
+    private class ShowWindowAction implements ActionListener {
         private Class<? extends JInternalFrame> frameClass;
 
         /**
          * @param frameClass
          */
-        public ShowWindowAction(Class<? extends JInternalFrame> frameClass)
-        {
+        public ShowWindowAction(Class<? extends JInternalFrame> frameClass) {
             super();
             this.frameClass = frameClass;
         }
 
         @Override
-        public void actionPerformed(ActionEvent e)
-        {
+        public void actionPerformed(ActionEvent e) {
             showFrame(frameClass);
         }
     }
