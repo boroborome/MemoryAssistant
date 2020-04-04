@@ -177,7 +177,7 @@ public abstract class BaseExtTableModel<T> extends AbstractTableModel implements
      */
     public void showData(Iterator<T> it)
     {
-        lstRow.clear();
+        clear();
         if (it != null)
         {
             while (it.hasNext())
