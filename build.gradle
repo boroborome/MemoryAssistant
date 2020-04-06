@@ -5,6 +5,7 @@ buildscript {
 		junitJupiterVersion = '5.0.0-M4'
 	}
 	repositories {
+		mavenLocal()
 		mavenCentral()
 	}
 	dependencies {
