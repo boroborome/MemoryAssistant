@@ -323,7 +323,7 @@ public abstract class BaseExtTableModel<T> extends AbstractTableModel implements
         for (int i = 0, l = lstRow.size(); i < l; i++)
         {
             RowPair rp = lstRow.get(i);
-            Object v = getValueAt(rp.getData(), column);
+            Object v = getValueAt(i, column);
             if (v instanceof Comparable)
             {
                 rp.key = (Comparable) v;
