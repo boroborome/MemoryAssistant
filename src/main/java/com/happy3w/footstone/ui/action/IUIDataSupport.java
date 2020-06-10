@@ -12,19 +12,21 @@ import com.happy3w.footstone.model.IBufferIterator;
 
 /**
  * <DT><B>Title:</B></DT>
- *    <DD>基石</DD>
+ * <DD>基石</DD>
  * <DT><B>Description:</B></DT>
- *    <DD>界面数据支持接口<br>当一个动作正在执行时可能从界面获取信息，或者将操作的结果显示在界面，或者要求更新，需要通过这个接口实现。</DD>
+ * <DD>界面数据支持接口<br>当一个动作正在执行时可能从界面获取信息，或者将操作的结果显示在界面，或者要求更新，需要通过这个接口实现。</DD>
  * <P>Copyright:  Copyright (c) 2008</P>
  * <P>Company:    BoRoBoRoMe Co. Ltd.</P>
- * @author        BoRoBoRoMe
- * @version       1.0 2011-10-19
+ *
+ * @author BoRoBoRoMe
+ * @version 1.0 2011-10-19
  */
-public interface IUIDataSupport<T>
-{
+public interface IUIDataSupport<T> {
     ObjectBasket<T> getObjectBasket();
-    
+
     void add(IBufferIterator<T> it);
+
     void modify(IBufferIterator<T> it);
+
     void delete(IBufferIterator<T> it);
 }

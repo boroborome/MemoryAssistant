@@ -11,21 +11,19 @@ package com.happy3w.memoryassistant.view.res;
 
 /**
  * @author BoRoBoRoMe
- *
  */
-public final class ResConst
-{
+public final class ResConst {
     /**
      * 界面的资源键
      */
     public static final String ResKey = ResConst.class.getPackage().getName();
     public static final String NotEmpty = "win.NotEmpty";
     public static final String AddSystemTrayFailed = "win.addSystemTrayFailed";
-    public static final String About="win.about";
-    
+    public static final String About = "win.about";
+
     // The index is not a right number.
     public static final String IndexNumberFormatWrong = "IndexNumberFormatWrong";
-    
+
     //Please select one task.
     public static final String RequreTask = "requireTask";
 }

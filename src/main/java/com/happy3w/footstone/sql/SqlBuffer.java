@@ -23,139 +23,131 @@ import java.util.regex.Pattern;
  * <P>Description:构造Sql时的缓存，类似StringBuilder</P>
  * <P>Copyright:  Copyright (c) 2008</P>
  * <P>Company:    BoRoBoRoMe Co. Ltd.</P>
- * @author        BoRoBoRoMe
- * @version       1.0 2008-9-4
+ *
+ * @author BoRoBoRoMe
+ * @version 1.0 2008-9-4
  */
-public class SqlBuffer
-{
+public class SqlBuffer {
     /*
      * 用于查找站位符的正则表达式，占位符形为如{0}的内容
      */
     private static final Pattern holderPattern = Pattern.compile("\\{\\d+\\}"); //$NON-NLS-1$
-    
+
     /*
      * 带有占位符的Sql字符串
      */
     private StringBuilder sqlBuf = new StringBuilder();
-    
+
     /*
      * 各种参数的列表
      */
     private List<Object> lstParams = new ArrayList<Object>();
-    
+
     /**
      * 构造函数
      */
-    public SqlBuffer()
-    {
+    public SqlBuffer() {
         super();
     }
-    
+
     /**
      * 构造函数
+     *
      * @param sql 初始的sql语句
      */
-    public SqlBuffer(final String sql)
-    {
+    public SqlBuffer(final String sql) {
         super();
         append(sql);
     }
-    
+
     /**
      * 构造函数
-     * @param sql 初始的sql语句
+     *
+     * @param sql    初始的sql语句
      * @param params 参数列表
      */
-    public SqlBuffer(final String sql, final Object[] params)
-    {
+    public SqlBuffer(final String sql, final Object[] params) {
         super();
         append(sql, params);
     }
-    
+
     /**
      * 清空缓存
      */
-    public void reset()
-    {
+    public void reset() {
         sqlBuf.setLength(0);
         lstParams.clear();
     }
-    
-    private void formatSql(final String sql)
-    {
+
+    private void formatSql(final String sql) {
         this.sqlBuf.append(sql);
         Matcher m = holderPattern.matcher(sql);
         int curCount = lstParams.size();
-        
-        while (m.find())
-        {
+
+        while (m.find()) {
             int start = m.start() + 1;
             int end = m.end() - 1;
             int v = Integer.parseInt(sql.substring(start, end));
-            this.sqlBuf.replace(this.sqlBuf.length() - sql.length() + start, 
+            this.sqlBuf.replace(this.sqlBuf.length() - sql.length() + start,
                     this.sqlBuf.length() - sql.length() + end, String.valueOf(curCount + v));
         }
     }
-    
-    public SqlBuffer append(final char ch)
-    {
+
+    public SqlBuffer append(final char ch) {
         sqlBuf.append(ch);
         return this;
     }
-    
-    public SqlBuffer append(final String sql)
-    {
+
+    public SqlBuffer append(final String sql) {
         formatSql(sql);
         return this;
     }
-    
-    public SqlBuffer append(final String sql, final Object param)
-    {
+
+    public SqlBuffer append(final String sql, final Object param) {
         formatSql(sql);
         lstParams.add(param);
         return this;
     }
-    public SqlBuffer append(final String sql, final Object param1, final Object param2)
-    {
+
+    public SqlBuffer append(final String sql, final Object param1, final Object param2) {
         formatSql(sql);
         lstParams.add(param1);
         lstParams.add(param2);
         return this;
     }
-    
-    public SqlBuffer append(final String sql, final Object[] params)
-    {
+
+    public SqlBuffer append(final String sql, final Object[] params) {
         formatSql(sql);
         lstParams.addAll(Arrays.asList(params));
         return this;
     }
-    
+
     /**
      * 获取sql
+     *
      * @return sql
      */
-    public StringBuilder getSqlBuf()
-    {
+    public StringBuilder getSqlBuf() {
         return sqlBuf;
     }
+
     /**
      * 获取lstParams
+     *
      * @return lstParams
      */
-    public List<Object> getLstParams()
-    {
+    public List<Object> getLstParams() {
         return lstParams;
     }
 
     /**
      * 删除末尾的几个字符
+     *
      * @param length 要删除的长度
      */
-    public void removeFromLast(final int length)
-    {
+    public void removeFromLast(final int length) {
         int len = sqlBuf.length() - length;
-        if (len < 0)
-        {
+        if (len < 0) {
             len = 0;
         }
         sqlBuf.setLength(len);
@@ -163,24 +155,20 @@ public class SqlBuffer
 
     /**
      * 将两一个缓存与自己合并
+     *
      * @param otherSqlBuf 另一个缓存
      */
-    public void merge(final SqlBuffer otherSqlBuf)
-    {
-        if (lstParams.size() == 0)
-        {
+    public void merge(final SqlBuffer otherSqlBuf) {
+        if (lstParams.size() == 0) {
             sqlBuf.append(otherSqlBuf.sqlBuf.toString());
-        }
-        else
-        {
+        } else {
             formatSql(otherSqlBuf.sqlBuf.toString());
         }
         lstParams.addAll(otherSqlBuf.lstParams);
     }
-    
+
     @Override
-    public String toString()
-    {
+    public String toString() {
         return sqlBuf.toString();
     }
 }

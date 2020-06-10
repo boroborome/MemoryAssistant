@@ -16,8 +16,7 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Calendar;
 
-public interface IParamSetter
-{
+public interface IParamSetter {
 
     /**
      * @param parameterIndex
@@ -402,8 +401,8 @@ public interface IParamSetter
      * @param x
      * @param length
      * @throws SQLException
-     * @deprecated
      * @see java.sql.PreparedStatement#setUnicodeStream(int, InputStream, int)
+     * @deprecated
      */
     @SuppressWarnings("dep-ann")
     void setUnicodeStream(int parameterIndex, InputStream x, int length) throws SQLException;

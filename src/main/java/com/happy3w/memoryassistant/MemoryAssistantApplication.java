@@ -17,25 +17,23 @@ import java.awt.event.WindowEvent;
 @EnableJpaRepositories(basePackages = {"com.happy3w.memoryassistant.repository"})
 public class MemoryAssistantApplication {
 
-	public static void main(String[] args) {
-		ConfigurableApplicationContext context = new SpringApplicationBuilder(MemoryAssistantApplication.class).headless(false).run(args);
+    public static void main(String[] args) {
+        ConfigurableApplicationContext context = new SpringApplicationBuilder(MemoryAssistantApplication.class).headless(false).run(args);
 //		ConfigurableApplicationContext context = SpringApplication.run(MemoryAssistantApplication.class, args);
-		ContextHolder.setContext(context);
+        ContextHolder.setContext(context);
 
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				MainFrame frame = new MainFrame();
-				frame.addWindowListener(new WindowAdapter()
-				{
-					@Override
-					public void windowClosed(WindowEvent e)
-					{
-						System.exit(0);
-					}
-				});
-				frame.setVisible(true);
-			}
-		});
-	}
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                MainFrame frame = new MainFrame();
+                frame.addWindowListener(new WindowAdapter() {
+                    @Override
+                    public void windowClosed(WindowEvent e) {
+                        System.exit(0);
+                    }
+                });
+                frame.setVisible(true);
+            }
+        });
+    }
 }

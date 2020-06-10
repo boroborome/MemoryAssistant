@@ -21,13 +21,13 @@ import java.util.Iterator;
  * <li>当没有执行next方法时current方法会返回null，或者其他表示无效的值</li>
  * <li>当hasNext返回false的时候，current中仍然保存最后的元素，读取的时候不要遗漏</li>
  * </ol>
- * @author BoRoBoRoMe
  *
+ * @author BoRoBoRoMe
  */
-public interface IBufferIterator<E> extends Iterator<E>
-{
+public interface IBufferIterator<E> extends Iterator<E> {
     /**
      * 执行next后保存next的结果
+     *
      * @return
      */
     E current();

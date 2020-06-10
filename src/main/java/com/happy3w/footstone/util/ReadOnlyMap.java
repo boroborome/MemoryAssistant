@@ -14,96 +14,84 @@ import java.util.Set;
 
 /**
  * <DT><B>Title:</B></DT>
- *    <DD>基石</DD>
+ * <DD>基石</DD>
  * <DT><B>Description:</B></DT>
- *    <DD>只读的映射表</DD>
+ * <DD>只读的映射表</DD>
  * <P>Copyright:  Copyright (c) 2008</P>
  * <P>Company:    BoRoBoRoMe Co. Ltd.</P>
- * @author        BoRoBoRoMe
- * @version       1.0 2011-7-10
+ *
+ * @author BoRoBoRoMe
+ * @version 1.0 2011-7-10
  */
-public class ReadOnlyMap<K, V> implements Map<K, V>
-{
+public class ReadOnlyMap<K, V> implements Map<K, V> {
     private Map<K, V> innerMap;
-    
+
     /**
      * 构造函数
+     *
      * @param map
      */
-    public ReadOnlyMap(Map<K,V> map)
-    {
+    public ReadOnlyMap(Map<K, V> map) {
         innerMap = map;
     }
-    
+
     @Override
-    public void clear()
-    {
+    public void clear() {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public boolean containsKey(Object key)
-    {
+    public boolean containsKey(Object key) {
         return innerMap.containsKey(key);
     }
 
     @Override
-    public boolean containsValue(Object value)
-    {
+    public boolean containsValue(Object value) {
         return innerMap.containsValue(value);
     }
 
     @Override
-    public Set<Entry<K, V>> entrySet()
-    {
+    public Set<Entry<K, V>> entrySet() {
         return innerMap.entrySet();
     }
 
     @Override
-    public V get(Object key)
-    {
+    public V get(Object key) {
         return innerMap.get(key);
     }
 
     @Override
-    public boolean isEmpty()
-    {
+    public boolean isEmpty() {
         return innerMap.isEmpty();
     }
 
     @Override
-    public Set<K> keySet()
-    {
+    public Set<K> keySet() {
         return innerMap.keySet();
     }
 
     @Override
-    public V put(K key, V value)
-    {
+    public V put(K key, V value) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void putAll(Map<? extends K, ? extends V> m)
-    {
+    public void putAll(Map<? extends K, ? extends V> m) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public V remove(Object key)
-    {
+    public V remove(Object key) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public int size()
-    {
+    public int size() {
         return innerMap.size();
     }
 
     @Override
-    public Collection<V> values()
-    {
+    public Collection<V> values() {
         return innerMap.values();
     }
 

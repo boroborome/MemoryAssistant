@@ -17,15 +17,16 @@ package com.happy3w.footstone.exception;
  * <P>Description:异常埋葬者，负责处理一种异常，一个异常埋葬着可以处理一种异常</P>
  * <P>Copyright:  Copyright (c) 2008</P>
  * <P>Company:    BoRoBoRoMe Co. Ltd.</P>
- * @author        BoRoBoRoMe
- * @version       1.0 2008-1-10
+ *
+ * @author BoRoBoRoMe
+ * @version 1.0 2008-1-10
  */
-public interface IExceptionBurier
-{
+public interface IExceptionBurier {
     /**
      * 处理提供的异常
+     *
      * @param exception 需要处理的异常
-     * @param buried 说明这个异常是否已经被处理过
+     * @param buried    说明这个异常是否已经被处理过
      */
     void bury(final Exception exception, final boolean buried);
 }

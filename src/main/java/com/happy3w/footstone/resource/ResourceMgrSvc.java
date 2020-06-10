@@ -18,22 +18,19 @@ import java.util.ResourceBundle;
 
 /**
  * @author BoRoBoRoMe
- *
  */
-public class ResourceMgrSvc implements IResourceMgrSvc
-{
+public class ResourceMgrSvc implements IResourceMgrSvc {
     /**
      * 资源影射表
      */
     private Map<String, Map<String, String>> mapRes = new HashMap<String, Map<String, String>>();
-    
+
 
     /* (non-Javadoc)
      * @see com.boroborome.footstone.resource.IResourceMgrSvc#getRes(java.lang.String)
      */
     @Override
-    public Map<String, String> getResMap(String key)
-    {
+    public Map<String, String> getResMap(String key) {
         return mapRes.get(key);
     }
 
@@ -41,17 +38,12 @@ public class ResourceMgrSvc implements IResourceMgrSvc
      * @see com.boroborome.footstone.resource.IResourceMgrSvc#regRes(java.lang.String, java.util.ResourceBundle)
      */
     @Override
-    public void regRes(String key, ResourceBundle res)
-    {
-        if (res == null)
-        {
+    public void regRes(String key, ResourceBundle res) {
+        if (res == null) {
             unregRes(key);
-        }
-        else
-        {
+        } else {
             Map<String, String> map = new HashMap<String, String>();
-            for (String k : res.keySet())
-            {
+            for (String k : res.keySet()) {
                 map.put(k, res.getString(k));
             }
             mapRes.put(key, new ReadOnlyMap<String, String>(map));
@@ -62,21 +54,18 @@ public class ResourceMgrSvc implements IResourceMgrSvc
      * @see com.boroborome.footstone.resource.IResourceMgrSvc#unregRes(java.lang.String)
      */
     @Override
-    public void unregRes(String key)
-    {
+    public void unregRes(String key) {
         mapRes.put(key, null);
     }
 
     @Override
-    public void regRes(String key, InputStream resStream) throws IOException
-    {
+    public void regRes(String key, InputStream resStream) throws IOException {
         PropertyResourceBundleExt prb = new PropertyResourceBundleExt(resStream);
         regRes(key, prb);
     }
 
     @Override
-    public String getRes(String mapKey, String resKey)
-    {
+    public String getRes(String mapKey, String resKey) {
         Map<String, String> map = mapRes.get(mapKey);
         return map == null ? null : map.get(resKey);
     }

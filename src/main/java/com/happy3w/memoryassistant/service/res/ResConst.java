@@ -11,10 +11,8 @@ package com.happy3w.memoryassistant.service.res;
 
 /**
  * @author BoRoBoRoMe
- *
  */
-public final class ResConst
-{
+public final class ResConst {
     /**
      * 任务管理器的资源
      */
@@ -22,9 +20,9 @@ public final class ResConst
     public static final String FailedSql = "db.FailedSql";
     public static final String FailedFile = "db.FailedFile";
     public static final String ConnectDBFailed = "db.ConnnectDBFailed";
-    
+
     //Failed to create statement.
     public static final String FailedToCreateState = "db.FailedToCreateState";
-	public static final String FailedInExeSql = "db.FailedInExeSql";
-    
+    public static final String FailedInExeSql = "db.FailedInExeSql";
+
 }

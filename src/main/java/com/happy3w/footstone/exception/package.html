@@ -1,40 +1,40 @@
 <html>
 <head>
-<title>资源使用说明</title>
+    <title>资源使用说明</title>
 </head>
 <body>
 资源使用说明<br>
 资源使用包括如下几种情况
 <ol>
-<li>
-一般界面显示<br>
-一般界面显示总是缺少不了文本标签，这部分内容需要进行本地化。此时可以直接使用ResourceManager.loadResource(path)方法加载资源，使用资源。<br>
-这里的path应该是从basePath之后的相对路径。
-</li>
+    <li>
+        一般界面显示<br>
+        一般界面显示总是缺少不了文本标签，这部分内容需要进行本地化。此时可以直接使用ResourceManager.loadResource(path)方法加载资源，使用资源。<br>
+        这里的path应该是从basePath之后的相对路径。
+    </li>
 
-<li>
-界面控件<br>
-界面控件和一般界面显示都是要显示的内容，但不同点是这部分内容在使用时不希望总是传递ResourceManager参数。这给使用带来诸多不便。
-为了便于使用为两种不同的界面控件提供了两种不同的获取ResourceManager方法<br>
-<ol>
-<li>
-Win窗口程序控件<br>
-一个Win窗口程序在启动时应该使用什么资源都已经确定了，任何地方都可以通过ResourceManager.getInstance()方法获得系统中唯一的资源管理实例。此实例可以满足Win程序对资源的需要。
-</li>
-<li>
-Web程序控件/页面<br>
-Web程序和Win程序不同，Web程序的服务器启动时可能同时会有使用中文和英文的用户在使用，如果使用ResourceManager.getInstance()方法获得唯一资源实例，会使中文/英文只能存在一种，不可行。
-但用户的Session可以确定唯一用户，唯一用户使用的资源应该是一样的，所以可以从Session中获得对应的ResourceManager对象。<br>
-初始化这些资源时不能为每一个用户都创建唯一的资源，应该使用缓冲池对多种语言的管理器进行缓冲。
-</li>
-</ol>
-</li>
+    <li>
+        界面控件<br>
+        界面控件和一般界面显示都是要显示的内容，但不同点是这部分内容在使用时不希望总是传递ResourceManager参数。这给使用带来诸多不便。
+        为了便于使用为两种不同的界面控件提供了两种不同的获取ResourceManager方法<br>
+        <ol>
+            <li>
+                Win窗口程序控件<br>
+                一个Win窗口程序在启动时应该使用什么资源都已经确定了，任何地方都可以通过ResourceManager.getInstance()方法获得系统中唯一的资源管理实例。此实例可以满足Win程序对资源的需要。
+            </li>
+            <li>
+                Web程序控件/页面<br>
+                Web程序和Win程序不同，Web程序的服务器启动时可能同时会有使用中文和英文的用户在使用，如果使用ResourceManager.getInstance()方法获得唯一资源实例，会使中文/英文只能存在一种，不可行。
+                但用户的Session可以确定唯一用户，唯一用户使用的资源应该是一样的，所以可以从Session中获得对应的ResourceManager对象。<br>
+                初始化这些资源时不能为每一个用户都创建唯一的资源，应该使用缓冲池对多种语言的管理器进行缓冲。
+            </li>
+        </ol>
+    </li>
 
-<li>
-异常说明<br>
-各种异常说明不是需要显示给用户就是要记录日志，都是需要本地化的资源<br>
-这部分信息通过MessageException表示出需要读取的资源和资源存放位置，由捕获异常的界面部分处理本地化显示。
-</li>
+    <li>
+        异常说明<br>
+        各种异常说明不是需要显示给用户就是要记录日志，都是需要本地化的资源<br>
+        这部分信息通过MessageException表示出需要读取的资源和资源存放位置，由捕获异常的界面部分处理本地化显示。
+    </li>
 </ol>
 </body>
 </html>

@@ -14,37 +14,37 @@ package com.happy3w.footstone.dataenergy;
 
 /**
  * <DT><B>Title:</B></DT>
- *    <DD>数据跟踪记录</DD>
+ * <DD>数据跟踪记录</DD>
  * <DT><B>Description:</B></DT>
- *    <DD>辅助数据引擎或者数据机器，在遍历数据或者解析数据时需要对数据的中间结果进行跟踪</DD>
+ * <DD>辅助数据引擎或者数据机器，在遍历数据或者解析数据时需要对数据的中间结果进行跟踪</DD>
  * <P>Copyright:  Copyright (c) 2008</P>
  * <P>Company:    BoRoBoRoMe Co. Ltd.</P>
- * @author        BoRoBoRoMe
- * @version       1.0 2010-3-11
+ *
+ * @author BoRoBoRoMe
+ * @version 1.0 2010-3-11
  */
-public class DataTraceItem
-{
+public class DataTraceItem {
     /**
      * 数据名称
      */
     public final String dataName;
-    
+
     /**
      * 数据在上一个节点的属性名称
      */
     public final String attributeName;
-    
+
     /**
      * 构造函数
+     *
      * @param dataName
      * @param attributeName
      */
-    public DataTraceItem(String dataName, String attributeName)
-    {
+    public DataTraceItem(String dataName, String attributeName) {
         super();
         this.dataName = dataName;
         this.attributeName = attributeName;
     }
-    
-    
+
+
 }

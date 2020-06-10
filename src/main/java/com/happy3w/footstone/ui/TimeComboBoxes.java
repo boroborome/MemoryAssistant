@@ -1,33 +1,30 @@
 /*
  * <P>Title: 基石模块</P> <P>Description:[描述功能、作用、用法和注意事项]</P> <P>Copyright: Copyright (c) 2008</P> <P>Company: BoRoBoRoMe Co. Ltd.</P>
- * 
+ *
  * @author BoRoBoRoMe
- * 
+ *
  * @version 1.0 2011-10-2
  */
 package com.happy3w.footstone.ui;
 
 /**
  * <DT><B>Title:</B></DT> <DD>基石</DD> <DT><B>Description:</B></DT> <DD>[描述功能、作用、用法和注意事项]</DD>
- * <P>
+ * <p>
  * Copyright: Copyright (c) 2008
  * </P>
- * <P>
+ * <p>
  * Company: BoRoBoRoMe Co. Ltd.
  * </P>
- * 
+ *
  * @author BoRoBoRoMe
  * @version 1.0 2011-10-2
  */
-import java.awt.Rectangle;
+
+import javax.swing.*;
+import java.awt.*;
 import java.util.Date;
 
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-
-public class TimeComboBoxes
-{
+public class TimeComboBoxes {
 
     private JPanel jContentPane = null;
     private JComboBox yearComboBox = null;
@@ -48,16 +45,14 @@ public class TimeComboBoxes
     private float roomForLetter = 2;
     private float roomForSeparator = 1; // 分隔作用
 
-    public TimeComboBoxes(int startX, int startY, int width, int height)
-    {
+    public TimeComboBoxes(int startX, int startY, int width, int height) {
         this.startX = startX;
         this.startY = startY;
         this.width = width;
         this.height = height;
     }
 
-    float getwholeSpaceLength()
-    {
+    float getwholeSpaceLength() {
         float result;
         result = roomForYearField + roomForLetter + roomForSeparator;
         result += roomForMonthField + roomForLetter + roomForSeparator;
@@ -65,33 +60,27 @@ public class TimeComboBoxes
         return result;
     }
 
-    float getYearSpacePercent()
-    {
+    float getYearSpacePercent() {
         return roomForYearField / getwholeSpaceLength();
     }
 
-    float getMonthSpacePercent()
-    {
+    float getMonthSpacePercent() {
         return roomForMonthField / getwholeSpaceLength();
     }
 
-    float getDaySpacePercent()
-    {
+    float getDaySpacePercent() {
         return roomForDayField / getwholeSpaceLength();
     }
 
-    float getLetterSpacePercent()
-    {
+    float getLetterSpacePercent() {
         return roomForLetter / getwholeSpaceLength();
     }
 
-    float getSeparatorSpacePercent()
-    {
+    float getSeparatorSpacePercent() {
         return roomForSeparator / getwholeSpaceLength();
     }
 
-    Rectangle getYearRectangle()
-    {
+    Rectangle getYearRectangle() {
         int width, height;
         float temp = this.width * getYearSpacePercent();
         width = (int) temp;
@@ -100,8 +89,7 @@ public class TimeComboBoxes
         return yearRec;
     }
 
-    Rectangle getMonthRectangle()
-    {
+    Rectangle getMonthRectangle() {
         int x, width, height;
 
         // 计算x
@@ -118,8 +106,7 @@ public class TimeComboBoxes
         return monthRec;
     }
 
-    Rectangle getDayRectangle()
-    {
+    Rectangle getDayRectangle() {
         int x, width, height;
         // 计算x
         float temp = 1.0f - (getDaySpacePercent() + getLetterSpacePercent());
@@ -135,8 +122,7 @@ public class TimeComboBoxes
         return dayRec;
     }
 
-    Rectangle getYearLabelRectangle()
-    {
+    Rectangle getYearLabelRectangle() {
         int x, width, height;
         // 计算x
         float temp = getYearSpacePercent();
@@ -152,8 +138,7 @@ public class TimeComboBoxes
         return yearLabelRec;
     }
 
-    Rectangle getMonthLabelRectangle()
-    {
+    Rectangle getMonthLabelRectangle() {
         int x, width, height;
         // 计算x
         float temp = getYearSpacePercent() + getLetterSpacePercent() + getSeparatorSpacePercent();
@@ -170,8 +155,7 @@ public class TimeComboBoxes
         return yearLabelRec;
     }
 
-    Rectangle getDayLabelRectangle()
-    {
+    Rectangle getDayLabelRectangle() {
         int x, width, height;
         // 计算x
         float temp = 1.0f - getLetterSpacePercent();
@@ -189,13 +173,11 @@ public class TimeComboBoxes
 
     /**
      * This method initializes jContentPane
-     * 
+     *
      * @return javax.swing.JPanel
      */
-    public JPanel getBoxes()
-    {
-        if (jContentPane == null)
-        {
+    public JPanel getBoxes() {
+        if (jContentPane == null) {
             jLabel2 = new JLabel();
             jLabel2.setBounds(getYearLabelRectangle());
             jLabel2.setText("日");
@@ -219,19 +201,15 @@ public class TimeComboBoxes
 
     /**
      * This method initializes yearComboBox
-     * 
+     *
      * @return javax.swing.JComboBox
      */
-    private JComboBox getYearComboBox()
-    {
-        if (yearComboBox == null)
-        {
+    private JComboBox getYearComboBox() {
+        if (yearComboBox == null) {
             yearComboBox = new JComboBox(Library.getComboBoxYearFiled());
             yearComboBox.setBounds(getYearRectangle());
-            yearComboBox.addItemListener(new java.awt.event.ItemListener()
-            {
-                public void itemStateChanged(java.awt.event.ItemEvent e)
-                {
+            yearComboBox.addItemListener(new java.awt.event.ItemListener() {
+                public void itemStateChanged(java.awt.event.ItemEvent e) {
                     dayComboBox.removeAllItems();
                     Library.flushComboBox(yearComboBox, monthComboBox, dayComboBox, new Rectangle(421, 375,
                             45, 31));
@@ -241,26 +219,21 @@ public class TimeComboBoxes
         return yearComboBox;
     }
 
-    public void setYearComboBox()
-    {
+    public void setYearComboBox() {
 
     }
 
     /**
      * This method initializes monthComboBox
-     * 
+     *
      * @return javax.swing.JComboBox
      */
-    private JComboBox getMonthComboBox()
-    {
-        if (monthComboBox == null)
-        {
+    private JComboBox getMonthComboBox() {
+        if (monthComboBox == null) {
             monthComboBox = new JComboBox(Library.getComboBoxMonthFiled());
             monthComboBox.setBounds(getMonthRectangle());
-            monthComboBox.addItemListener(new java.awt.event.ItemListener()
-            {
-                public void itemStateChanged(java.awt.event.ItemEvent e)
-                {
+            monthComboBox.addItemListener(new java.awt.event.ItemListener() {
+                public void itemStateChanged(java.awt.event.ItemEvent e) {
                     dayComboBox.removeAllItems();
                     Library.flushComboBox(yearComboBox, monthComboBox, dayComboBox, new Rectangle(421, 375,
                             45, 31));
@@ -272,13 +245,11 @@ public class TimeComboBoxes
 
     /**
      * This method initializes dayComboBox
-     * 
+     *
      * @return javax.swing.JComboBox
      */
-    private JComboBox getDayComboBox()
-    {
-        if (dayComboBox == null)
-        {
+    private JComboBox getDayComboBox() {
+        if (dayComboBox == null) {
             String year = yearComboBox.getSelectedItem().toString();
             String month = monthComboBox.getSelectedItem().toString();
             dayComboBox = new JComboBox(Library.getComboBoxDayFiled(year, month));
@@ -287,8 +258,7 @@ public class TimeComboBoxes
         return dayComboBox;
     }
 
-    public String getTimeString()
-    {
+    public String getTimeString() {
         String result;
         result = yearComboBox.getSelectedItem().toString();
         result += "-";
@@ -299,26 +269,22 @@ public class TimeComboBoxes
     }
 }
 
-class Constants
-{
+class Constants {
 
     public static final int END_YEAR = 3000;
     public static final int BEGIN_YEAR = 1980;
 
 }
 
-class Library
-{
+class Library {
 
     /**
      * 用于填充jComnboBox的year框
      */
-    public static String[] getComboBoxYearFiled()
-    {
+    public static String[] getComboBoxYearFiled() {
         String[] result = new String[Constants.END_YEAR - Constants.BEGIN_YEAR];
         String temp;
-        for (int i = Constants.BEGIN_YEAR, j = 0; i < Constants.END_YEAR; i++, j++)
-        {
+        for (int i = Constants.BEGIN_YEAR, j = 0; i < Constants.END_YEAR; i++, j++) {
             temp = "" + i + "";
             result[j] = new String(temp);
         }
@@ -328,12 +294,10 @@ class Library
     /**
      * 用于填充jComnboBox的month框
      */
-    public static String[] getComboBoxMonthFiled()
-    {
+    public static String[] getComboBoxMonthFiled() {
         String[] result = new String[12];
         String temp;
-        for (int i = 0, j = 1; i < 12; i++, j++)
-        {
+        for (int i = 0, j = 1; i < 12; i++, j++) {
             temp = "" + j + "";
             result[i] = new String(temp);
         }
@@ -343,16 +307,14 @@ class Library
     /**
      * 用于填充jComnboBox的day框,用于用户选择月份后对日的下拉式框做修改
      */
-    public static String[] getComboBoxDayFiled(String yearField, String monthField)
-    {
+    public static String[] getComboBoxDayFiled(String yearField, String monthField) {
         int year, month, days;
         year = (new Integer(yearField)).intValue();
         month = (new Integer(monthField)).intValue();
         days = new Date(year, month, 0).getDay();// getDays(year,month);
         String[] result = new String[days];
         String temp;
-        for (int i = 0, j = 1; i < days; i++, j++)
-        {
+        for (int i = 0, j = 1; i < days; i++, j++) {
             temp = "" + j + "";
             result[i] = new String(temp);
         }
@@ -360,8 +322,7 @@ class Library
     }
 
     public static void flushComboBox(JComboBox yearComboBox, JComboBox monthComboBox, JComboBox dayComboBox,
-            Rectangle rec)
-    {
+                                     Rectangle rec) {
         String year = yearComboBox.getSelectedItem().toString();
         String month = monthComboBox.getSelectedItem().toString();
         dayComboBox.removeAllItems();

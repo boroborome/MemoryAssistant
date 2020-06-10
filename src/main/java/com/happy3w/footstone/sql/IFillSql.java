@@ -9,41 +9,40 @@
  */
 package com.happy3w.footstone.sql;
 
+import com.happy3w.footstone.exception.MessageException;
+
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import com.happy3w.footstone.exception.MessageException;
-
 /**
  * @author BoRoBoRoMe
- *
  */
-public abstract class IFillSql<T>
-{
+public abstract class IFillSql<T> {
     /**
      * 根据场景不同，有时将value中值填写到statement中
      * 有时将statement中内容填写到value中
+     *
      * @param statement
      * @param value
      */
     public abstract void fill(PreparedStatement statement, T value) throws SQLException, MessageException;
-    
+
     /**
      * 成功时执行
+     *
      * @param value
-     * @throws MessageException 
+     * @throws MessageException
      */
-    public void onSuccess(T value) throws MessageException
-    {
-        
+    public void onSuccess(T value) throws MessageException {
+
     }
-    
+
     /**
      * 失败时执行
+     *
      * @param value
      */
-    public void onFailed(T value) throws MessageException
-    {
-        
+    public void onFailed(T value) throws MessageException {
+
     }
 }

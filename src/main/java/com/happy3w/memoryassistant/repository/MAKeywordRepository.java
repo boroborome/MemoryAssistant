@@ -10,5 +10,6 @@ import java.util.List;
 @Repository
 public interface MAKeywordRepository extends JpaRepository<MAKeyword, Long> {
     List<MAKeyword> findAllByKeywordLike(String keyword);
+
     List<MAKeyword> findAllByKeywordIn(Collection<String> keywords);
 }

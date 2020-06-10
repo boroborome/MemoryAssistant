@@ -1,4 +1,3 @@
-
 package com.happy3w.memoryassistant.view;
 
 import com.happy3w.footstone.FootstoneSvcAccess;

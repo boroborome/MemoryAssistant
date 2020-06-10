@@ -12,18 +12,18 @@ import com.happy3w.footstone.exception.MessageException;
 
 /**
  * @author BoRoBoRoMe
- *
  */
-public interface ISystemInstallSvc
-{
+public interface ISystemInstallSvc {
     /**
      * 卸载
+     *
      * @throws MessageException
      */
     void uninstall() throws MessageException;
-    
+
     /**
      * 安装
+     *
      * @throws MessageException
      */
     void install() throws MessageException;

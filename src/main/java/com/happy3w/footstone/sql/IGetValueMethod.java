@@ -14,20 +14,21 @@ package com.happy3w.footstone.sql;
 
 /**
  * <DT><B>Title:获取值方法</B></DT>
- *    <DD>[产品名称和版本号]</DD>
+ * <DD>[产品名称和版本号]</DD>
  * <DT><B>Description:</B></DT>
- *    <DD>[描述功能、作用、用法和注意事项]</DD>
+ * <DD>[描述功能、作用、用法和注意事项]</DD>
  * <P>Copyright:  Copyright (c) 2008</P>
  * <P>Company:    BoRoBoRoMe Co. Ltd.</P>
- * @author        BoRoBoRoMe
- * @version       1.0 2010-5-23
+ *
+ * @author BoRoBoRoMe
+ * @version 1.0 2010-5-23
  */
-public interface IGetValueMethod
-{
+public interface IGetValueMethod {
     /**
      * 获取值
+     *
      * @param source 获取数据的源泉
-     * @param param 获取数据的参数，参数标记
+     * @param param  获取数据的参数，参数标记
      * @return 得到的值
      */
     Object getValue(Object source, Object param);

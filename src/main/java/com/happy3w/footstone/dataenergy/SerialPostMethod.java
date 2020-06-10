@@ -20,19 +20,19 @@ import java.lang.annotation.Target;
 
 /**
  * <DT><B>Title:</B></DT>
- *    <DD>序列化后置方法标记</DD>
+ * <DD>序列化后置方法标记</DD>
  * <DT><B>Description:</B></DT>
- *    <DD>在对象数据引擎中用于表示这个方法会在对象的各种属性都设置好后，调用。一个对象应该只有一个方法标记为后置方法，否则不确定哪一个会被执行。<br>
- *    后置方法不能以get/is开头，且方法没有参数。</DD>
+ * <DD>在对象数据引擎中用于表示这个方法会在对象的各种属性都设置好后，调用。一个对象应该只有一个方法标记为后置方法，否则不确定哪一个会被执行。<br>
+ * 后置方法不能以get/is开头，且方法没有参数。</DD>
  * <P>Copyright:  Copyright (c) 2008</P>
  * <P>Company:    BoRoBoRoMe Co. Ltd.</P>
- * @author        BoRoBoRoMe
- * @version       1.0 2010-3-8
+ *
+ * @author BoRoBoRoMe
+ * @version 1.0 2010-3-8
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface SerialPostMethod
-{
+public @interface SerialPostMethod {
     //标记属性没有内容
 }

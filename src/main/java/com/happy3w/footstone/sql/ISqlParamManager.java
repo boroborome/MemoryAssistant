@@ -14,29 +14,31 @@ package com.happy3w.footstone.sql;
 
 /**
  * <DT><B>Title:</B></DT>
- *    <DD>Sql参数管理器</DD>
+ * <DD>Sql参数管理器</DD>
  * <DT><B>Description:</B></DT>
- *    <DD>在批量处理数据时，为了不重复创建Sql，所以使用Sql参数构建器</DD>
+ * <DD>在批量处理数据时，为了不重复创建Sql，所以使用Sql参数构建器</DD>
  * <P>Copyright:  Copyright (c) 2008</P>
  * <P>Company:    BoRoBoRoMe Co. Ltd.</P>
- * @author        BoRoBoRoMe
- * @version       1.0 2010-5-23
+ *
+ * @author BoRoBoRoMe
+ * @version 1.0 2010-5-23
  */
-public interface ISqlParamManager
-{
+public interface ISqlParamManager {
     /**
      * 检测是否还有需要处理的数据
+     *
      * @return
      */
     boolean hasNext();
-    
+
     /**
      * 处理下一个参数
      */
     void next();
-    
+
     /**
      * 构建一个Sql参数
+     *
      * @param paramFlag Sql参数在获取值时使用的标记
      * @return
      */

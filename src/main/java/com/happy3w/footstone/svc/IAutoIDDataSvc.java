@@ -12,18 +12,19 @@ import com.happy3w.footstone.exception.MessageException;
 
 /**
  * <DT><B>Title:</B></DT>
- *    <DD>基石</DD>
+ * <DD>基石</DD>
  * <DT><B>Description:</B></DT>
- *    <DD>The interface of datasvc which is support auto id</DD>
+ * <DD>The interface of datasvc which is support auto id</DD>
  * <P>Copyright:  Copyright (c) 2008</P>
  * <P>Company:    BoRoBoRoMe Co. Ltd.</P>
- * @author        boroborome
- * @version       1.0 Apr 12, 2014
+ *
+ * @author boroborome
+ * @version 1.0 Apr 12, 2014
  */
-public interface IAutoIDDataSvc<E> extends IDataSvc<E>
-{
+public interface IAutoIDDataSvc<E> extends IDataSvc<E> {
     /**
      * The method to get MaxID
+     *
      * @return
      * @throws MessageException
      */

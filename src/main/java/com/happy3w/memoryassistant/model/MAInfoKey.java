@@ -1,8 +1,17 @@
 package com.happy3w.memoryassistant.model;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.IdClass;
+import javax.persistence.Table;
 import java.io.Serializable;
 
 @NoArgsConstructor
@@ -14,13 +23,12 @@ import java.io.Serializable;
 @Getter
 @Setter
 @EqualsAndHashCode
-public class MAInfoKey implements Serializable
-{
-	@Id
-	@Column(name = "infoid")
-	private long infoid;
+public class MAInfoKey implements Serializable {
+    @Id
+    @Column(name = "infoid")
+    private long infoid;
 
-	@Id
-	@Column(name = "wordid")
-	private long wordid;
+    @Id
+    @Column(name = "wordid")
+    private long wordid;
 }

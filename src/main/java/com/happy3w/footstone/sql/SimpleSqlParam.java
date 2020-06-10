@@ -16,67 +16,65 @@ import java.sql.SQLException;
 
 /**
  * <DT><B>Title:</B></DT>
- *    <DD>简单Sql参数设置器</DD>
+ * <DD>简单Sql参数设置器</DD>
  * <DT><B>Description:</B></DT>
- *    <DD>能够处理一般普通参数的设置。</DD>
+ * <DD>能够处理一般普通参数的设置。</DD>
  * <P>Copyright:  Copyright (c) 2008</P>
  * <P>Company:    BoRoBoRoMe Co. Ltd.</P>
- * @author        BoRoBoRoMe
- * @version       1.0 2010-4-25
+ *
+ * @author BoRoBoRoMe
+ * @version 1.0 2010-4-25
  */
-public class SimpleSqlParam implements ISqlParam
-{
+public class SimpleSqlParam implements ISqlParam {
     /**
      * 空的Sql参数
      */
     public static final ISqlParam EmptySqlParam = new SimpleSqlParam(null);
-    
+
     /**
      * 参数值
      */
     private Object paramValue;
-    
+
     /**
      * 内部sql参数提供器，如果使用了内部参数提供器则paramValue无效
      */
     private ISqlParam inner;
-    
+
     /**
      * 构造函数
      */
-    public SimpleSqlParam()
-    {
+    public SimpleSqlParam() {
         super();
     }
 
     /**
      * 构造函数
+     *
      * @param paramValue
      */
-    public SimpleSqlParam(Object paramValue)
-    {
+    public SimpleSqlParam(Object paramValue) {
         super();
         setParamValue(paramValue);
     }
 
     /**
      * 获取paramValue
+     *
      * @return paramValue
      */
-    public Object getParamValue()
-    {
+    public Object getParamValue() {
         return paramValue;
     }
 
     /**
      * 设置paramValue
+     *
      * @param paramValue paramValue
      */
-    public void setParamValue(Object paramValue)
-    {
+    public void setParamValue(Object paramValue) {
         this.paramValue = paramValue;
-        if (paramValue instanceof ISqlParam)
-        {
+        if (paramValue instanceof ISqlParam) {
             inner = (ISqlParam) paramValue;
         }
     }
@@ -85,14 +83,10 @@ public class SimpleSqlParam implements ISqlParam
      * @see com.boroborome.common.sql.ISqlParam#setParam(com.boroborome.common.sql.IParamSetter)
      */
     @Override
-    public void setParam(IParamSetter setter) throws SQLException
-    {
-        if (inner != null)
-        {
+    public void setParam(IParamSetter setter) throws SQLException {
+        if (inner != null) {
             inner.setParam(setter);
-        }
-        else
-        {
+        } else {
             setter.setObject(0, paramValue);
         }
     }

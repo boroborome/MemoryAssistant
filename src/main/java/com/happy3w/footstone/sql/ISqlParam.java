@@ -16,18 +16,19 @@ import java.sql.SQLException;
 
 /**
  * <DT><B>Title:</B></DT>
- *    <DD>Sql参数设置</DD>
+ * <DD>Sql参数设置</DD>
  * <DT><B>Description:</B></DT>
- *    <DD>SqlBuilder用于管理参数的接口</DD>
+ * <DD>SqlBuilder用于管理参数的接口</DD>
  * <P>Copyright:  Copyright (c) 2008</P>
  * <P>Company:    BoRoBoRoMe Co. Ltd.</P>
- * @author        BoRoBoRoMe
- * @version       1.0 2010-4-25
+ *
+ * @author BoRoBoRoMe
+ * @version 1.0 2010-4-25
  */
-public interface ISqlParam
-{
+public interface ISqlParam {
     /**
      * 将保存的参数信息通过参数设置接口设置到执行sql的工具中
+     *
      * @param setter
      * @throws SQLException
      */

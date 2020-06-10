@@ -11,10 +11,9 @@ package com.happy3w.footstone.svc;
 /**
  * 查询数据是用的条件<br>
  * 暂时没有找到通用的结构，因此只使用一个接口，不同的场景自己扩展自己的结构。
- * @author BoRoBoRoMe
  *
+ * @author BoRoBoRoMe
  */
-public interface IDataCondition<T>
-{
+public interface IDataCondition<T> {
 
 }

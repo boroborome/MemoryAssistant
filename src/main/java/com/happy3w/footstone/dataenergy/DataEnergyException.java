@@ -19,56 +19,56 @@ import com.happy3w.footstone.exception.MessageException;
  * <P>Description:传递错误信息</P>
  * <P>Copyright:  Copyright (c) 2008</P>
  * <P>Company:    BoRoBoRoMe Co. Ltd.</P>
- * @author        BoRoBoRoMe
- * @version       1.0 2010-2-24
+ *
+ * @author BoRoBoRoMe
+ * @version 1.0 2010-2-24
  */
-public class DataEnergyException extends MessageException
-{
+public class DataEnergyException extends MessageException {
 
     /**
      * 构造函数
+     *
      * @param resPath 资源路径
      * @param message 消息资源Key值，Key值对应的字符串值可以带有若干个站位符，与params中个数一致
-     * @param params 参数列表
-     * @param cause 导致错误的原因，可以为Null
+     * @param params  参数列表
+     * @param cause   导致错误的原因，可以为Null
      */
     public DataEnergyException(final String resPath, final String message,
-            final Object[] params, final Throwable cause)
-    {
+                               final Object[] params, final Throwable cause) {
         super(resPath, message, params, cause);
     }
 
     /**
      * 构造函数
+     *
      * @param resPath 资源路径
      * @param message 消息资源Key值，Key值对应的字符串值可以带有若干个站位符，与params中个数一致
-     * @param cause 导致错误的原因，可以为Null
+     * @param cause   导致错误的原因，可以为Null
      */
-    public DataEnergyException(final String resPath, final String message, final Throwable cause)
-    {
+    public DataEnergyException(final String resPath, final String message, final Throwable cause) {
         super(resPath, message, cause);
     }
 
     /**
      * 构造函数
+     *
      * @param resPath 资源路径
      * @param message 消息资源Key值，Key值对应的字符串值可以带有若干个站位符，与params中个数一致
-     * @param params 参数列表
+     * @param params  参数列表
      */
 
-    public DataEnergyException(final String resPath, final String message, final Object[] params)
-    {
+    public DataEnergyException(final String resPath, final String message, final Object[] params) {
         super(resPath, message, params);
     }
 
     /**
      * 构造函数
+     *
      * @param resPath 资源路径
      * @param message 消息资源Key值，Key值对应的字符串值可以带有若干个站位符，与params中个数一致
      */
-    public DataEnergyException(final String resPath, final String message)
-    {
+    public DataEnergyException(final String resPath, final String message) {
         super(resPath, message);
     }
-    
+
 }

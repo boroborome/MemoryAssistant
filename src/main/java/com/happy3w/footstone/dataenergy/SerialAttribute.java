@@ -20,18 +20,18 @@ import java.lang.annotation.Target;
 
 /**
  * <DT><B>Title:</B></DT>
- *    <DD>序列属性标记</DD>
+ * <DD>序列属性标记</DD>
  * <DT><B>Description:</B></DT>
- *    <DD>在对象数据引擎中用于表示这个属性需要提供给数据机器。如果一个get/is方法带有这个标记，则这个属性的值会提供给数据机器。</DD>
+ * <DD>在对象数据引擎中用于表示这个属性需要提供给数据机器。如果一个get/is方法带有这个标记，则这个属性的值会提供给数据机器。</DD>
  * <P>Copyright:  Copyright (c) 2008</P>
  * <P>Company:    BoRoBoRoMe Co. Ltd.</P>
- * @author        BoRoBoRoMe
- * @version       1.0 2010-3-8
+ *
+ * @author BoRoBoRoMe
+ * @version 1.0 2010-3-8
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface SerialAttribute
-{
+public @interface SerialAttribute {
     //标记属性没有内容
 }

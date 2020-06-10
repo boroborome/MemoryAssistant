@@ -16,90 +16,80 @@ import java.util.Iterator;
 
 /**
  * @author BoRoBoRoMe
- *
  */
-public abstract class AbstractBufferIterator<E> implements IBufferIterator<E>
-{
+public abstract class AbstractBufferIterator<E> implements IBufferIterator<E> {
     protected E curItem;
-    
+
     @Override
-    public E current()
-    {
+    public E current() {
         return curItem;
     }
 
     /**
      * 将it转换为一个AbstractBufferIterator
+     *
      * @param it
      * @return
      */
-    public static <T> AbstractBufferIterator<T> from(Iterator<T> it)
-    {
+    public static <T> AbstractBufferIterator<T> from(Iterator<T> it) {
         return new IteratorAdapter<T>(it);
     }
-    
-    public static <T> AbstractBufferIterator<T> from(T item)
-    {
+
+    public static <T> AbstractBufferIterator<T> from(T item) {
         return new SingleIteratorAdapter<T>(item);
     }
-    
-    private static class SingleIteratorAdapter<T> extends AbstractBufferIterator<T>
-    {
+
+    private static class SingleIteratorAdapter<T> extends AbstractBufferIterator<T> {
         private T item;
+
         /**
          * @param item
          */
-        public SingleIteratorAdapter(T item)
-        {
+        public SingleIteratorAdapter(T item) {
             this.item = item;
         }
+
         @Override
-        public boolean hasNext()
-        {
+        public boolean hasNext() {
             return item != null;
         }
 
         @Override
-        public T next()
-        {
+        public T next() {
             T t = item;
             item = null;
             return t;
         }
 
         @Override
-        public void remove()
-        {
+        public void remove() {
             item = null;
         }
     }
-    
-    private static class IteratorAdapter<T> extends AbstractBufferIterator<T>
-    {
+
+    private static class IteratorAdapter<T> extends AbstractBufferIterator<T> {
         private Iterator<T> it;
+
         /**
          * @param it
          */
-        public IteratorAdapter(Iterator<T> it)
-        {
+        public IteratorAdapter(Iterator<T> it) {
             this.it = it;
         }
+
         @Override
-        public boolean hasNext()
-        {
+        public boolean hasNext() {
             return it.hasNext();
         }
 
         @Override
-        public T next()
-        {
+        public T next() {
             curItem = it.next();
             return curItem;
         }
 
         @Override
-        public void remove()
-        {
+        public void remove() {
             it.remove();
         }
     }

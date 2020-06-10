@@ -17,28 +17,27 @@ package com.happy3w.footstone.util;
  * <P>Description:[描述功能、作用、用法和注意事项]</P>
  * <P>Copyright:  Copyright (c) 2008</P>
  * <P>Company:    BoRoBoRoMe Co. Ltd.</P>
- * @author        BoRoBoRoMe
- * @version       1.0 2009-6-10
+ *
+ * @author BoRoBoRoMe
+ * @version 1.0 2009-6-10
  */
-public abstract class AbstractChildItem<E>
-{
+public abstract class AbstractChildItem<E> {
     private E owner;
-    
-    public AbstractChildItem()
-    {
+
+    public AbstractChildItem() {
         super();
     }
-    
+
     /**
      * 获取owner
+     *
      * @return owner
      */
-    public E getOwner()
-    {
+    public E getOwner() {
         return owner;
     }
-    protected void setOwner(E owner)
-    {
+
+    protected void setOwner(E owner) {
         this.owner = owner;
     }
 }

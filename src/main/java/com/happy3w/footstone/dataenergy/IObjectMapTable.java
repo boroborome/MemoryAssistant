@@ -14,25 +14,27 @@ package com.happy3w.footstone.dataenergy;
 
 /**
  * <DT><B>Title:</B></DT>
- *    <DD>对象映射表接口</DD>
+ * <DD>对象映射表接口</DD>
  * <DT><B>Description:</B></DT>
- *    <DD>对外提供对象及对象名称之间关系，并辅助处理对象属性列表</DD>
+ * <DD>对外提供对象及对象名称之间关系，并辅助处理对象属性列表</DD>
  * <P>Copyright:  Copyright (c) 2008</P>
  * <P>Company:    BoRoBoRoMe Co. Ltd.</P>
- * @author        BoRoBoRoMe
- * @version       1.0 2010-3-9
+ *
+ * @author BoRoBoRoMe
+ * @version 1.0 2010-3-9
  */
-public interface IObjectMapTable
-{
+public interface IObjectMapTable {
     /**
      * 通过对象类型确定对象的信息
+     *
      * @param clazz 对象类型
      * @return 对象信息
      */
     ObjectMapItem findInfo(final Class<?> clazz);
-    
+
     /**
      * 根据对象名称查找对象信息
+     *
      * @param name 对象名称
      * @return 对象信息
      */

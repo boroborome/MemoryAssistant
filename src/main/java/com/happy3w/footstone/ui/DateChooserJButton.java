@@ -1,15 +1,10 @@
 package com.happy3w.footstone.ui;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.Frame;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
-import java.awt.Point;
+import javax.swing.*;
+import javax.swing.border.LineBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
@@ -17,53 +12,33 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
-import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
-import javax.swing.border.LineBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
-public class DateChooserJButton extends JButton
-{
+public class DateChooserJButton extends JButton {
 
     private DateChooser dateChooser = null;
 
     private String preLabel = "";
 
-    public DateChooserJButton()
-    {
+    public DateChooserJButton() {
         this(getNowDate());
     }
 
-    public DateChooserJButton(SimpleDateFormat df, String dateString)
-    {
+    public DateChooserJButton(SimpleDateFormat df, String dateString) {
         this();
         setText(df, dateString);
     }
 
-    public DateChooserJButton(Date date)
-    {
+    public DateChooserJButton(Date date) {
         this("", date);
     }
 
-    public DateChooserJButton(String preLabel, Date date)
-    {
+    public DateChooserJButton(String preLabel, Date date) {
         if (preLabel != null)
             this.preLabel = preLabel;
         setDate(date);
         setBorder(null);
         setCursor(new Cursor(Cursor.HAND_CURSOR));
-        super.addActionListener(new ActionListener()
-        {
-            public void actionPerformed(ActionEvent e)
-            {
+        super.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
                 if (dateChooser == null)
                     dateChooser = new DateChooser();
                 Point p = getLocationOnScreen();
@@ -73,71 +48,54 @@ public class DateChooserJButton extends JButton
         });
     }
 
-    private static Date getNowDate()
-    {
+    private static Date getNowDate() {
         return Calendar.getInstance().getTime();
     }
 
-    private static SimpleDateFormat getDefaultDateFormat()
-    {
+    private static SimpleDateFormat getDefaultDateFormat() {
         return new SimpleDateFormat("yyyy年MM月dd日HH时");
     }
 
     // 覆盖父类的方法
-    public void setText(String s)
-    {
+    public void setText(String s) {
         Date date;
-        try
-        {
+        try {
             date = getDefaultDateFormat().parse(s);
-        }
-        catch (ParseException e)
-        {
+        } catch (ParseException e) {
             date = getNowDate();
         }
         setDate(date);
     }
 
-    public void setText(SimpleDateFormat df, String s)
-    {
+    public void setText(SimpleDateFormat df, String s) {
         Date date;
-        try
-        {
+        try {
             date = df.parse(s);
-        }
-        catch (ParseException e)
-        {
+        } catch (ParseException e) {
             date = getNowDate();
         }
         setDate(date);
     }
 
-    public void setDate(Date date)
-    {
+    public void setDate(Date date) {
         super.setText(preLabel + getDefaultDateFormat().format(date));
     }
 
-    public Date getDate()
-    {
+    public Date getDate() {
         String dateString = getText().substring(preLabel.length());
-        try
-        {
+        try {
             return getDefaultDateFormat().parse(dateString);
-        }
-        catch (ParseException e)
-        {
+        } catch (ParseException e) {
             return getNowDate();
         }
 
     }
 
     // 覆盖父类的方法使之无效
-    public void addActionListener(ActionListener listener)
-    {
+    public void addActionListener(ActionListener listener) {
     }
 
-    private class DateChooser extends JPanel implements ActionListener, ChangeListener
-    {
+    private class DateChooser extends JPanel implements ActionListener, ChangeListener {
         int startYear = 1980; // 默认【最小】显示年份
         int lastYear = 2050; // 默认【最大】显示年份
         int width = 200; // 界面宽度
@@ -166,8 +124,7 @@ public class DateChooserJButton extends JButton
         JSpinner hourSpin;
         JButton[][] daysButton = new JButton[7][8];
 
-        DateChooser()
-        {
+        DateChooser() {
 
             setLayout(new BorderLayout());
             setBorder(new LineBorder(backGroundColor, 2));
@@ -180,8 +137,7 @@ public class DateChooserJButton extends JButton
 
         }
 
-        private JPanel createYearAndMonthPanal()
-        {
+        private JPanel createYearAndMonthPanal() {
             Calendar c = getCalendar();
             int currentYear = c.get(Calendar.YEAR);
             int currentMonth = c.get(Calendar.MONTH) + 1;
@@ -225,12 +181,11 @@ public class DateChooserJButton extends JButton
             return result;
         }
 
-        private JPanel createWeekAndDayPanal()
-        {
+        private JPanel createWeekAndDayPanal() {
             String[] colname =
-            {
-                "日", "一", "二", "三", "四", "五", "六"
-            };
+                    {
+                            "日", "一", "二", "三", "四", "五", "六"
+                    };
             JPanel result = new JPanel();
             // 设置固定字体，以免调用环境改变影响界面美观
             result.setFont(new Font("宋体", Font.PLAIN, 12));
@@ -238,8 +193,7 @@ public class DateChooserJButton extends JButton
             result.setBackground(Color.white);
             JLabel cell;
 
-            for (int i = 0; i < 7; i++)
-            {
+            for (int i = 0; i < 7; i++) {
                 cell = new JLabel(colname[i]);
                 cell.setHorizontalAlignment(JLabel.RIGHT);
                 if (i == 0 || i == 6)
@@ -251,8 +205,7 @@ public class DateChooserJButton extends JButton
 
             int actionCommandId = 0;
             for (int i = 0; i < 6; i++)
-                for (int j = 0; j < 7; j++)
-                {
+                for (int j = 0; j < 7; j++) {
                     JButton numberButton = new JButton();
                     numberButton.setBorder(null);
                     numberButton.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -272,8 +225,7 @@ public class DateChooserJButton extends JButton
             return result;
         }
 
-        private JDialog createDialog(Frame owner)
-        {
+        private JDialog createDialog(Frame owner) {
             JDialog result = new JDialog(owner, "日期时间选择", true);
             result.setDefaultCloseOperation(JDialog.HIDE_ON_CLOSE);
             result.getContentPane().add(this, BorderLayout.CENTER);
@@ -282,8 +234,7 @@ public class DateChooserJButton extends JButton
             return result;
         }
 
-        void showDateChooser(Point position)
-        {
+        void showDateChooser(Point position) {
             Frame owner = (Frame) SwingUtilities.getWindowAncestor(DateChooserJButton.this);
             if (dialog == null || dialog.getOwner() != owner)
                 dialog = createDialog(owner);
@@ -292,20 +243,17 @@ public class DateChooserJButton extends JButton
             dialog.show();
         }
 
-        Point getAppropriateLocation(Frame owner, Point position)
-        {
+        Point getAppropriateLocation(Frame owner, Point position) {
             Point result = new Point(position);
             Point p = owner.getLocation();
             int offsetX = (position.x + width) - (p.x + owner.getWidth());
             int offsetY = (position.y + height) - (p.y + owner.getHeight());
 
-            if (offsetX > 0)
-            {
+            if (offsetX > 0) {
                 result.x -= offsetX;
             }
 
-            if (offsetY > 0)
-            {
+            if (offsetY > 0) {
                 result.y -= offsetY;
             }
 
@@ -313,30 +261,25 @@ public class DateChooserJButton extends JButton
 
         }
 
-        private Calendar getCalendar()
-        {
+        private Calendar getCalendar() {
             Calendar result = Calendar.getInstance();
             result.setTime(getDate());
             return result;
         }
 
-        private int getSelectedYear()
-        {
+        private int getSelectedYear() {
             return ((Integer) yearSpin.getValue()).intValue();
         }
 
-        private int getSelectedMonth()
-        {
+        private int getSelectedMonth() {
             return ((Integer) monthSpin.getValue()).intValue();
         }
 
-        private int getSelectedHour()
-        {
+        private int getSelectedHour() {
             return ((Integer) hourSpin.getValue()).intValue();
         }
 
-        private void dayColorUpdate(boolean isOldDay)
-        {
+        private void dayColorUpdate(boolean isOldDay) {
             Calendar c = getCalendar();
             int day = c.get(Calendar.DAY_OF_MONTH);
             c.set(Calendar.DAY_OF_MONTH, 1);
@@ -349,16 +292,13 @@ public class DateChooserJButton extends JButton
                 daysButton[i][j].setForeground(todayBackColor);
         }
 
-        private void flushWeekAndDay()
-        {
+        private void flushWeekAndDay() {
             Calendar c = getCalendar();
             c.set(Calendar.DAY_OF_MONTH, 1);
             int maxDayNo = c.getActualMaximum(Calendar.DAY_OF_MONTH);
             int dayNo = 2 - c.get(Calendar.DAY_OF_WEEK);
-            for (int i = 0; i < 6; i++)
-            {
-                for (int j = 0; j < 7; j++)
-                {
+            for (int i = 0; i < 6; i++) {
+                for (int j = 0; j < 7; j++) {
                     String s = "";
                     if (dayNo >= 1 && dayNo <= maxDayNo)
                         s = String.valueOf(dayNo);
@@ -369,12 +309,10 @@ public class DateChooserJButton extends JButton
             dayColorUpdate(false);
         }
 
-        public void stateChanged(ChangeEvent e)
-        {
+        public void stateChanged(ChangeEvent e) {
             JSpinner source = (JSpinner) e.getSource();
             Calendar c = getCalendar();
-            if (source.getName().equals("Hour"))
-            {
+            if (source.getName().equals("Hour")) {
                 c.set(Calendar.HOUR_OF_DAY, getSelectedHour());
                 setDate(c.getTime());
                 return;
@@ -391,8 +329,7 @@ public class DateChooserJButton extends JButton
             flushWeekAndDay();
         }
 
-        public void actionPerformed(ActionEvent e)
-        {
+        public void actionPerformed(ActionEvent e) {
             JButton source = (JButton) e.getSource();
             if (source.getText().length() == 0)
                 return;
@@ -406,8 +343,7 @@ public class DateChooserJButton extends JButton
 
     }
 
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) {
         JDialog f = new JDialog();
         DateChooserJButton d = new DateChooserJButton();
         f.getContentPane().add(d);

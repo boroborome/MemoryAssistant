@@ -12,11 +12,11 @@
  */
 package com.happy3w.footstone.util;
 
+import com.happy3w.footstone.exception.RuntimeMessageException;
+
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.happy3w.footstone.exception.RuntimeMessageException;
 
 /**
  * <P>Title:      带有上下级关系的准确列表列表</P>
@@ -27,32 +27,27 @@ import com.happy3w.footstone.exception.RuntimeMessageException;
  *  </ol></P>
  * <P>Copyright:  Copyright (c) 2008</P>
  * <P>Company:    BoRoBoRoMe Co. Ltd.</P>
- * @author        BoRoBoRoMe
- * @version       1.0 2009-6-10
+ *
+ * @author BoRoBoRoMe
+ * @version 1.0 2009-6-10
  */
-public class StrictList<OwnerType, E extends AbstractChildItem<OwnerType>> extends AbstractList<E>
-{
+public class StrictList<OwnerType, E extends AbstractChildItem<OwnerType>> extends AbstractList<E> {
     private List<E> lst = new ArrayList<E>();
 
     private OwnerType owner;
     private Class<E> childType;
 
-    public StrictList(OwnerType owner, Class<E> childType)
-    {
+    public StrictList(OwnerType owner, Class<E> childType) {
         this.owner = owner;
         this.childType = childType;
     }
 
-    public E createChild()
-    {
+    public E createChild() {
         E child = null;
-        try
-        {
-            child= childType.newInstance();
+        try {
+            child = childType.newInstance();
             child.setOwner(owner);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             throw new RuntimeMessageException(CommonRes.ResFileName,
                     CommonRes.StrictList_CreateChildFailed, e);
         }
@@ -63,31 +58,27 @@ public class StrictList<OwnerType, E extends AbstractChildItem<OwnerType>> exten
      * @see java.util.AbstractList#add(java.lang.Object)
      */
     @Override
-    public void add(int index, E e)
-    {
+    public void add(int index, E e) {
         checkData(e);
 
-        if (!contains(e))
-        {
+        if (!contains(e)) {
             lst.add(index, e);
         }
     }
 
-    protected void checkData(E e)
-    {
+    protected void checkData(E e) {
         //if (e.getOwner() != owner)
         //{
-           // throw new RuntimeMessageException(CommonRes.ResFileName,
-                   // CommonRes.StrictList_AddFailed);
-       // }
+        // throw new RuntimeMessageException(CommonRes.ResFileName,
+        // CommonRes.StrictList_AddFailed);
+        // }
     }
 
     /* (non-Javadoc)
      * @see java.util.AbstractList#set(int, java.lang.Object)
      */
     @Override
-    public E set(int index, E element)
-    {
+    public E set(int index, E element) {
         checkData(element);
         return lst.set(index, element);
     }
@@ -96,8 +87,7 @@ public class StrictList<OwnerType, E extends AbstractChildItem<OwnerType>> exten
      * @see java.util.AbstractList#remove(int)
      */
     @Override
-    public E remove(int index)
-    {
+    public E remove(int index) {
         return lst.remove(index);
     }
 
@@ -105,8 +95,7 @@ public class StrictList<OwnerType, E extends AbstractChildItem<OwnerType>> exten
      * @see java.util.AbstractList#get(int)
      */
     @Override
-    public E get(int index)
-    {
+    public E get(int index) {
         return lst.get(index);
     }
 
@@ -114,8 +103,7 @@ public class StrictList<OwnerType, E extends AbstractChildItem<OwnerType>> exten
      * @see java.util.AbstractCollection#size()
      */
     @Override
-    public int size()
-    {
+    public int size() {
         return lst.size();
     }
 

@@ -12,38 +12,38 @@
  */
 package com.happy3w.footstone.dataenergy;
 
-import java.lang.reflect.Method;
-
 import com.happy3w.footstone.util.AttributeAccesser;
 import com.happy3w.footstone.xml.XmlEnergyUtil;
 
+import java.lang.reflect.Method;
+
 /**
  * <DT><B>Title:</B></DT>
- *    <DD>属性信息</DD>
+ * <DD>属性信息</DD>
  * <DT><B>Description:</B></DT>
- *    <DD>记录一个属性对应的设置和获取方法</DD>
+ * <DD>记录一个属性对应的设置和获取方法</DD>
  * <P>Copyright:  Copyright (c) 2008</P>
  * <P>Company:    BoRoBoRoMe Co. Ltd.</P>
- * @author        BoRoBoRoMe
- * @version       1.0 2010-3-9
+ *
+ * @author BoRoBoRoMe
+ * @version 1.0 2010-3-9
  */
-public class ObjectMapAttribute extends AttributeAccesser
-{
+public class ObjectMapAttribute extends AttributeAccesser {
     /**
      * 属性为简单类型的标记
      */
     public final boolean isSimpleType;
-    
+
     /**
      * 构造函数
+     *
      * @param name
      * @param getMethod
      * @param setMethod
      */
-    public ObjectMapAttribute(String name, Method getMethod, Method setMethod)
-    {
+    public ObjectMapAttribute(String name, Method getMethod, Method setMethod) {
         super(name, getMethod, setMethod);
-        
+
         isSimpleType = XmlEnergyUtil.isSimpleType(getMethod.getReturnType());
     }
 }

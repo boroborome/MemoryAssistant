@@ -16,71 +16,75 @@ import com.happy3w.footstone.dataenergy.SerialAttribute;
 
 /**
  * <DT><B>Title:</B></DT>
- *    <DD>Map映射条目</DD>
+ * <DD>Map映射条目</DD>
  * <DT><B>Description:</B></DT>
- *    <DD>在从XML文件读取Map信息时会使用这个结构表示key和value之间的关系。</DD>
+ * <DD>在从XML文件读取Map信息时会使用这个结构表示key和value之间的关系。</DD>
  * <P>Copyright:  Copyright (c) 2008</P>
  * <P>Company:    BoRoBoRoMe Co. Ltd.</P>
- * @author        BoRoBoRoMe
- * @version       1.0 2010-3-8
+ *
+ * @author BoRoBoRoMe
+ * @version 1.0 2010-3-8
  */
-public class MapItem<K,V>
-{
+public class MapItem<K, V> {
     private K key;
     private V value;
-    
+
     /**
      * 构造函数
      */
-    public MapItem()
-    {
+    public MapItem() {
         super();
     }
+
     /**
      * 构造函数
+     *
      * @param key
      * @param value
      */
-    public MapItem(K key, V value)
-    {
+    public MapItem(K key, V value) {
         super();
         this.key = key;
         this.value = value;
     }
+
     /**
      * 获取key
+     *
      * @return key
      */
     @SerialAttribute()
-    public K getKey()
-    {
+    public K getKey() {
         return key;
     }
+
     /**
      * 设置key
+     *
      * @param key key
      */
-    public void setKey(K key)
-    {
+    public void setKey(K key) {
         this.key = key;
     }
+
     /**
      * 获取value
+     *
      * @return value
      */
     @SerialAttribute()
-    public V getValue()
-    {
+    public V getValue() {
         return value;
     }
+
     /**
      * 设置value
+     *
      * @param value value
      */
-    public void setValue(V value)
-    {
+    public void setValue(V value) {
         this.value = value;
     }
-    
-    
+
+
 }

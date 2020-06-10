@@ -19,19 +19,17 @@ import java.util.ArrayList;
  * <P>Description:这个数据处理机的作用是将多个数据处理机组合在一起，让多个数据处理机共同工作。</P>
  * <P>Copyright:  Copyright (c) 2008</P>
  * <P>Company:    BoRoBoRoMe Co. Ltd.</P>
- * @author        BoRoBoRoMe
- * @version       1.0 2010-2-25
+ *
+ * @author BoRoBoRoMe
+ * @version 1.0 2010-2-25
  */
-public class ComplexDataMachine extends ArrayList<IDataMachine> implements IDataMachine
-{
+public class ComplexDataMachine extends ArrayList<IDataMachine> implements IDataMachine {
     /* (non-Javadoc)
      * @see com.boroborome.common.dataenergy.IDataMachine#endData()
      */
     @Override
-    public void endData(String name) throws DataEnergyException
-    {
-        for (IDataMachine machine : this)
-        {
+    public void endData(String name) throws DataEnergyException {
+        for (IDataMachine machine : this) {
             machine.endData(name);
         }
     }
@@ -40,10 +38,8 @@ public class ComplexDataMachine extends ArrayList<IDataMachine> implements IData
      * @see com.boroborome.common.dataenergy.IDataMachine#setAttribute(java.lang.String, java.lang.Object)
      */
     @Override
-    public void setAttribute(final String name, final Object value) throws DataEnergyException
-    {
-        for (IDataMachine machine : this)
-        {
+    public void setAttribute(final String name, final Object value) throws DataEnergyException {
+        for (IDataMachine machine : this) {
             machine.setAttribute(name, value);
         }
     }
@@ -52,28 +48,22 @@ public class ComplexDataMachine extends ArrayList<IDataMachine> implements IData
      * @see com.boroborome.common.dataenergy.IDataMachine#startData(java.lang.String)
      */
     @Override
-    public void startData(final String name, final String attributeName) throws DataEnergyException
-    {
-        for (IDataMachine machine : this)
-        {
+    public void startData(final String name, final String attributeName) throws DataEnergyException {
+        for (IDataMachine machine : this) {
             machine.startData(name, attributeName);
         }
     }
 
     @Override
-    public void endWork() throws DataEnergyException
-    {
-        for (IDataMachine machine : this)
-        {
+    public void endWork() throws DataEnergyException {
+        for (IDataMachine machine : this) {
             machine.endWork();
         }
     }
 
     @Override
-    public void startWork() throws DataEnergyException
-    {
-        for (IDataMachine machine : this)
-        {
+    public void startWork() throws DataEnergyException {
+        for (IDataMachine machine : this) {
             machine.startWork();
         }
     }
