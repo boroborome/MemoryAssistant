@@ -1,0 +1,7 @@
+spring:
+  datasource:
+    url: jdbc:derby:database;create=true;databaseName=madb
+    driver-class-name: org.apache.derby.jdbc.EmbeddedDriver
+    username: madb
+    password:
+    initialize: true

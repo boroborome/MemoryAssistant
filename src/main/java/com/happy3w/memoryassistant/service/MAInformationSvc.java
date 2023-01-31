@@ -62,7 +62,7 @@ public class MAInformationSvc implements IDataSvc<MAInformation> {
             keywordSvc.saveAndUpdate(info.getLstKeyword());
             maInformationRepository.saveAndFlush(info);
             maInfoKeyRepository.deleteAllByInfoid(info.getId());
-            maInfoKeyRepository.save(info.getLstKeyword().stream()
+            maInfoKeyRepository.saveAll(info.getLstKeyword().stream()
                     .map(key -> new MAInfoKey(info.getId(), key.getId()))
                     .collect(Collectors.toList())
             );
@@ -75,7 +75,7 @@ public class MAInformationSvc implements IDataSvc<MAInformation> {
     public void delete(Iterator<MAInformation> it) throws MessageException {
         it.forEachRemaining(info -> {
             maInfoKeyRepository.deleteAllByInfoid(info.getId());
-            maInformationRepository.delete(info.getId());
+            maInformationRepository.deleteById(info.getId());
             eventContainer.fireEvents(IDataChangeListener.EVENT_DELETED, info);
         });
     }
@@ -95,7 +95,6 @@ public class MAInformationSvc implements IDataSvc<MAInformation> {
         List<Long> parameters = new ArrayList<>(keyIDs);
         parameters.add((long) keyIDs.size());
         return jdbcTemplate.query(buff.toString(),
-                parameters.toArray(),
                 new BeanPropertyRowMapper<MAInformation>(MAInformation.class) {
                     @Override
                     public MAInformation mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -104,7 +103,8 @@ public class MAInformationSvc implements IDataSvc<MAInformation> {
                         info.setLstKeyword(MAKeyword.string2List(rs.getString("keywords")));
                         return info;
                     }
-                }
+                },
+                parameters.toArray()
         );
     }
 

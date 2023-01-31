@@ -51,7 +51,7 @@ public class MAKeywordSvc implements IAutoIDDataSvc<MAKeyword> {
     @Override
     public void delete(Iterator<MAKeyword> it) throws MessageException {
         it.forEachRemaining(key -> {
-            maKeywordRepository.delete(key.getId());
+            maKeywordRepository.deleteById(key.getId());
             eventContainer.fireEvents(IDataChangeListener.EVENT_DELETED, key);
         });
     }

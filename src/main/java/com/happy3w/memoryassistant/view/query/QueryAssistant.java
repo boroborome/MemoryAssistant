@@ -3,7 +3,7 @@
  */
 package com.happy3w.memoryassistant.view.query;
 
-import org.apache.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Iterator;
 
@@ -11,9 +11,8 @@ import java.util.Iterator;
  * @author boroborome
  *
  */
+@Slf4j
 public class QueryAssistant<CondtionType, DataType> {
-    private static Logger log = Logger.getLogger(QueryAssistant.class);
-
     private CondtionType condition;
     private boolean conditionChanged = false;
     private Object conditionLock = new Object();

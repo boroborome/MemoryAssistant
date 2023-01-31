@@ -10,7 +10,7 @@ package com.happy3w.footstone.model;
 
 import com.happy3w.footstone.exception.RuntimeMessageException;
 import com.happy3w.footstone.res.ResConst;
-import org.apache.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -26,8 +26,8 @@ import java.sql.SQLException;
  * @author BoRoBoRoMe
  * @version 1.0 2011-10-5
  */
+@Slf4j
 public abstract class AbstractDBIterator<T> extends AbstractBufferIterator<T> {
-    private static final Logger log = Logger.getLogger(AbstractDBIterator.class);
 
     private ResultSet dbRS;
     private boolean bHasNext;

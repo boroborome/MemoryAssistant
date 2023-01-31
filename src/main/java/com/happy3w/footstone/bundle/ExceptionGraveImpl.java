@@ -15,7 +15,7 @@ import com.happy3w.footstone.exception.InputExceptionBurier;
 import com.happy3w.footstone.exception.MessageException;
 import com.happy3w.footstone.exception.MessageExceptionBurier;
 import com.happy3w.footstone.exception.SimpleExceptionBurier;
-import org.apache.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,10 +29,8 @@ import java.util.Map;
  * @author BoRoBoRoMe
  * @version 1.0 2008-1-10
  */
+@Slf4j
 public class ExceptionGraveImpl implements IExceptionGrave {
-    private static Logger log = Logger.getLogger(ExceptionGraveImpl.class);
-
-
     /**
      * 埋葬者的注册集合
      */

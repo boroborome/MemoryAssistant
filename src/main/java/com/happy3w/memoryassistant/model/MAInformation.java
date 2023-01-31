@@ -33,7 +33,7 @@ public class MAInformation {
 
     @Id
     @Column(name = "tid")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
     @Basic

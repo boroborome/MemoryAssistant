@@ -17,8 +17,6 @@ create index idxTblInfoMT on tblInformation(modifyTime);
 create table tblInfoKeyRelation (wordid BIGINT,
 	infoid BIGINT,
 	PRIMARY KEY (wordid, infoid));
-alter table tblInfoKeyRelation add constraint wordid_FK Foreign Key (wordid) references tblKeyWord (tid);
-alter table tblInfoKeyRelation add constraint infoid_FK Foreign Key (infoid) references tblInformation (tid);
 
 create index idxIkrKeyword on tblInfoKeyRelation(wordid);
 create index idxIkrInfoid on tblInfoKeyRelation(infoid);

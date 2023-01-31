@@ -6,7 +6,7 @@ import com.happy3w.memoryassistant.model.MAInformation;
 import com.happy3w.memoryassistant.model.MAKeyword;
 import com.happy3w.memoryassistant.view.res.ResConst;
 import com.happy3w.memoryassistant.view.wgt.KeywordField;
-import org.apache.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.swing.*;
 import javax.swing.event.UndoableEditEvent;
@@ -26,9 +26,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+@Slf4j
 public class InformationPanel extends AbstractDataPanel<MAInformation> {
     private static final String CANCEL_ACTION = "cancel";
-    private static Logger logger = Logger.getLogger(InformationPanel.class);
     private KeywordField txtKeys;
     private JTextPane txtInfoDetail;
     private UndoManager undoManager = new UndoManager();
@@ -78,10 +78,8 @@ public class InformationPanel extends AbstractDataPanel<MAInformation> {
                         buffer.insert(carePos, fileName);
                         carePos += fileName.length();
                     }
-                } catch (UnsupportedFlavorException e) {
-                    logger.trace(e);
-                } catch (IOException e) {
-                    logger.trace(e);
+                } catch (IOException | UnsupportedFlavorException e) {
+                    log.error("", e);
                 }
             }
             //强制拖放操作结束，停止阻塞拖放源  

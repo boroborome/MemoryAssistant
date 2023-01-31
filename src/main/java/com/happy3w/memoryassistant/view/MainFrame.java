@@ -10,7 +10,7 @@ import com.happy3w.memoryassistant.model.MAKeyword;
 import com.happy3w.memoryassistant.service.MAInformationSvc;
 import com.happy3w.memoryassistant.utils.ContextHolder;
 import com.happy3w.memoryassistant.view.res.ResConst;
-import org.apache.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,9 +26,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 public class MainFrame extends JFrame implements ISpaceName {
-    private static Logger log = Logger.getLogger(MainFrame.class);
-
     /**
      * 默认的资源名字空间
      */

@@ -19,7 +19,7 @@ import com.happy3w.memoryassistant.view.query.QueryAssistant;
 import com.happy3w.memoryassistant.view.wgt.IKeywordFieldListener;
 import com.happy3w.memoryassistant.view.wgt.KeywordField;
 import com.happy3w.memoryassistant.view.wgt.KeywordFieldEvent;
-import org.apache.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.ObjectUtils;
 
 import javax.swing.*;
@@ -39,8 +39,8 @@ import java.util.Set;
  * @author boroborome
  *
  */
+@Slf4j
 public class InfoManagePanel extends JPanel {
-    private static Logger log = Logger.getLogger(InfoManagePanel.class);
 
     private KeywordField txtKeys;
     private BaseReadonlyTableModel<MAInformation> tblModelInfo;

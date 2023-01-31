@@ -11,7 +11,7 @@ package com.happy3w.footstone.bundle;
 import com.happy3w.footstone.exception.MessageException;
 import com.happy3w.footstone.svc.IAutoIDDataSvc;
 import com.happy3w.footstone.svc.IIDGeneratorSvc;
-import org.apache.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,8 +27,8 @@ import java.util.Map;
  * @author BoRoBoRoMe
  * @version 1.0 2011-10-6
  */
+@Slf4j
 public class IDGeneratorSvcImpl implements IIDGeneratorSvc {
-    private static Logger logger = Logger.getLogger(IDGeneratorSvcImpl.class);
 
     /**
      * 保存某个类型对应的索引
@@ -81,7 +81,7 @@ public class IDGeneratorSvcImpl implements IIDGeneratorSvc {
         try {
             init(type, svc.getMaxID());
         } catch (MessageException e) {
-            logger.error("init maxid failed.", e);
+            log.error("init maxid failed.", e);
             //说明系统没有数据库，此时自动创建一次数据库
             //为了安全还是不要自动创建数据库的好
 //            try
