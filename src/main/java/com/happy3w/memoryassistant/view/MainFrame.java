@@ -5,6 +5,7 @@ import com.happy3w.footstone.resource.IResourceMgrSvc;
 import com.happy3w.footstone.resource.ISpaceName;
 import com.happy3w.footstone.sql.IDatabaseMgrSvc;
 import com.happy3w.footstone.svc.ISystemInstallSvc;
+import com.happy3w.footstone.ui.ExecuteSqlPanel;
 import com.happy3w.memoryassistant.view.res.ResConst;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
@@ -34,7 +35,7 @@ public class MainFrame extends JFrame implements ISpaceName {
 
     private String spaceName = DefualtSpaceName;
 
-    private Map<Class<? extends JInternalFrame>, JInternalFrame> mapFrame = new HashMap<Class<? extends JInternalFrame>, JInternalFrame>();
+    private Map<Class<? extends JComponent>, JInternalFrame> mapFrame = new HashMap<>();
 
     public MainFrame(ISystemInstallSvc systemInstallSvc,
                      Optional<IDatabaseMgrSvc> iDatabaseMgrSvc,
@@ -50,7 +51,7 @@ public class MainFrame extends JFrame implements ISpaceName {
     @PostConstruct
     public void initUI() {
         initialize();
-        showFrame(InformationFrame.class);
+        showFrame(InfoManagePanel.class, "Manage Info");
     }
 
     @Override
@@ -109,29 +110,43 @@ public class MainFrame extends JFrame implements ISpaceName {
 //        toolBar.add(createBtnShowWindow("Manage Task", TaskItemFrame.class));
 //        toolBar.add(createBtnShowWindow("Manage Event", TaskEventFrame.class));
 //        toolBar.add(createBtnShowWindow("Test", CheckCloseInternalFrame.class));
-        toolBar.add(createBtnShowWindow("Manage Info", InformationFrame.class));
+        toolBar.add(createBtnShowWindow("Manage Info", InformationPanel.class));
 //        toolBar.add(createUpgradeAction());
         if (iDatabaseMgrSvc.isPresent() && log.isDebugEnabled()) {
-            toolBar.add(createBtnShowWindow("Execute Sql", ExecuteSqlFrame.class));
+            toolBar.add(createBtnShowWindow("Execute Sql", ExecuteSqlPanel.class));
         }
         return toolBar;
     }
 
-    private JButton createBtnShowWindow(String title, Class<? extends JInternalFrame> frameClass) {
+    private JButton createBtnShowWindow(String title, Class<? extends JComponent> panelType) {
         JButton btn = new JButton(title);
         btn.setPreferredSize(new Dimension(80, 20));
-        btn.addActionListener(new ShowWindowAction(frameClass));
+        btn.addActionListener(new ShowWindowAction(panelType, title));
         return btn;
     }
 
-    private void showFrame(Class<? extends JInternalFrame> frameClass) {
-        JInternalFrame frame = this.mapFrame.get(frameClass);
+    private JInternalFrame createInternalFrame(Class<? extends JComponent> panelType, String title) throws InstantiationException, IllegalAccessException {
+        JComponent panel = applicationContext.getBean(panelType);
+        if (panel == null) {
+            panel = panelType.newInstance();
+        }
+
+        JInternalFrame frame = new JInternalFrame();
+        frame.setSize(900, 700);
+        frame.setMaximizable(true);
+        frame.setResizable(true);
+        frame.setIconifiable(true);
+        frame.setClosable(true);
+        frame.setContentPane(panel);
+        frame.setTitle(title);
+        return frame;
+    }
+
+    private void showFrame(Class<? extends JComponent> panelType, String title) {
+        JInternalFrame frame = this.mapFrame.get(panelType);
         if (frame == null) {
             try {
-                frame = applicationContext.getBean(frameClass);
-                if (frame == null) {
-                    frame = frameClass.newInstance();
-                }
+                frame = createInternalFrame(panelType, title);
             } catch (InstantiationException e) {
                 FootstoneSvcAccess.getExceptionGrave().bury(e);
                 return;
@@ -139,7 +154,7 @@ public class MainFrame extends JFrame implements ISpaceName {
                 FootstoneSvcAccess.getExceptionGrave().bury(e);
                 return;
             }
-            mapFrame.put(frameClass, frame);
+            mapFrame.put(panelType, frame);
         }
         if (frame.isVisible()) {
             frame.toFront();
@@ -240,16 +255,18 @@ public class MainFrame extends JFrame implements ISpaceName {
     }
 
     private class ShowWindowAction implements ActionListener {
-        private Class<? extends JInternalFrame> frameClass;
+        private final Class<? extends JComponent> panelType;
+        private final String title;
 
-        public ShowWindowAction(Class<? extends JInternalFrame> frameClass) {
+        public ShowWindowAction(Class<? extends JComponent> panelType, String title) {
             super();
-            this.frameClass = frameClass;
+            this.panelType = panelType;
+            this.title = title;
         }
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            showFrame(frameClass);
+            showFrame(panelType, title);
         }
     }
 }
