@@ -8,10 +8,11 @@ import com.happy3w.footstone.svc.ISystemInstallSvc;
 import com.happy3w.memoryassistant.model.MAInformation;
 import com.happy3w.memoryassistant.model.MAKeyword;
 import com.happy3w.memoryassistant.service.MAInformationSvc;
-import com.happy3w.memoryassistant.utils.ContextHolder;
 import com.happy3w.memoryassistant.view.res.ResConst;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationContext;
 
+import javax.annotation.PostConstruct;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -25,21 +26,41 @@ import java.sql.Statement;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
+@org.springframework.stereotype.Component
 @Slf4j
 public class MainFrame extends JFrame implements ISpaceName {
-    public static final String DefualtSpaceName = "MainFrame";  //  @jve:decl-index=0: //$NON-NLS-1$
+    public static final String DefualtSpaceName = "MainFrame";
+
+    private final ISystemInstallSvc systemInstallSvc;
+    private final Optional<IDatabaseMgrSvc> iDatabaseMgrSvc;
+    private final MAInformationSvc maInformationSvc;
+    private final IResourceMgrSvc resourceMgrSvc;
+    private final ApplicationContext applicationContext;
 
     private JLabel lblStatus = new JLabel();
-    private JDesktopPane desktopPane = null;
+    private JDesktopPane desktopPane = new JDesktopPane();
 
-    private String spaceName = DefualtSpaceName;  //  @jve:decl-index=0:
+    private String spaceName = DefualtSpaceName;
 
     private Map<Class<? extends JInternalFrame>, JInternalFrame> mapFrame = new HashMap<Class<? extends JInternalFrame>, JInternalFrame>();
 
-    public MainFrame() {
+    public MainFrame(ISystemInstallSvc systemInstallSvc,
+                     Optional<IDatabaseMgrSvc> iDatabaseMgrSvc,
+                     MAInformationSvc maInformationSvc,
+                     IResourceMgrSvc resourceMgrSvc,
+                     ApplicationContext applicationContext) {
         super();
+        this.systemInstallSvc = systemInstallSvc;
+        this.iDatabaseMgrSvc = iDatabaseMgrSvc;
+        this.maInformationSvc = maInformationSvc;
+        this.resourceMgrSvc = resourceMgrSvc;
+        this.applicationContext = applicationContext;
+    }
 
+    @PostConstruct
+    public void initUI() {
         initialize();
         showFrame(InformationFrame.class);
     }
@@ -62,7 +83,6 @@ public class MainFrame extends JFrame implements ISpaceName {
             return;
         }
 
-        ISystemInstallSvc systemInstallSvc = ContextHolder.getBean(ISystemInstallSvc.class);
         try {
             //数据库删除停止事件分发
             systemInstallSvc.uninstall();
@@ -79,19 +99,19 @@ public class MainFrame extends JFrame implements ISpaceName {
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setJMenuBar(createMainMenuBar());
         this.setContentPane(createPnlMain());
-        this.setTitle("Memory Assistant"); //$NON-NLS-1$
+        this.setTitle("Memory Assistant");
     }
 
     private JPanel createPnlMain() {
         lblStatus.setMinimumSize(new Dimension(10, 20));
-        lblStatus.setText(""); //$NON-NLS-1$
+        lblStatus.setText("");
         lblStatus.setPreferredSize(new Dimension(10, 20));
         JPanel pnlMain = new JPanel();
         pnlMain.setLayout(new BorderLayout());
         JToolBar toolBar = createToolBar();
         pnlMain.add(toolBar, BorderLayout.NORTH);
         pnlMain.add(lblStatus, BorderLayout.SOUTH);
-        pnlMain.add(createDesktopPane(), BorderLayout.CENTER);
+        pnlMain.add(desktopPane, BorderLayout.CENTER);
         return pnlMain;
     }
 
@@ -103,15 +123,13 @@ public class MainFrame extends JFrame implements ISpaceName {
 //        toolBar.add(createBtnShowWindow("Test", CheckCloseInternalFrame.class));
         toolBar.add(createBtnShowWindow("Manage Info", InformationFrame.class));
 //        toolBar.add(createUpgradeAction());
-        if (ContextHolder.getBean(IDatabaseMgrSvc.class) != null && log.isDebugEnabled()) {
+        if (iDatabaseMgrSvc.isPresent() && log.isDebugEnabled()) {
             toolBar.add(createBtnShowWindow("Execute Sql", ExecuteSqlFrame.class));
         }
         return toolBar;
     }
 
     private void doUpgrade() throws ClassNotFoundException, SQLException {
-        MAInformationSvc maInformationSvc = ContextHolder.getBean(MAInformationSvc.class);
-
         String driver = "org.apache.derby.jdbc.EmbeddedDriver";
         String url = "jdbc:derby:database/madb;create=true";
 
@@ -152,7 +170,10 @@ public class MainFrame extends JFrame implements ISpaceName {
         JInternalFrame frame = this.mapFrame.get(frameClass);
         if (frame == null) {
             try {
-                frame = frameClass.newInstance();
+                frame = applicationContext.getBean(frameClass);
+                if (frame == null) {
+                    frame = frameClass.newInstance();
+                }
             } catch (InstantiationException e) {
                 FootstoneSvcAccess.getExceptionGrave().bury(e);
                 return;
@@ -206,12 +227,6 @@ public class MainFrame extends JFrame implements ISpaceName {
         return menuItem;
     }
 
-    private JDesktopPane createDesktopPane() {
-        JDesktopPane desktopPane = new JDesktopPane();
-        desktopPane.add(new JButton("Hello"));
-        return desktopPane;
-    }
-
     private JMenu createMenuFile() {
         JMenu menuFile = new JMenu();
         menuFile.setText("File");
@@ -256,7 +271,7 @@ public class MainFrame extends JFrame implements ISpaceName {
     }
 
     protected void showAbout() {
-        JOptionPane.showMessageDialog(this, ContextHolder.getBean(IResourceMgrSvc.class).getRes(ResConst.ResKey, ResConst.About));
+        JOptionPane.showMessageDialog(this, resourceMgrSvc.getRes(ResConst.ResKey, ResConst.About));
     }
 
     private JMenuItem createMItmRebuildDB() {

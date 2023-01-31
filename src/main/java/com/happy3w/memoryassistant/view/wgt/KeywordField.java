@@ -10,7 +10,6 @@ import com.happy3w.memoryassistant.model.MAKeyword;
 import com.happy3w.memoryassistant.model.MAKeywordCondition;
 import com.happy3w.memoryassistant.model.MAKeywordFilterIterator;
 import com.happy3w.memoryassistant.service.MAKeywordSvc;
-import com.happy3w.memoryassistant.utils.ContextHolder;
 import com.happy3w.memoryassistant.view.query.IQueryLogic;
 import com.happy3w.memoryassistant.view.query.QueryAssistant;
 
@@ -43,9 +42,7 @@ public class KeywordField extends JTextField {
 
     private ExtTable tblKey;
 
-    private QueryAssistant<String, MAKeyword> queryAssistant
-            = new QueryAssistant<String, MAKeyword>("Thread Query keyword for KeywordField",
-            new KeywordQueryLogic());
+    private QueryAssistant<String, MAKeyword> queryAssistant;
 
     private Map<Integer, IPopupWindowKeyAction> mapKeyAction = new HashMap<Integer, IPopupWindowKeyAction>();
 
@@ -54,9 +51,11 @@ public class KeywordField extends JTextField {
     /**
      *
      */
-    public KeywordField() {
+    public KeywordField(MAKeywordSvc maKeywordSvc) {
         super();
-
+        queryAssistant
+                = new QueryAssistant<>("Thread Query keyword for KeywordField",
+                new KeywordQueryLogic(maKeywordSvc));
         initPopupWindow();
 
         //Close the popup window when the focus is out of keyword field and popup window
@@ -130,6 +129,7 @@ public class KeywordField extends JTextField {
     /**
      * x:is the start of index in text
      * y:is the end of index in text
+     *
      * @return
      */
     private Point findCurKeywordPos() {
@@ -165,6 +165,7 @@ public class KeywordField extends JTextField {
     /**
      * the keyword list shown in the keyword field<br>
      * it is readonly.
+     *
      * @return the lstKeyword
      */
     public List<MAKeyword> getLstKeyword() {
@@ -175,6 +176,7 @@ public class KeywordField extends JTextField {
     /**
      * Set the available keyword set in popup window<br>
      * if this set is not empty,only keyword in this set can show in popup window.
+     *
      * @param setKeyword
      */
     public void setAvailableKeyword(Set<String> setKeyword) {
@@ -277,11 +279,11 @@ public class KeywordField extends JTextField {
     }
 
     private class KeywordQueryLogic implements IQueryLogic<String, MAKeyword> {
-        private MAKeywordSvc maKeywordSvc;
+        private final MAKeywordSvc maKeywordSvc;
         private MAKeywordCondition cond;
 
-        public KeywordQueryLogic() {
-            maKeywordSvc = ContextHolder.getBean(MAKeywordSvc.class);
+        public KeywordQueryLogic(MAKeywordSvc maKeywordSvc) {
+            this.maKeywordSvc = maKeywordSvc;
             cond = new MAKeywordCondition();
         }
 

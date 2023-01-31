@@ -12,7 +12,9 @@ import java.net.URL;
  *
  */
 public class MAMainFrame extends JFrame {
-    public MAMainFrame() {
+    private final InfoManagePanel infoManagePanel;
+    public MAMainFrame(InfoManagePanel infoManagePanel) {
+        this.infoManagePanel = infoManagePanel;
         initUI();
     }
 
@@ -40,8 +42,7 @@ public class MAMainFrame extends JFrame {
     private JPanel createPnlMain() {
         JPanel pnlMain = new JPanel();
         pnlMain.setLayout(new BorderLayout());
-        InfoManagePanel pnlInfo = new InfoManagePanel();
-        pnlMain.add(pnlInfo, BorderLayout.CENTER);
+        pnlMain.add(infoManagePanel, BorderLayout.CENTER);
         return pnlMain;
     }
 }

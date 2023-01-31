@@ -4,6 +4,7 @@ import com.happy3w.footstone.exception.InputException;
 import com.happy3w.footstone.ui.AbstractDataPanel;
 import com.happy3w.memoryassistant.model.MAInformation;
 import com.happy3w.memoryassistant.model.MAKeyword;
+import com.happy3w.memoryassistant.service.MAKeywordSvc;
 import com.happy3w.memoryassistant.view.res.ResConst;
 import com.happy3w.memoryassistant.view.wgt.KeywordField;
 import lombok.extern.slf4j.Slf4j;
@@ -33,8 +34,8 @@ public class InformationPanel extends AbstractDataPanel<MAInformation> {
     private JTextPane txtInfoDetail;
     private UndoManager undoManager = new UndoManager();
 
-    public InformationPanel() {
-        initUI();
+    public InformationPanel(MAKeywordSvc maKeywordSvc) {
+        initUI(maKeywordSvc);
         makeDropable();
     }
 
@@ -88,14 +89,14 @@ public class InformationPanel extends AbstractDataPanel<MAInformation> {
         this.txtInfoDetail.setText(buffer.toString());
     }
 
-    private void initUI() {
+    private void initUI(MAKeywordSvc maKeywordSvc) {
         this.setLayout(new GridBagLayout());
         this.add(new JLabel("Key:"),
                 new GridBagConstraints(0, 0, 1, 1,
                         0, 0,
                         GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
                         new Insets(0, 0, 0, 0), 0, 0));
-        txtKeys = new KeywordField();
+        txtKeys = new KeywordField(maKeywordSvc);
         this.add(txtKeys,
                 new GridBagConstraints(1, 0, 1, 1,
                         1, 0,

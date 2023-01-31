@@ -1,6 +1,5 @@
 package com.happy3w.memoryassistant;
 
-import com.happy3w.memoryassistant.utils.ContextHolder;
 import com.happy3w.memoryassistant.view.MainFrame;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -18,22 +17,19 @@ import java.awt.event.WindowEvent;
 public class MemoryAssistantApplication {
 
     public static void main(String[] args) {
-        ConfigurableApplicationContext context = new SpringApplicationBuilder(MemoryAssistantApplication.class).headless(false).run(args);
-//		ConfigurableApplicationContext context = SpringApplication.run(MemoryAssistantApplication.class, args);
-        ContextHolder.setContext(context);
+        ConfigurableApplicationContext context = new SpringApplicationBuilder(MemoryAssistantApplication.class)
+                .headless(false)
+                .run(args);
 
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                MainFrame frame = new MainFrame();
-                frame.addWindowListener(new WindowAdapter() {
-                    @Override
-                    public void windowClosed(WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                frame.setVisible(true);
-            }
+        SwingUtilities.invokeLater(() -> {
+            MainFrame frame = context.getBean(MainFrame.class);
+            frame.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosed(WindowEvent e) {
+                    System.exit(0);
+                }
+            });
+            frame.setVisible(true);
         });
     }
 }

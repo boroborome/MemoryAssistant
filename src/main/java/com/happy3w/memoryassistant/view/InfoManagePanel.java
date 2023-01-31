@@ -13,7 +13,7 @@ import com.happy3w.memoryassistant.model.MAInformation;
 import com.happy3w.memoryassistant.model.MAInformationCondition;
 import com.happy3w.memoryassistant.model.MAKeyword;
 import com.happy3w.memoryassistant.service.MAInformationSvc;
-import com.happy3w.memoryassistant.utils.ContextHolder;
+import com.happy3w.memoryassistant.service.MAKeywordSvc;
 import com.happy3w.memoryassistant.view.query.IQueryLogic;
 import com.happy3w.memoryassistant.view.query.QueryAssistant;
 import com.happy3w.memoryassistant.view.wgt.IKeywordFieldListener;
@@ -22,6 +22,7 @@ import com.happy3w.memoryassistant.view.wgt.KeywordFieldEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.ObjectUtils;
 
+import javax.annotation.PostConstruct;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -37,10 +38,12 @@ import java.util.Set;
 
 /**
  * @author boroborome
- *
  */
+@org.springframework.stereotype.Component
 @Slf4j
 public class InfoManagePanel extends JPanel {
+    private final MAInformationSvc maInformationSvc;
+    private final MAKeywordSvc maKeywordSvc;
 
     private KeywordField txtKeys;
     private BaseReadonlyTableModel<MAInformation> tblModelInfo;
@@ -50,9 +53,14 @@ public class InfoManagePanel extends JPanel {
             = new QueryAssistant<List<MAKeyword>, MAInformation>("Thread Query Information", new QueryInformationLogic());
     private int currentSelectRow = -1;
 
-    public InfoManagePanel() {
-        initUI();
+    public InfoManagePanel(MAInformationSvc maInformationSvc, MAKeywordSvc maKeywordSvc) {
+        this.maInformationSvc = maInformationSvc;
+        this.maKeywordSvc = maKeywordSvc;
+    }
 
+    @PostConstruct
+    public void initialize() {
+        initUI();
         initActions();
     }
 
@@ -75,7 +83,7 @@ public class InfoManagePanel extends JPanel {
         sptPnl.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
         sptPnl.setLeftComponent(createInfoMgrTable());
 
-        pnlInfoDetail = new InformationPanel();
+        pnlInfoDetail = new InformationPanel(maKeywordSvc);
         sptPnl.setRightComponent(pnlInfoDetail);
     }
 
@@ -86,7 +94,7 @@ public class InfoManagePanel extends JPanel {
         int row = 0;
         pnl.add(new JLabel("Key:"), new GridBagConstraints(0, row, 1, 1, 0, 0, GridBagConstraints.NORTHWEST,
                 GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-        txtKeys = new KeywordField();
+        txtKeys = new KeywordField(maKeywordSvc);
         pnl.add(txtKeys, new GridBagConstraints(1, row, 1, 1, 1, 0, GridBagConstraints.NORTHWEST,
                 GridBagConstraints.HORIZONTAL, new Insets(0, 12, 0, 0), 0, 0));
 
@@ -173,7 +181,6 @@ public class InfoManagePanel extends JPanel {
         for (int row : selectRows) {
             lstInfo.add(tblModelInfo.getItem(row));
         }
-        MAInformationSvc maInformationSvc = ContextHolder.getBean(MAInformationSvc.class);
         try {
             currentSelectRow = -1;//cancel current modify information
             tblInfo.getSelectionModel().clearSelection();
@@ -195,7 +202,6 @@ public class InfoManagePanel extends JPanel {
         MAInformation info = new MAInformation();
         info.setLstKeyword(txtKeys.getLstKeyword());
 
-        MAInformationSvc maInformationSvc = ContextHolder.getBean(MAInformationSvc.class);
         try {
             maInformationSvc.create(Arrays.asList(info).iterator());
             tblModelInfo.insertItem(0, info);
@@ -212,7 +218,6 @@ public class InfoManagePanel extends JPanel {
             pnlInfoDetail.collectData(preInfo);
             if (!ObjectUtils.nullSafeEquals(pnlInfoDetail.getOldValue(), preInfo)) {
                 try {
-                    MAInformationSvc maInformationSvc = ContextHolder.getBean(MAInformationSvc.class);
                     maInformationSvc.modify(Arrays.asList(preInfo).iterator());
                     tblModelInfo.justSetItem(currentSelectRow, preInfo);
                 } catch (MessageException exp) {
@@ -224,12 +229,7 @@ public class InfoManagePanel extends JPanel {
     }
 
     private class QueryInformationLogic implements IQueryLogic<List<MAKeyword>, MAInformation> {
-        private MAInformationSvc maInformationSvc;
         private MAInformationCondition cond = new MAInformationCondition();
-
-        public QueryInformationLogic() {
-            maInformationSvc = ContextHolder.getBean(MAInformationSvc.class);
-        }
 
         @Override
         public void clearView() {

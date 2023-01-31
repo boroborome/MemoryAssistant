@@ -8,8 +8,10 @@
  */
 package com.happy3w.memoryassistant.view;
 
+import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
 import javax.swing.*;
-import java.awt.*;
 
 /**
  * <P>Title:      工具包 Util v1.0</P>
@@ -20,46 +22,24 @@ import java.awt.*;
  * @author BoRoBoRoMe
  * @version 1.0 2008-4-5
  */
+@Component
 public class InformationFrame extends JInternalFrame {
 
-    private JPanel pnlMain = null;
+    private final InfoManagePanel infoManagePanel;
 
-    /**
-     * This is the ManageFrame default constructor
-     */
-    public InformationFrame() {
+    public InformationFrame(InfoManagePanel infoManagePanel) {
         super();
-
-        initialize();
+        this.infoManagePanel = infoManagePanel;
     }
 
-    /**
-     * This method initializes this
-     *
-     * @return void
-     */
-    private void initialize() {
+    @PostConstruct
+    public void initUI() {
         this.setSize(900, 700);
         this.setMaximizable(true);
         this.setResizable(true);
         this.setIconifiable(true);
         this.setClosable(true);
-        this.setContentPane(getPnlMain());
+        this.setContentPane(infoManagePanel);
         this.setTitle("Manage Information");
-    }
-
-    /**
-     * This method initializes jContentPane
-     *
-     * @return javax.swing.JPanel
-     */
-    private JPanel getPnlMain() {
-        if (pnlMain == null) {
-            pnlMain = new JPanel();
-            pnlMain.setLayout(new BorderLayout());
-            InfoManagePanel pnlInfo = new InfoManagePanel();
-            pnlMain.add(pnlInfo, BorderLayout.CENTER);
-        }
-        return pnlMain;
     }
 }
