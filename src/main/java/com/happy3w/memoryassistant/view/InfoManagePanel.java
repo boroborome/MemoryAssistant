@@ -65,12 +65,7 @@ public class InfoManagePanel extends JPanel {
     }
 
     private void initActions() {
-        txtKeys.getEventContainer().addEventListener(new IKeywordFieldListener() {
-            @Override
-            public void onKeywordChange(KeywordFieldEvent e) {
-                queryAssistant.setCondtion(e.getLstKey());
-            }
-        });
+        txtKeys.getEventContainer().addEventListener(e -> queryAssistant.setCondtion(e.getLstKey()));
     }
 
     private void initUI() {

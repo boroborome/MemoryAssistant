@@ -47,6 +47,13 @@ public class IDGeneratorSvcImpl implements IIDGeneratorSvc {
         return creator.nextIndex();
     }
 
+    @Override
+    public void resetAll() {
+        for (IndexCreator creator : mapIndex.values()) {
+            creator.reset();
+        }
+    }
+
     private static class IndexCreator {
         private long index;
 
@@ -60,11 +67,12 @@ public class IDGeneratorSvcImpl implements IIDGeneratorSvc {
         public IndexCreator(Supplier<Long> curIdGenerator) {
             super();
             this.curIdGenerator = curIdGenerator;
-            this.index = curIdGenerator.get();
+            reset();
         }
 
         public void reset() {
-            this.index = curIdGenerator.get();
+            Long value = curIdGenerator.get();
+            this.index = value == null ? 0L : value;
         }
 
         /**

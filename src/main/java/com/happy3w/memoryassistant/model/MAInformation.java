@@ -45,7 +45,7 @@ public class MAInformation {
     private Date modifyTime;
 
     @Basic
-    @Column(name = "content")
+    @Column(name = "content", length = 8000)
     private String content;
 
     @Basic

@@ -41,4 +41,6 @@ public interface IIDGeneratorSvc {
      * @return
      */
     long nextIndex(Class<?> type);
+
+    void resetAll();
 }
