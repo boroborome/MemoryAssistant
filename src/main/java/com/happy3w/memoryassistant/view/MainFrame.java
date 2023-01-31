@@ -28,9 +28,6 @@ import java.util.Map;
 
 @Slf4j
 public class MainFrame extends JFrame implements ISpaceName {
-    /**
-     * 默认的资源名字空间
-     */
     public static final String DefualtSpaceName = "MainFrame";  //  @jve:decl-index=0: //$NON-NLS-1$
 
     private JLabel lblStatus = new JLabel();
@@ -57,9 +54,6 @@ public class MainFrame extends JFrame implements ISpaceName {
         this.spaceName = spaceName;
     }
 
-    /**
-     * 构建数据库
-     */
     private void rebuildDB() {
         int result = JOptionPane.showConfirmDialog(this,
                 "The operation will rebuild the database, and all data will be clean.\nAre you sure you want to do?",
@@ -185,11 +179,31 @@ public class MainFrame extends JFrame implements ISpaceName {
     private JMenuBar createMainMenuBar() {
         JMenuBar mainMenuBar = new JMenuBar();
         mainMenuBar.add(createMenuFile());
-//            mainMenuBar.add(getMenuManage());
+        mainMenuBar.add(createMenuManage());
 //            mainMenuBar.add(getMenuQuery());
         mainMenuBar.add(createMenuSetting());
         mainMenuBar.add(createMenuAbout());
         return mainMenuBar;
+    }
+
+    private Component createMenuManage() {
+        JMenu menuFile = new JMenu();
+        menuFile.setText("Manage");
+        menuFile.add(createMItmExport());
+        menuFile.add(createMItmImport());
+        return menuFile;
+    }
+
+    private JMenuItem createMItmImport() {
+        JMenuItem menuItem = new JMenuItem("Import");
+        menuItem.addActionListener(e -> {});
+        return menuItem;
+    }
+
+    private JMenuItem createMItmExport() {
+        JMenuItem menuItem = new JMenuItem("Export");
+        menuItem.addActionListener(e -> {});
+        return menuItem;
     }
 
     private JDesktopPane createDesktopPane() {
@@ -200,7 +214,7 @@ public class MainFrame extends JFrame implements ISpaceName {
 
     private JMenu createMenuFile() {
         JMenu menuFile = new JMenu();
-        menuFile.setText("File"); //$NON-NLS-1$
+        menuFile.setText("File");
         menuFile.add(createMItmExit());
         return menuFile;
     }
@@ -213,14 +227,14 @@ public class MainFrame extends JFrame implements ISpaceName {
                 System.exit(0);
             }
         };
-        a.putValue(Action.NAME, "Exit"); //$NON-NLS-1$
+        a.putValue(Action.NAME, "Exit");
         mItmExit.setAction(a);
         return mItmExit;
     }
 
     private JMenu createMenuSetting() {
         JMenu menuSetting = new JMenu();
-        menuSetting.setText("Setting"); //$NON-NLS-1$
+        menuSetting.setText("Setting");
 //            menuSetting.add(getMItmQuerySetting());
 //            menuSetting.add(getMItmSetting());
         menuSetting.add(createMItmRebuildDB());
@@ -229,7 +243,7 @@ public class MainFrame extends JFrame implements ISpaceName {
 
     private JMenu createMenuAbout() {
         JMenu menuAbout = new JMenu();
-        menuAbout.setText("Help"); //$NON-NLS-1$
+        menuAbout.setText("Help");
         menuAbout.add(createMItmAbout());
         return menuAbout;
     }
@@ -237,7 +251,7 @@ public class MainFrame extends JFrame implements ISpaceName {
     private JMenuItem createMItmAbout() {
         JMenuItem mItmAbout = new JMenuItem();
         mItmAbout.addActionListener(e -> showAbout());
-        mItmAbout.setText("About"); //$NON-NLS-1$
+        mItmAbout.setText("About");
         return mItmAbout;
     }
 
@@ -247,7 +261,7 @@ public class MainFrame extends JFrame implements ISpaceName {
 
     private JMenuItem createMItmRebuildDB() {
         JMenuItem mItmRebuildDB = new JMenuItem();
-        mItmRebuildDB.setText("RebuildDB"); //$NON-NLS-1$
+        mItmRebuildDB.setText("RebuildDB");
         mItmRebuildDB.addActionListener(e -> rebuildDB());
         return mItmRebuildDB;
     }
@@ -255,9 +269,6 @@ public class MainFrame extends JFrame implements ISpaceName {
     private class ShowWindowAction implements ActionListener {
         private Class<? extends JInternalFrame> frameClass;
 
-        /**
-         * @param frameClass
-         */
         public ShowWindowAction(Class<? extends JInternalFrame> frameClass) {
             super();
             this.frameClass = frameClass;
