@@ -4,21 +4,23 @@ import com.happy3w.footstone.exception.MessageException;
 import com.happy3w.footstone.model.AbstractBufferIterator;
 import com.happy3w.footstone.model.EventContainer;
 import com.happy3w.footstone.model.IBufferIterator;
+import com.happy3w.footstone.svc.IAutoIDDataSvc;
 import com.happy3w.footstone.svc.IDataChangeListener;
 import com.happy3w.footstone.svc.IDataCondition;
-import com.happy3w.footstone.svc.IDataSvc;
+import com.happy3w.footstone.svc.IIDGeneratorSvc;
 import com.happy3w.memoryassistant.model.MAInfoKey;
 import com.happy3w.memoryassistant.model.MAInformation;
 import com.happy3w.memoryassistant.model.MAInformationCondition;
 import com.happy3w.memoryassistant.model.MAKeyword;
 import com.happy3w.memoryassistant.repository.MAInfoKeyRepository;
 import com.happy3w.memoryassistant.repository.MAInformationRepository;
+import com.happy3w.toolkits.iterator.EasyIterator;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -29,25 +31,38 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-public class MAInformationSvc implements IDataSvc<MAInformation> {
+public class MAInformationSvc implements IAutoIDDataSvc<MAInformation> {
+    private final MAKeywordSvc keywordSvc;
+    private final MAInformationRepository maInformationRepository;
+    private final MAInfoKeyRepository maInfoKeyRepository;
+    private final IIDGeneratorSvc iidGeneratorSvc;
+
     private EventContainer<IDataChangeListener<MAInformation>> eventContainer = new EventContainer<IDataChangeListener<MAInformation>>(IDataChangeListener.class);
-    @Autowired
-    private MAKeywordSvc keywordSvc;
 
-    @Autowired
-    private MAInformationRepository maInformationRepository;
-
-    @Autowired
-    private MAInfoKeyRepository maInfoKeyRepository;
-
-    public MAInformationSvc() {
+    public MAInformationSvc(IIDGeneratorSvc iidGeneratorSvc,
+                            MAKeywordSvc keywordSvc,
+                            MAInformationRepository maInformationRepository,
+                            MAInfoKeyRepository maInfoKeyRepository,
+                            JdbcTemplate jdbcTemplate) {
         super();
+        this.iidGeneratorSvc = iidGeneratorSvc;
+        this.keywordSvc = keywordSvc;
+        this.maInformationRepository = maInformationRepository;
+        this.maInfoKeyRepository = maInfoKeyRepository;
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
+    @PostConstruct
+    public void initService() {
+        iidGeneratorSvc.init(MAInformation.class, this);
     }
 
     @Override
     @Transactional
     public void create(Iterator<MAInformation> it) throws MessageException {
-        saveOrModify(it, IDataChangeListener.EVENT_CREATED);
+        saveOrModify(EasyIterator.fromIterator(it).peek(info ->
+                        info.setId(iidGeneratorSvc.nextIndex(MAInformation.class))),
+                IDataChangeListener.EVENT_CREATED);
     }
 
 
@@ -80,8 +95,7 @@ public class MAInformationSvc implements IDataSvc<MAInformation> {
         });
     }
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     public List<MAInformation> findAllByLstKeywordFullMatch(List<Long> keyIDs) {
         StringBuilder buff = new StringBuilder("select ti.* from tblInformation ti join tblInfoKeyRelation tr " +
@@ -141,5 +155,10 @@ public class MAInformationSvc implements IDataSvc<MAInformation> {
     @Override
     public EventContainer<IDataChangeListener<MAInformation>> getEventContainer() {
         return this.eventContainer;
+    }
+
+    @Override
+    public long getMaxID() throws MessageException {
+        return jdbcTemplate.queryForObject("select max(tid) as maxID from tblInformation", Long.class);
     }
 }

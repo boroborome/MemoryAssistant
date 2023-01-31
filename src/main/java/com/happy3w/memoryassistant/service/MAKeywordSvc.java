@@ -7,6 +7,7 @@ import com.happy3w.footstone.model.IBufferIterator;
 import com.happy3w.footstone.svc.IAutoIDDataSvc;
 import com.happy3w.footstone.svc.IDataChangeListener;
 import com.happy3w.footstone.svc.IDataCondition;
+import com.happy3w.footstone.svc.IIDGeneratorSvc;
 import com.happy3w.memoryassistant.model.MAKeyword;
 import com.happy3w.memoryassistant.model.MAKeywordCondition;
 import com.happy3w.memoryassistant.repository.MAKeywordRepository;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -27,18 +29,26 @@ public class MAKeywordSvc implements IAutoIDDataSvc<MAKeyword> {
     @Autowired
     private MAKeywordRepository maKeywordRepository;
 
+    private final IIDGeneratorSvc iidGeneratorSvc;
+
     private EventContainer<IDataChangeListener<MAKeyword>> eventContainer = new EventContainer<IDataChangeListener<MAKeyword>>(IDataChangeListener.class);
 
-    public MAKeywordSvc() {
+    public MAKeywordSvc(IIDGeneratorSvc iidGeneratorSvc) {
         super();
+        this.iidGeneratorSvc = iidGeneratorSvc;
+    }
+
+    @PostConstruct
+    public void initService() {
+        iidGeneratorSvc.init(MAKeyword.class, this);
     }
 
     @Override
     public void create(Iterator<MAKeyword> it) throws MessageException {
         it.forEachRemaining(key -> {
             key.setKeyword(key.getKeyword().toLowerCase());
-            MAKeyword newKey = maKeywordRepository.save(key);
-            key.setId(newKey.getId());
+            key.setId(iidGeneratorSvc.nextIndex(MAKeyword.class));
+            maKeywordRepository.save(key);
             eventContainer.fireEvents(IDataChangeListener.EVENT_CREATED, key);
         });
     }
@@ -87,7 +97,7 @@ public class MAKeywordSvc implements IAutoIDDataSvc<MAKeyword> {
      */
     @Override
     public long getMaxID() throws MessageException {
-        return jdbcTemplate.queryForObject("select max(wordid) as maxID from tblKeyWord", Long.class);
+        return jdbcTemplate.queryForObject("select max(tid) as maxID from tblKeyWord", Long.class);
     }
 
     public Iterable<MAKeyword> filterNoIdKeywords(List<MAKeyword> lstKeyword) {
