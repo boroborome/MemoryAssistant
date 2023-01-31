@@ -4,9 +4,9 @@ import com.happy3w.footstone.exception.MessageException;
 import com.happy3w.footstone.model.AbstractBufferIterator;
 import com.happy3w.footstone.model.EventContainer;
 import com.happy3w.footstone.model.IBufferIterator;
-import com.happy3w.footstone.svc.IAutoIDDataSvc;
 import com.happy3w.footstone.svc.IDataChangeListener;
 import com.happy3w.footstone.svc.IDataCondition;
+import com.happy3w.footstone.svc.IDataSvc;
 import com.happy3w.footstone.svc.IIDGeneratorSvc;
 import com.happy3w.memoryassistant.model.MAInfoKey;
 import com.happy3w.memoryassistant.model.MAInformation;
@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-public class MAInformationSvc implements IAutoIDDataSvc<MAInformation> {
+public class MAInformationSvc implements IDataSvc<MAInformation> {
     private final MAKeywordSvc keywordSvc;
     private final MAInformationRepository maInformationRepository;
     private final MAInfoKeyRepository maInfoKeyRepository;
@@ -54,7 +54,8 @@ public class MAInformationSvc implements IAutoIDDataSvc<MAInformation> {
 
     @PostConstruct
     public void initService() {
-        iidGeneratorSvc.init(MAInformation.class, this);
+        iidGeneratorSvc.registerGenerator(MAInformation.class, () ->
+                jdbcTemplate.queryForObject("select max(tid) as maxID from tblInformation", Long.class));
     }
 
     @Override
@@ -155,10 +156,5 @@ public class MAInformationSvc implements IAutoIDDataSvc<MAInformation> {
     @Override
     public EventContainer<IDataChangeListener<MAInformation>> getEventContainer() {
         return this.eventContainer;
-    }
-
-    @Override
-    public long getMaxID() throws MessageException {
-        return jdbcTemplate.queryForObject("select max(tid) as maxID from tblInformation", Long.class);
     }
 }

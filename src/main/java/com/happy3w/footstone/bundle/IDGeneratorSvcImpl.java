@@ -9,12 +9,12 @@
 package com.happy3w.footstone.bundle;
 
 import com.happy3w.footstone.exception.MessageException;
-import com.happy3w.footstone.svc.IAutoIDDataSvc;
 import com.happy3w.footstone.svc.IIDGeneratorSvc;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
 /**
  * <DT><B>Title:</B></DT>
@@ -36,16 +36,11 @@ public class IDGeneratorSvcImpl implements IIDGeneratorSvc {
     private Map<Class<?>, IndexCreator> mapIndex = new HashMap<Class<?>, IndexCreator>();
 
     @Override
-    public void init(Class<?> type, long startIndex) {
-        mapIndex.put(type, new IndexCreator(startIndex));
-    }
-
-    @Override
     public long nextIndex(Class<?> type) {
         IndexCreator creator = mapIndex.get(type);
         if (creator == null) {
             synchronized (mapIndex) {
-                creator = new IndexCreator(0);
+                creator = new IndexCreator(() -> 0L);
                 mapIndex.put(type, creator);
             }
         }
@@ -55,14 +50,21 @@ public class IDGeneratorSvcImpl implements IIDGeneratorSvc {
     private static class IndexCreator {
         private long index;
 
+        private final Supplier<Long> curIdGenerator;
+
         /**
          * 构造方法
          *
-         * @param index 起始Index，这个索引不会被nextIndex返回，下一个值才是可用值
+         * @param curIdGenerator 起始Index，这个索引不会被nextIndex返回，下一个值才是可用值
          */
-        public IndexCreator(long index) {
+        public IndexCreator(Supplier<Long> curIdGenerator) {
             super();
-            this.index = index;
+            this.curIdGenerator = curIdGenerator;
+            this.index = curIdGenerator.get();
+        }
+
+        public void reset() {
+            this.index = curIdGenerator.get();
         }
 
         /**
@@ -77,9 +79,9 @@ public class IDGeneratorSvcImpl implements IIDGeneratorSvc {
     }
 
     @Override
-    public <E> void init(Class<E> type, IAutoIDDataSvc<E> svc) {
+    public <E> void registerGenerator(Class<E> type, Supplier<Long> curIdGenerator) {
         try {
-            init(type, svc.getMaxID());
+            mapIndex.put(type, new IndexCreator(curIdGenerator));
         } catch (MessageException e) {
             log.error("init maxid failed.", e);
             //说明系统没有数据库，此时自动创建一次数据库

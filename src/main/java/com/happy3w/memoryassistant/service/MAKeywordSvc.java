@@ -4,9 +4,9 @@ import com.happy3w.footstone.exception.MessageException;
 import com.happy3w.footstone.model.AbstractBufferIterator;
 import com.happy3w.footstone.model.EventContainer;
 import com.happy3w.footstone.model.IBufferIterator;
-import com.happy3w.footstone.svc.IAutoIDDataSvc;
 import com.happy3w.footstone.svc.IDataChangeListener;
 import com.happy3w.footstone.svc.IDataCondition;
+import com.happy3w.footstone.svc.IDataSvc;
 import com.happy3w.footstone.svc.IIDGeneratorSvc;
 import com.happy3w.memoryassistant.model.MAKeyword;
 import com.happy3w.memoryassistant.model.MAKeywordCondition;
@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class MAKeywordSvc implements IAutoIDDataSvc<MAKeyword> {
+public class MAKeywordSvc implements IDataSvc<MAKeyword> {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -40,7 +40,8 @@ public class MAKeywordSvc implements IAutoIDDataSvc<MAKeyword> {
 
     @PostConstruct
     public void initService() {
-        iidGeneratorSvc.init(MAKeyword.class, this);
+        iidGeneratorSvc.registerGenerator(MAKeyword.class, () ->
+                jdbcTemplate.queryForObject("select max(tid) as maxID from tblKeyWord", Long.class));
     }
 
     @Override
@@ -87,17 +88,6 @@ public class MAKeywordSvc implements IAutoIDDataSvc<MAKeyword> {
         }
 
         this.create(itNoId.iterator());
-    }
-
-    /**
-     * 获取最大的ID
-     *
-     * @return
-     * @throws MessageException
-     */
-    @Override
-    public long getMaxID() throws MessageException {
-        return jdbcTemplate.queryForObject("select max(tid) as maxID from tblKeyWord", Long.class);
     }
 
     public Iterable<MAKeyword> filterNoIdKeywords(List<MAKeyword> lstKeyword) {

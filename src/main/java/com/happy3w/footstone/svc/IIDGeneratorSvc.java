@@ -8,6 +8,8 @@
  */
 package com.happy3w.footstone.svc;
 
+import java.util.function.Supplier;
+
 /**
  * <DT><B>Title:</B></DT>
  * <DD>任务管理模型</DD>
@@ -20,7 +22,7 @@ package com.happy3w.footstone.svc;
  * @version 1.0 2011-10-6
  */
 public interface IIDGeneratorSvc {
-    <E> void init(Class<E> type, IAutoIDDataSvc<E> svc);
+    <E> void registerGenerator(Class<E> type, Supplier<Long> curIdSupplier);
 
     /**
      * 初始化某一个类型的索引
@@ -28,7 +30,9 @@ public interface IIDGeneratorSvc {
      * @param type
      * @param startIndex 开始索引，nextIndex的返回结果从startIndex的下一个开始
      */
-    void init(Class<?> type, long startIndex);
+    default void registerGenerator(Class<?> type, long startIndex) {
+        registerGenerator(type, () -> startIndex);
+    }
 
     /**
      * 获取一个索引
