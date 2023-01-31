@@ -5,9 +5,6 @@ import com.happy3w.footstone.resource.IResourceMgrSvc;
 import com.happy3w.footstone.resource.ISpaceName;
 import com.happy3w.footstone.sql.IDatabaseMgrSvc;
 import com.happy3w.footstone.svc.ISystemInstallSvc;
-import com.happy3w.memoryassistant.model.MAInformation;
-import com.happy3w.memoryassistant.model.MAKeyword;
-import com.happy3w.memoryassistant.service.MAInformationSvc;
 import com.happy3w.memoryassistant.view.res.ResConst;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
@@ -18,12 +15,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyVetoException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -35,7 +26,6 @@ public class MainFrame extends JFrame implements ISpaceName {
 
     private final ISystemInstallSvc systemInstallSvc;
     private final Optional<IDatabaseMgrSvc> iDatabaseMgrSvc;
-    private final MAInformationSvc maInformationSvc;
     private final IResourceMgrSvc resourceMgrSvc;
     private final ApplicationContext applicationContext;
 
@@ -48,13 +38,11 @@ public class MainFrame extends JFrame implements ISpaceName {
 
     public MainFrame(ISystemInstallSvc systemInstallSvc,
                      Optional<IDatabaseMgrSvc> iDatabaseMgrSvc,
-                     MAInformationSvc maInformationSvc,
                      IResourceMgrSvc resourceMgrSvc,
                      ApplicationContext applicationContext) {
         super();
         this.systemInstallSvc = systemInstallSvc;
         this.iDatabaseMgrSvc = iDatabaseMgrSvc;
-        this.maInformationSvc = maInformationSvc;
         this.resourceMgrSvc = resourceMgrSvc;
         this.applicationContext = applicationContext;
     }
@@ -127,36 +115,6 @@ public class MainFrame extends JFrame implements ISpaceName {
             toolBar.add(createBtnShowWindow("Execute Sql", ExecuteSqlFrame.class));
         }
         return toolBar;
-    }
-
-    private void doUpgrade() throws ClassNotFoundException, SQLException {
-        String driver = "org.apache.derby.jdbc.EmbeddedDriver";
-        String url = "jdbc:derby:database/madb;create=true";
-
-        this.getClass().getClassLoader().loadClass(driver);
-        Connection connection = DriverManager.getConnection(url);
-        Statement statement = connection.createStatement();
-        ResultSet orgDataSet = statement.executeQuery("select * from tblInformation");
-        while (orgDataSet.next()) {
-            MAInformation maInformation = new MAInformation();
-            maInformation.setContent(orgDataSet.getString("content"));
-            maInformation.setLstKeyword(MAKeyword.string2List(orgDataSet.getString("keywords")));
-
-            maInformationSvc.create(Arrays.asList(maInformation).iterator());
-        }
-    }
-
-    private JButton createUpgradeAction() {
-        JButton btn = new JButton("Upgrade");
-        btn.setPreferredSize(new Dimension(80, 20));
-        btn.addActionListener(e -> {
-            try {
-                doUpgrade();
-            } catch (Exception e1) {
-                e1.printStackTrace();
-            }
-        });
-        return btn;
     }
 
     private JButton createBtnShowWindow(String title, Class<? extends JInternalFrame> frameClass) {
