@@ -19,6 +19,7 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyVetoException;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -51,6 +52,9 @@ public class MainFrame extends JFrame implements ISpaceName {
         this.resourceMgrSvc = resourceMgrSvc;
         this.applicationContext = applicationContext;
         this.memoryService = memoryService;
+        URL iconUrl = MainFrame.class.getResource("/brain.png");
+        ImageIcon icon = new ImageIcon(iconUrl);
+        this.setIconImage(icon.getImage());
     }
 
     @PostConstruct
