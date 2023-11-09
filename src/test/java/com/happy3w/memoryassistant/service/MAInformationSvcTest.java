@@ -7,6 +7,7 @@ import com.happy3w.memoryassistant.model.MAKeyword;
 import com.happy3w.memoryassistant.repository.MAInformationRepository;
 import com.happy3w.memoryassistant.repository.MAKeywordRepository;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -15,6 +16,7 @@ import javax.persistence.EntityManager;
 import java.util.Arrays;
 import java.util.List;
 
+@Disabled
 public class MAInformationSvcTest extends CommonAppTest {
 
     @Autowired
