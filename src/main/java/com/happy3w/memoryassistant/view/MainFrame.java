@@ -9,6 +9,7 @@ import com.happy3w.footstone.ui.ExecuteSqlPanel;
 import com.happy3w.memoryassistant.service.MemoryService;
 import com.happy3w.memoryassistant.view.res.ResConst;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 
 import javax.annotation.PostConstruct;
@@ -30,7 +31,7 @@ public class MainFrame extends JFrame implements ISpaceName {
     public static final String DefualtSpaceName = "MainFrame";
 
     private final ISystemInstallSvc systemInstallSvc;
-    private final Optional<IDatabaseMgrSvc> iDatabaseMgrSvc;
+    private final Optional<IDatabaseMgrSvc> databaseMgrSvc;
     private final IResourceMgrSvc resourceMgrSvc;
     private final ApplicationContext applicationContext;
     private final MemoryService memoryService;
@@ -41,14 +42,18 @@ public class MainFrame extends JFrame implements ISpaceName {
     private String spaceName = DefualtSpaceName;
 
     private Map<Class<? extends JComponent>, JInternalFrame> mapFrame = new HashMap<>();
+    private final boolean isDebug;
 
     public MainFrame(ISystemInstallSvc systemInstallSvc,
-                     Optional<IDatabaseMgrSvc> iDatabaseMgrSvc,
+                     Optional<IDatabaseMgrSvc> databaseMgrSvc,
                      IResourceMgrSvc resourceMgrSvc,
-                     ApplicationContext applicationContext, MemoryService memoryService) {
+                     ApplicationContext applicationContext,
+                     MemoryService memoryService,
+                     @Value("${happy3w.debug:false}") boolean isDebug) {
         super();
+        this.isDebug = isDebug;
         this.systemInstallSvc = systemInstallSvc;
-        this.iDatabaseMgrSvc = iDatabaseMgrSvc;
+        this.databaseMgrSvc = databaseMgrSvc;
         this.resourceMgrSvc = resourceMgrSvc;
         this.applicationContext = applicationContext;
         this.memoryService = memoryService;
@@ -121,7 +126,7 @@ public class MainFrame extends JFrame implements ISpaceName {
 //        toolBar.add(createBtnShowWindow("Test", CheckCloseInternalFrame.class));
         toolBar.add(createBtnShowWindow("Manage Info", InformationPanel.class));
 //        toolBar.add(createUpgradeAction());
-        if (iDatabaseMgrSvc.isPresent() && log.isDebugEnabled()) {
+        if (databaseMgrSvc.isPresent() && isDebug) {
             toolBar.add(createBtnShowWindow("Execute Sql", ExecuteSqlPanel.class));
         }
         return toolBar;

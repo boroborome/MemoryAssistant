@@ -1,0 +1,18 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="MemoryAssistantApplication-derby" type="Application" factoryName="Application">
+    <envs>
+      <env name="spring.profiles.active" value="derby" />
+    </envs>
+    <option name="MAIN_CLASS_NAME" value="com.happy3w.memoryassistant.MemoryAssistantApplication" />
+    <module name="MemoryAssistant.main" />
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="com.happy3w.memoryassistant.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

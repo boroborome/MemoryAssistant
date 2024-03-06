@@ -47,10 +47,6 @@ public final class FootstoneSvcAccess {
 //        return (IResourceMgrSvc) Activator.getService(IResourceMgrSvc.class.getName());
     }
 
-    public static IDatabaseMgrSvc getDatabaseSvc() {
-        return null;
-    }
-
     public static void setBeanFactory(ConfigurableListableBeanFactory beanFactory) {
         FootstoneSvcAccess.beanFactory = beanFactory;
     }

@@ -100,7 +100,7 @@ public class MAKeywordSvc implements IDataSvc<MAKeyword> {
         for (int keyIndex = lstKeyword.size() - 1; keyIndex >= 0; --keyIndex) {
             MAKeyword key = lstKeyword.get(keyIndex);
             if (!mapKey.containsKey(key.getKeyword())) {
-                mapKey.put(key.getKeyword(), key);
+                mapKey.put(key.getKeyword().toLowerCase(), key);
             } else {
                 lstKeyword.remove(keyIndex);
             }

@@ -128,7 +128,6 @@ public class MAInformationSvc implements IDataSvc<MAInformation> {
     //Title:Derby server-side programming
     @Override
     public IBufferIterator<MAInformation> query(IDataCondition<MAInformation> condition) throws MessageException {
-        IBufferIterator<MAInformation> result = null;
         MAInformationCondition c = (MAInformationCondition) condition;
 
         List<MAInformation> queryResult = null;

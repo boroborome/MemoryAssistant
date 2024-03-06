@@ -11,6 +11,8 @@ package com.happy3w.footstone.ui;
 import com.happy3w.footstone.FootstoneSvcAccess;
 import com.happy3w.footstone.exception.MessageException;
 import com.happy3w.footstone.sql.IDatabaseMgrSvc;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -38,6 +40,8 @@ import java.util.Vector;
  * @author BoRoBoRoMe
  * @version 1.0 2011-10-16
  */
+@Slf4j
+@Component
 public class ExecuteSqlPanel extends JSplitPane {
 
     private static final int TAB_TEXT_RESULT = 0;
@@ -48,12 +52,14 @@ public class ExecuteSqlPanel extends JSplitPane {
     private JLabel lblTableResult;
     private JTable tblResult;
     private DefaultTableModel tblModel;
+    private final IDatabaseMgrSvc databaseMgrSvc;
 
     /**
      * 构造函数
      */
-    public ExecuteSqlPanel() {
+    public ExecuteSqlPanel(IDatabaseMgrSvc databaseMgrSvc) {
         super();
+        this.databaseMgrSvc = databaseMgrSvc;
         initUI();
     }
 
@@ -90,12 +96,7 @@ public class ExecuteSqlPanel extends JSplitPane {
         JScrollPane sp = new JScrollPane();
         tblResult = new JTable();
         tblModel = (DefaultTableModel) tblResult.getModel();
-        tblResult.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                doRefreshTableInfo();
-            }
-        });
+        tblResult.getSelectionModel().addListSelectionListener(e -> doRefreshTableInfo());
         sp.setViewportView(tblResult);
         return sp;
     }
@@ -146,8 +147,7 @@ public class ExecuteSqlPanel extends JSplitPane {
     }
 
     private void doExecuteSql() {
-        IDatabaseMgrSvc svc = FootstoneSvcAccess.getDatabaseSvc();
-        if (svc == null) {
+        if (databaseMgrSvc == null) {
             JOptionPane.showMessageDialog(this, "No database connection.");
             return;
         }
@@ -158,9 +158,9 @@ public class ExecuteSqlPanel extends JSplitPane {
             }
             sql = sql.trim();
             if ("select ".equalsIgnoreCase(sql.substring(0, 7))) {
-                doExecuteQuery(svc, sql);
+                doExecuteQuery(databaseMgrSvc, sql);
             } else {
-                doExecuteUpdate(svc, sql);
+                doExecuteUpdate(databaseMgrSvc, sql);
             }
 
         } catch (Exception e) {
@@ -178,28 +178,35 @@ public class ExecuteSqlPanel extends JSplitPane {
     }
 
     private void doExecuteQuery(IDatabaseMgrSvc svc, String sql) throws SQLException, MessageException {
-        ResultSet rs = svc.executeQuery(sql);
-        ResultSetMetaData md = rs.getMetaData();
-        int columnCount = md.getColumnCount();
+        svc.executeQuery(this::showResult, sql);
+    }
 
-        //创建表头
-        Vector<String> columnVec = new Vector<String>();
-        for (int i = 1; i <= columnCount; i++) {
-            columnVec.add(md.getColumnName(i));
-        }
+    private void showResult(ResultSet rs) {
+        try {
+            ResultSetMetaData md = rs.getMetaData();
+            int columnCount = md.getColumnCount();
 
-        //收集表内容
-        Vector<Vector<Object>> dataVec = new Vector<Vector<Object>>();
-        while (rs.next()) {
-            Vector<Object> rowVec = new Vector<Object>();
+            //创建表头
+            Vector<String> columnVec = new Vector<String>();
             for (int i = 1; i <= columnCount; i++) {
-                rowVec.add(rs.getObject(i));
+                columnVec.add(md.getColumnName(i));
             }
-            dataVec.add(rowVec);
-        }
 
-        this.tblModel.setDataVector(dataVec, columnVec);
-        this.tabPnl.setSelectedIndex(TAB_TABLE_RESULT);
+            //收集表内容
+            Vector<Vector<Object>> dataVec = new Vector<Vector<Object>>();
+            while (rs.next()) {
+                Vector<Object> rowVec = new Vector<Object>();
+                for (int i = 1; i <= columnCount; i++) {
+                    rowVec.add(rs.getObject(i));
+                }
+                dataVec.add(rowVec);
+            }
+
+            this.tblModel.setDataVector(dataVec, columnVec);
+            this.tabPnl.setSelectedIndex(TAB_TABLE_RESULT);
+        } catch (SQLException e) {
+            log.error("show result error.", e);
+        }
     }
 
     private JScrollPane createInputSqlPnl() {

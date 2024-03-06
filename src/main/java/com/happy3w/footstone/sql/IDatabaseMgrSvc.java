@@ -14,6 +14,8 @@ import java.io.InputStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Iterator;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * <DT><B>Title:</B></DT>
@@ -52,15 +54,7 @@ public interface IDatabaseMgrSvc {
      */
     void runSqlFile(InputStream sqlFileStream) throws MessageException;
 
-    /**
-     * 执行指定的sql语句，返回结果
-     *
-     * @param sql select开头的sql语句
-     * @return
-     * @throws SQLException
-     * @throws MessageException
-     */
-    ResultSet executeQuery(String sql, Object... param);
+    void executeQuery(Consumer<ResultSet> resultConsumer, String sql, Object... param);
 
     /**
      * 执行更新语句

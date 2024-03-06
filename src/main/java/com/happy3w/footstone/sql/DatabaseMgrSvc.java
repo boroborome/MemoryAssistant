@@ -25,6 +25,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.function.Consumer;
 
 /**
  * <DT><B>Title:</B></DT>
@@ -118,13 +119,12 @@ public class DatabaseMgrSvc implements IDatabaseMgrSvc {
     }
 
     @Override
-    public ResultSet executeQuery(String sql, Object... param) {
-        return jdbcTemplate.execute(sql, new PreparedStatementCallback<ResultSet>() {
-            @Override
-            public ResultSet doInPreparedStatement(PreparedStatement ps) throws SQLException, DataAccessException {
-                SimpleSqlBuilder.fillParameters(ps, Arrays.asList(param));
-                return ps.executeQuery();
-            }
+    public void executeQuery(Consumer<ResultSet> resultConsumer, String sql, Object... param) {
+        jdbcTemplate.execute(sql, (PreparedStatementCallback<ResultSet>) ps -> {
+            SimpleSqlBuilder.fillParameters(ps, Arrays.asList(param));
+            ResultSet rs = ps.executeQuery();
+            resultConsumer.accept(rs);
+            return rs;
         });
     }
 

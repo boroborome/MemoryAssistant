@@ -12,7 +12,11 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 @SpringBootApplication
-@ComponentScan(basePackages = {"com.happy3w.footstone.bundle", "com.happy3w.footstone.sql", "com.happy3w.memoryassistant"})
+@ComponentScan(basePackages = {"com.happy3w.footstone.bundle",
+        "com.happy3w.footstone.sql",
+        "com.happy3w.memoryassistant",
+        "com.happy3w.footstone.ui"
+})
 @EnableJpaRepositories(basePackages = {"com.happy3w.memoryassistant.repository"})
 public class MemoryAssistantApplication {
 

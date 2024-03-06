@@ -5,3 +5,5 @@ spring:
     username: madb
     password:
     initialize: true
+happy3w:
+  debug: true
