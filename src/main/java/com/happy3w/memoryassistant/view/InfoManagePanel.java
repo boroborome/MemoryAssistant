@@ -16,9 +16,7 @@ import com.happy3w.memoryassistant.service.MAInformationSvc;
 import com.happy3w.memoryassistant.service.MAKeywordSvc;
 import com.happy3w.memoryassistant.view.query.IQueryLogic;
 import com.happy3w.memoryassistant.view.query.QueryAssistant;
-import com.happy3w.memoryassistant.view.wgt.IKeywordFieldListener;
 import com.happy3w.memoryassistant.view.wgt.KeywordField;
-import com.happy3w.memoryassistant.view.wgt.KeywordFieldEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.ObjectUtils;
 
@@ -65,7 +63,7 @@ public class InfoManagePanel extends JPanel {
     }
 
     private void initActions() {
-        txtKeys.getEventContainer().addEventListener(e -> queryAssistant.setCondtion(e.getLstKey()));
+        txtKeys.getEventContainer().addEventListener(e -> queryAssistant.setCondition(e.getLstKey()));
     }
 
     private void initUI() {

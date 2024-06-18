@@ -1,6 +1,7 @@
 package com.happy3w.memoryassistant.model;
 
 import com.happy3w.footstone.model.AbstractFilterIterator;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Iterator;
 import java.util.Set;
@@ -8,6 +9,7 @@ import java.util.Set;
 /**
  * @author boroborome
  */
+@Slf4j
 public class MAKeywordFilterIterator extends AbstractFilterIterator<MAKeyword> {
     private Set<String> setExcludeKeyword;
     private Set<String> setAvailableKeyword;
@@ -17,6 +19,7 @@ public class MAKeywordFilterIterator extends AbstractFilterIterator<MAKeyword> {
         super(innerIt);
         this.setExcludeKeyword = setExcludeKeyword == null || setExcludeKeyword.isEmpty() ? null : setExcludeKeyword;
         this.setAvailableKeyword = setAvailableKeyword == null || setAvailableKeyword.isEmpty() ? null : setAvailableKeyword;
+        log.info("setExcludeKeyword:{}, setAvailableKeyword:{}", setExcludeKeyword, setAvailableKeyword);
     }
 
     @Override
@@ -24,9 +27,9 @@ public class MAKeywordFilterIterator extends AbstractFilterIterator<MAKeyword> {
         if (setExcludeKeyword != null && setExcludeKeyword.contains(value.getKeyword())) {
             return false;
         }
-        if (setAvailableKeyword != null && !setAvailableKeyword.contains(value.getKeyword())) {
-            return false;
-        }
+//        if (setAvailableKeyword != null && !setAvailableKeyword.contains(value.getKeyword())) {
+//            return false;
+//        }
         return true;
     }
 }

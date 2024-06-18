@@ -8,6 +8,8 @@
  */
 package com.happy3w.footstone.ui;
 
+import lombok.extern.slf4j.Slf4j;
+
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -26,6 +28,7 @@ import java.util.List;
  * @author BoRoBoRoMe
  * @version 1.0 2008-1-29
  */
+@Slf4j
 public abstract class BaseExtTableModel<T> extends AbstractTableModel implements Iterable<T> {
     /*
      * 正序
@@ -170,14 +173,18 @@ public abstract class BaseExtTableModel<T> extends AbstractTableModel implements
      */
     public void showData(Iterator<T> it) {
         clear();
+        int count = 0, totalCount = 0;
         if (it != null) {
             while (it.hasNext()) {
                 T value = it.next();
+                totalCount++;
                 if (value != null) {
                     justAddItem(value);
+                    count++;
                 }
             }
         }
+        log.info("showData: add {}/{} rows.", count, totalCount);
         this.fireTableDataChanged();
     }
 

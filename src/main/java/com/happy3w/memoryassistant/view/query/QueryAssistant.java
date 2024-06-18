@@ -14,7 +14,7 @@ import java.util.Iterator;
 @Slf4j
 public class QueryAssistant<CondtionType, DataType> {
     private CondtionType condition;
-    private boolean conditionChanged = false;
+    private volatile boolean conditionChanged = false;
     private Object conditionLock = new Object();
 
     private IQueryLogic<CondtionType, DataType> logic;
@@ -43,7 +43,7 @@ public class QueryAssistant<CondtionType, DataType> {
     /**
      * @param condition the prefix to set
      */
-    public void setCondtion(CondtionType condition) {
+    public void setCondition(CondtionType condition) {
         synchronized (conditionLock) {
             if (this.condition == condition) {
                 return;
@@ -79,6 +79,7 @@ public class QueryAssistant<CondtionType, DataType> {
                         continue;
                     }
 
+                    log.info("Condition:{}", condition);
                     //query
                     Iterator<DataType> it = logic.query(condition);
                     if (conditionChanged) {

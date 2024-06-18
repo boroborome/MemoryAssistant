@@ -157,7 +157,7 @@ public class KeywordField extends JTextField {
         if (prefix == null || prefix.isEmpty()) {
             this.popupWindow.setVisible(false);
         } else {
-            queryAssistant.setCondtion(prefix);
+            queryAssistant.setCondition(prefix);
         }
     }
 
@@ -280,11 +280,9 @@ public class KeywordField extends JTextField {
 
     private class KeywordQueryLogic implements IQueryLogic<String, MAKeyword> {
         private final MAKeywordSvc maKeywordSvc;
-        private MAKeywordCondition cond;
 
         public KeywordQueryLogic(MAKeywordSvc maKeywordSvc) {
             this.maKeywordSvc = maKeywordSvc;
-            cond = new MAKeywordCondition();
         }
 
         @Override
@@ -295,11 +293,9 @@ public class KeywordField extends JTextField {
 
         @Override
         public Iterator<MAKeyword> query(String condition) throws Exception {
-            cond.setKeywordLike(condition);
-            Iterator<MAKeyword> itKeyword = maKeywordSvc.query(cond);
+            Iterator<MAKeyword> itKeyword = maKeywordSvc.query(new MAKeywordCondition(condition));
             return new MAKeywordFilterIterator(itKeyword, setExistKeyword, setAvailableKeyword);
         }
-
 
         @Override
         public void showData(Iterator<MAKeyword> it) throws Exception {
@@ -321,9 +317,6 @@ public class KeywordField extends JTextField {
 
     }
 
-    /* (non-Javadoc)
-     * @see javax.swing.JComponent#processKeyEvent(java.awt.event.KeyEvent)
-     */
     @Override
     protected void processKeyEvent(KeyEvent e) {
         IPopupWindowKeyAction action = this.mapKeyAction.get(Integer.valueOf(e.getKeyCode()));

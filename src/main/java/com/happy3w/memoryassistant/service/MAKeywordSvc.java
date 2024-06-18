@@ -11,6 +11,7 @@ import com.happy3w.footstone.svc.IIDGeneratorSvc;
 import com.happy3w.memoryassistant.model.MAKeyword;
 import com.happy3w.memoryassistant.model.MAKeywordCondition;
 import com.happy3w.memoryassistant.repository.MAKeywordRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Service
 public class MAKeywordSvc implements IDataSvc<MAKeyword> {
     @Autowired
@@ -73,6 +75,11 @@ public class MAKeywordSvc implements IDataSvc<MAKeyword> {
         List<MAKeyword> keywords = (c.getKeywordLike() != null && !c.getKeywordLike().isEmpty())
                 ? maKeywordRepository.findAllByKeywordLike(c.getKeywordLike().toLowerCase() + '%')
                 : maKeywordRepository.findAll();
+        if (((MAKeywordCondition) condition).getKeywordLike() == null) {
+            log.info("null condition,data count:{}", keywords.size());
+        } else {
+            log.info("condition:'{}%', data count:{}", c.getKeywordLike(), keywords.size());
+        }
         return AbstractBufferIterator.from(keywords.iterator());
     }
 
