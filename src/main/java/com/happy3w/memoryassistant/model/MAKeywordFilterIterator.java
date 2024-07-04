@@ -19,7 +19,6 @@ public class MAKeywordFilterIterator extends AbstractFilterIterator<MAKeyword> {
         super(innerIt);
         this.setExcludeKeyword = setExcludeKeyword == null || setExcludeKeyword.isEmpty() ? null : setExcludeKeyword;
         this.setAvailableKeyword = setAvailableKeyword == null || setAvailableKeyword.isEmpty() ? null : setAvailableKeyword;
-        log.info("setExcludeKeyword:{}, setAvailableKeyword:{}", setExcludeKeyword, setAvailableKeyword);
     }
 
     @Override

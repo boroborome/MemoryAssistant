@@ -75,11 +75,6 @@ public class MAKeywordSvc implements IDataSvc<MAKeyword> {
         List<MAKeyword> keywords = (c.getKeywordLike() != null && !c.getKeywordLike().isEmpty())
                 ? maKeywordRepository.findAllByKeywordLike(c.getKeywordLike().toLowerCase() + '%')
                 : maKeywordRepository.findAll();
-        if (((MAKeywordCondition) condition).getKeywordLike() == null) {
-            log.info("null condition,data count:{}", keywords.size());
-        } else {
-            log.info("condition:'{}%', data count:{}", c.getKeywordLike(), keywords.size());
-        }
         return AbstractBufferIterator.from(keywords.iterator());
     }
 

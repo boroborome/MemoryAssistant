@@ -79,7 +79,6 @@ public class QueryAssistant<CondtionType, DataType> {
                         continue;
                     }
 
-                    log.info("Condition:{}", condition);
                     //query
                     Iterator<DataType> it = logic.query(condition);
                     if (conditionChanged) {

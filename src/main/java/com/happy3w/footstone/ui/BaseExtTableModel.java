@@ -173,18 +173,14 @@ public abstract class BaseExtTableModel<T> extends AbstractTableModel implements
      */
     public void showData(Iterator<T> it) {
         clear();
-        int count = 0, totalCount = 0;
         if (it != null) {
             while (it.hasNext()) {
                 T value = it.next();
-                totalCount++;
                 if (value != null) {
                     justAddItem(value);
-                    count++;
                 }
             }
         }
-        log.info("showData: add {}/{} rows.", count, totalCount);
         this.fireTableDataChanged();
     }
 
